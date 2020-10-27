@@ -1,0 +1,1 @@
+enum User { authenticated, unauthenticated }
