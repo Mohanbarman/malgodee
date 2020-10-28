@@ -44,7 +44,7 @@ class ContactUsSection extends StatelessWidget {
                   ),
                   SizedBox(height: ScreenPadding),
                   inputCustomDeocration(
-                    TextField(
+                    TextFormField(
                       controller: TextEditingController(text: '8098018239'),
                       decoration: InputDecoration(
                         border: InputBorder.none,
@@ -59,7 +59,7 @@ class ContactUsSection extends StatelessWidget {
                   ),
                   SizedBox(height: ScreenPadding),
                   inputCustomDeocration(
-                    TextField(
+                    TextFormField(
                       controller: TextEditingController(text: '8098018239'),
                       decoration: InputDecoration(
                         border: InputBorder.none,

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ShoppingApp/flavour.dart';
@@ -20,7 +21,7 @@ class CategoriesSection extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 UnderlinedText("Categories"),
-                Provider.of<User>(context) == User.authenticated
+                FirebaseAuth.instance.currentUser != null
                     ? Button1('Add category', '/addcategory')
                     : SizedBox()
               ],

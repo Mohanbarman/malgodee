@@ -1,6 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:ShoppingApp/flavour.dart';
 import '../styles.dart';
 
 PreferredSize CustomAppBar() {
@@ -23,10 +22,10 @@ class Bar extends StatelessWidget {
           color: DefaultFontColor,
         ),
         onPressed: () {
-          if (Provider.of<User>(context, listen: false) == User.authenticated) {
+          if (FirebaseAuth.instance.currentUser != null) {
             return showAlertDialog(context);
           }
-          Navigator.pushNamed(context, '/login');
+          Navigator.pushReplacementNamed(context, '/login');
         },
       ),
     );
@@ -34,10 +33,11 @@ class Bar extends StatelessWidget {
 
   showAlertDialog(BuildContext context) {
     Widget logoutButton = FlatButton(
+      color: DefaultRedColor,
       onPressed: () {
-        // var model = Provider.of<User>(context, listen: false);
-        // print(context)
+        FirebaseAuth.instance.signOut();
         Navigator.pop(context);
+        Navigator.pushNamed(context, '/');
       },
       child: Text('Logout'),
     );

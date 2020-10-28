@@ -1,13 +1,17 @@
 import 'package:ShoppingApp/styles.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 import 'route_generator.dart';
 import 'flavour.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(
     Provider<User>.value(
-      value: User.authenticated,
+      value: User.unauthenticated,
       child: App(),
     ),
   );
@@ -16,6 +20,10 @@ void main() {
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       initialRoute: '/',

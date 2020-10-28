@@ -19,6 +19,7 @@ dependencies:
   icon_shadow: ^1.0.1
   firebase_auth:
   cloud_firestore:
+  firebase_core:
 
 
 dev_dependencies:
