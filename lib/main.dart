@@ -1,19 +1,14 @@
 import 'package:ShoppingApp/styles.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'route_generator.dart';
-import 'flavour.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(
-    Provider<User>.value(
-      value: User.unauthenticated,
-      child: App(),
-    ),
+    App(),
   );
 }
 

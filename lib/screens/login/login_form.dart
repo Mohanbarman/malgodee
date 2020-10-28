@@ -1,11 +1,9 @@
 import 'dart:io';
-
 import 'package:ShoppingApp/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/styles.dart';
-import 'package:ShoppingApp/components/input_custom_decoration.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
 class LoginForm extends StatefulWidget {
@@ -25,6 +23,8 @@ class _LoginFormState extends State<LoginForm> {
     borderRadius: BorderRadius.circular(10),
     borderSide: BorderSide(color: Colors.white),
   );
+  bool _loginBtnDisabled = false;
+  Color _loginBtnColor = SecondaryColor;
 
   @override
   Widget build(BuildContext context) {
@@ -43,17 +43,7 @@ class _LoginFormState extends State<LoginForm> {
             TextFormField(
               controller: _emailTextController,
               keyboardType: TextInputType.emailAddress,
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Email can\'t be empty';
-                }
-                if (!RegExp(
-                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                    .hasMatch(_emailTextController.text)) {
-                  return 'Please enter a valid email';
-                }
-                return null;
-              },
+              validator: emailValidator,
               decoration: InputDecoration(
                 contentPadding: _inputPadding,
                 hintText: 'yourmail@domain.com',
@@ -77,12 +67,7 @@ class _LoginFormState extends State<LoginForm> {
             TextFormField(
               controller: _passwordTextController,
               obscureText: !_showPassword,
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Password can\'t be empty';
-                }
-                return null;
-              },
+              validator: passwordValidator,
               decoration: InputDecoration(
                 border: _inputBorder,
                 focusedBorder: _inputBorder,
@@ -130,13 +115,18 @@ class _LoginFormState extends State<LoginForm> {
                   shadowColor: SecondaryColorDropShadow,
                   child: FlatButton(
                     padding: EdgeInsets.symmetric(horizontal: 30, vertical: 13),
-                    onPressed: () => onSubmit(
-                      context,
-                      _formKey,
-                      _emailTextController,
-                      _passwordTextController,
-                    ),
-                    color: SecondaryColor,
+                    onPressed: () async {
+                      // setState(() {
+                      //   _loginBtnColor = DefaultGreenColor;
+                      // });
+                      onSubmit(
+                        context,
+                        _formKey,
+                        _emailTextController,
+                        _passwordTextController,
+                      );
+                    },
+                    color: _loginBtnColor,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -161,16 +151,48 @@ class _LoginFormState extends State<LoginForm> {
 }
 
 onSubmit(context, formKey, emailController, passwordController) async {
-  if (formKey.currentState.validate()) {
+  try {
+    final result = await InternetAddress.lookup('example.com');
+    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+      if (formKey.currentState.validate()) {
+        Scaffold.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: AccentColor,
+            content: Text('Verifying credentials'),
+          ),
+        );
+        await Firebase.initializeApp();
+        Authentication(context).signInWithEmail(
+          emailController.text,
+          passwordController.text,
+        );
+      }
+    }
+  } on SocketException catch (_) {
     Scaffold.of(context).showSnackBar(
       SnackBar(
-        content: Text('Processing data..'),
+        backgroundColor: DefaultRedColor,
+        content: Text('Internet not working'),
       ),
     );
-    await Firebase.initializeApp();
-    Authentication(context).signInWithEmail(
-      emailController.text,
-      passwordController.text,
-    );
   }
+}
+
+String emailValidator(String value) {
+  if (value.isEmpty) {
+    return 'Email can\'t be empty';
+  }
+  if (!RegExp(
+          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+      .hasMatch(value)) {
+    return 'Please enter a valid email';
+  }
+  return null;
+}
+
+String passwordValidator(String value) {
+  if (value.isEmpty) {
+    return 'Password can\'t be empty';
+  }
+  return null;
 }

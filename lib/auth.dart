@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:ShoppingApp/styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +22,7 @@ class Authentication {
             ),
           )
           .closed
-          .then((_) => Navigator.pushReplacementNamed(context, '/'));
+          .then((_) => Navigator.pushReplacementNamed(this.context, '/'));
       // print(creds);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {

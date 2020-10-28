@@ -34,11 +34,9 @@ class Bar extends StatelessWidget {
 
   showAlertDialog(BuildContext context) {
     Widget logoutButton = FlatButton(
-      color: DefaultRedColor,
       onPressed: () {
         FirebaseAuth.instance.signOut();
         Navigator.pop(context);
-        Navigator.pushReplacementNamed(context, '/');
       },
       child: Text('Logout'),
     );
