@@ -1,3 +1,4 @@
+import 'package:ShoppingApp/auth.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +14,7 @@ class ContactUsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Provider.of<User>(context) == User.unauthenticated
+      child: !Authentication.isAuthenticated()
           ? Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -36,13 +37,13 @@ class ContactUsSection extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   UnderlinedText('Edit contact number'),
-                  SizedBox(height: ScreenPadding * 2),
+                  SizedBox(height: ScreenPadding),
                   Row(
                     children: [
                       Text('Calling number', style: LoginFormLabelStyle)
                     ],
                   ),
-                  SizedBox(height: ScreenPadding),
+                  SizedBox(height: ScreenPadding / 2),
                   inputCustomDeocration(
                     TextFormField(
                       controller: TextEditingController(text: '8098018239'),
@@ -57,7 +58,7 @@ class ContactUsSection extends StatelessWidget {
                       Text('Whatsapp number', style: LoginFormLabelStyle)
                     ],
                   ),
-                  SizedBox(height: ScreenPadding),
+                  SizedBox(height: ScreenPadding / 2),
                   inputCustomDeocration(
                     TextFormField(
                       controller: TextEditingController(text: '8098018239'),

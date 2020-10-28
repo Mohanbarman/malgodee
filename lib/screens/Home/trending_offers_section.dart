@@ -1,3 +1,4 @@
+import 'package:ShoppingApp/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ShoppingApp/flavour.dart';
@@ -19,7 +20,7 @@ class TrendingOffersSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               UnderlinedText('Trending offers'),
-              Provider.of<User>(context) == User.authenticated
+              Authentication.isAuthenticated()
                   ? Button1('Add offer', '/addoffer')
                   : Button1('View all', '/offers')
             ],

@@ -12,7 +12,7 @@ class Authentication {
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
-      User user = FirebaseAuth.instance.currentUser;
+      FirebaseAuth.instance.currentUser;
       Scaffold.of(context)
           .showSnackBar(
             SnackBar(
@@ -23,7 +23,7 @@ class Authentication {
             ),
           )
           .closed
-          .then((_) => Navigator.pushNamed(context, '/'));
+          .then((_) => Navigator.pushReplacementNamed(context, '/'));
       // print(creds);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -42,5 +42,9 @@ class Authentication {
         );
       }
     }
+  }
+
+  static isAuthenticated() {
+    return FirebaseAuth.instance.currentUser != null;
   }
 }

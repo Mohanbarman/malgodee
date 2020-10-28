@@ -1,3 +1,4 @@
+import 'package:ShoppingApp/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../styles.dart';
@@ -22,10 +23,10 @@ class Bar extends StatelessWidget {
           color: DefaultFontColor,
         ),
         onPressed: () {
-          if (FirebaseAuth.instance.currentUser != null) {
+          if (Authentication.isAuthenticated()) {
             return showAlertDialog(context);
           }
-          Navigator.pushReplacementNamed(context, '/login');
+          Navigator.pushNamed(context, '/login');
         },
       ),
     );
@@ -37,7 +38,7 @@ class Bar extends StatelessWidget {
       onPressed: () {
         FirebaseAuth.instance.signOut();
         Navigator.pop(context);
-        Navigator.pushNamed(context, '/');
+        Navigator.pushReplacementNamed(context, '/');
       },
       child: Text('Logout'),
     );

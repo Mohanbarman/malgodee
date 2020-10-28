@@ -1,3 +1,4 @@
+import 'package:ShoppingApp/auth.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -53,7 +54,7 @@ class AllBrands extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 UnderlinedText('All brands'),
-                Provider.of<User>(context) == User.authenticated
+                Authentication.isAuthenticated()
                     ? Button1('Add brand', '/addbrand')
                     : SizedBox()
               ],
