@@ -25,6 +25,7 @@ class Authentication {
           .then((_) => Navigator.pushReplacementNamed(this.context, '/'));
       // print(creds);
     } on FirebaseAuthException catch (e) {
+      print(e);
       if (e.code == 'user-not-found') {
         Scaffold.of(context).showSnackBar(
           SnackBar(

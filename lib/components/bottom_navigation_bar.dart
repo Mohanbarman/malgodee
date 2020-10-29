@@ -3,7 +3,7 @@ import 'package:flutter/rendering.dart';
 import '../styles.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
-  int _selected_index;
+  final int _selected_index;
   CustomBottomNavigationBar(this._selected_index);
   @override
   _CustomBottomNavigationBarState createState() =>

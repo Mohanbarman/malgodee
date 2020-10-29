@@ -23,7 +23,6 @@ class _LoginFormState extends State<LoginForm> {
     borderRadius: BorderRadius.circular(10),
     borderSide: BorderSide(color: Colors.white),
   );
-  bool _loginBtnDisabled = false;
   Color _loginBtnColor = SecondaryColor;
 
   @override

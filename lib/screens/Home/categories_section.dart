@@ -1,8 +1,5 @@
 import 'package:ShoppingApp/auth.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:ShoppingApp/flavour.dart';
 import '../../components/underlined_text.dart';
 import '../../components/rounded_icon_container.dart';
 import 'package:ShoppingApp/components/buttons.dart';
@@ -37,24 +34,11 @@ class CategoriesSection extends StatelessWidget {
               physics: ClampingScrollPhysics(),
               children: [
                 SizedBox(width: ScreenPadding),
-                RoundedIconContainer('Fan', _categorySampleImage),
-                SizedBox(width: 30),
-                RoundedIconContainer('Fan', _categorySampleImage),
-                SizedBox(width: 30),
-                RoundedIconContainer('Fan', _categorySampleImage),
-                SizedBox(width: 30),
-                RoundedIconContainer('Fan', _categorySampleImage),
-                SizedBox(width: 30),
-                RoundedIconContainer('Fan', _categorySampleImage),
-                SizedBox(width: 30),
-                RoundedIconContainer('Fan', _categorySampleImage),
-                SizedBox(width: 30),
-                RoundedIconContainer('Fan', _categorySampleImage),
-                SizedBox(width: 30),
-                RoundedIconContainer('Fan', _categorySampleImage),
-                SizedBox(width: 30),
-                RoundedIconContainer('Fan', _categorySampleImage),
-                SizedBox(width: 30),
+                for (int i = 0; i < 8; i++)
+                  Row(children: [
+                    RoundedIconContainer('Fan', _categorySampleImage),
+                    SizedBox(width: 30)
+                  ]),
                 RoundedIconContainer(
                     'All Categories', null, true, '/categories'),
                 SizedBox(width: 30),

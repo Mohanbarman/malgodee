@@ -53,9 +53,9 @@ class Offers extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 UnderlinedText('All offers'),
-                Provider.of<User>(context) == User.authenticated
-                    ? Button1('Add offer', '/addoffer')
-                    : SizedBox()
+                // Provider.of<User>(context) == User.authenticated
+                //     ? Button1('Add offer', '/addoffer')
+                //     : SizedBox()
               ],
             ),
             ...offers.map(
@@ -72,7 +72,7 @@ class Offers extends StatelessWidget {
                             child: OfferDialog(offer['image']),
                           );
                         },
-                        child: Provider.of<User>(context) == User.authenticated
+                        child: 1 == 1
                             ? Container(
                                 width:
                                     MediaQuery.of(context).size.width / 2 - 30,
@@ -113,7 +113,7 @@ class Offers extends StatelessWidget {
                             child: OfferDialog(offer['image']),
                           );
                         },
-                        child: Provider.of<User>(context) == User.authenticated
+                        child: 1 == 1
                             ? Container(
                                 width:
                                     MediaQuery.of(context).size.width / 2 - 30,

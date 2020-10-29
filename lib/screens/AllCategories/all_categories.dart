@@ -1,10 +1,8 @@
 import 'package:ShoppingApp/auth.dart';
 import 'package:ShoppingApp/components/bottom_navigation_bar.dart';
 import 'package:ShoppingApp/styles.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ShoppingApp/flavour.dart';
 import 'package:ShoppingApp/components/buttons.dart';
 import '../../components/app_bar.dart';
 import '../../components/underlined_text.dart';
@@ -51,18 +49,27 @@ class AllCategories extends StatelessWidget {
       bottomNavigationBar: CustomBottomNavigationBar(null),
       backgroundColor: BackgroundColor,
       body: Container(
-        padding:
-            EdgeInsets.fromLTRB(ScreenPadding, ScreenPadding, ScreenPadding, 0),
+        padding: EdgeInsets.fromLTRB(
+          ScreenPadding,
+          ScreenPadding,
+          ScreenPadding,
+          0,
+        ),
         child: ListView(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                UnderlinedText('All categories'),
-                Authentication.isAuthenticated()
-                    ? Button1('Add category', '/addcategory')
-                    : SizedBox()
-              ],
+            StreamBuilder(
+              stream: Provider.of(context).stream,
+              builder: (context, snapshot) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    UnderlinedText('All categories'),
+                    Authentication.isAuthenticated()
+                        ? Button1('Add category', '/addcategory')
+                        : SizedBox()
+                  ],
+                );
+              },
             ),
             SizedBox(height: 30),
             CustomGridView(brands),
