@@ -1,5 +1,4 @@
 import 'package:ShoppingApp/screens/all_brands/all_brands.dart';
-import 'flavour.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'screens/Home/home.dart';
@@ -33,11 +32,8 @@ class RouteGenerator {
       case '/products':
         return NoAnimationMaterialPageRoute(builder: (_) => AllProducts(args));
       case '/productinfo':
-        print(args);
-        if (args == User.authenticated) {
-          return NoAnimationMaterialPageRoute(builder: (_) => EditProduct());
-        }
-        return NoAnimationMaterialPageRoute(builder: (_) => ProductInfo());
+        return NoAnimationMaterialPageRoute(
+            builder: (_) => EditProduct()); // work left
       case '/addcategory':
         return NoAnimationMaterialPageRoute(builder: (_) => AddCategory());
       case '/addbrand':

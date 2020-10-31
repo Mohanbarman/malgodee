@@ -12,11 +12,11 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_feather_icons: ^1.0.3
-  provider: ^4.3.2+2
   persistent_bottom_nav_bar: ^2.1.0
   carousel_slider: ^2.3.1
   cupertino_icons: ^0.1.3
   icon_shadow: ^1.0.1
+  provider:
   firebase_auth:
   cloud_firestore:
   firebase_core:

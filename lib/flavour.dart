@@ -1,1 +1,0 @@
-enum User { authenticated, unauthenticated }

@@ -1,7 +1,6 @@
 import 'package:ShoppingApp/auth.dart';
+import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:ShoppingApp/flavour.dart';
 import '../../components/underlined_text.dart';
 import '../../components/buttons.dart';
 import '../../components/offer_image_container.dart';
@@ -20,9 +19,17 @@ class TrendingOffersSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               UnderlinedText('Trending offers'),
-              Authentication.isAuthenticated()
-                  ? Button1('Add offer', '/addoffer')
-                  : Button1('View all', '/offers')
+              StreamBuilder(
+                initialData: adminStreamController.initialData,
+                stream: adminStreamController.authStatusStream,
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.data == UserAuth.isAuthorized) {
+                    return Button1('Add offer', '/addoffer');
+                  } else {
+                    return SizedBox();
+                  }
+                },
+              ),
             ],
           ),
           SizedBox(height: 20),

@@ -1,4 +1,6 @@
 import 'package:ShoppingApp/auth.dart';
+import 'package:ShoppingApp/bloc/admin_features.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../components/underlined_text.dart';
 import '../../components/rounded_icon_container.dart';
@@ -19,9 +21,19 @@ class CategoriesSection extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 UnderlinedText("Categories"),
-                Authentication.isAuthenticated()
-                    ? Button1('Add category', '/addcategory')
-                    : SizedBox()
+                StreamBuilder(
+                  initialData: adminStreamController.initialData,
+                  stream: adminStreamController.authStatusStream,
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData &&
+                        snapshot.data == UserAuth.isAuthorized) {
+                      return Button1('Add category', '/addcategory');
+                    } else if (snapshot.data == UserAuth.unauthorized) {
+                      return SizedBox();
+                    }
+                    return SizedBox();
+                  },
+                ),
               ],
             ),
           ),

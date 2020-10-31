@@ -1,9 +1,7 @@
+import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:provider/provider.dart';
-import 'package:ShoppingApp/flavour.dart';
-import 'package:ShoppingApp/components/buttons.dart';
 import 'package:ShoppingApp/components/app_bar.dart';
 import 'package:ShoppingApp/components/bottom_navigation_bar.dart';
 import 'package:ShoppingApp/components/underlined_text.dart';
@@ -72,8 +70,13 @@ class Offers extends StatelessWidget {
                             child: OfferDialog(offer['image']),
                           );
                         },
-                        child: 1 == 1
-                            ? Container(
+                        child: StreamBuilder(
+                          initialData: adminStreamController.initialData,
+                          stream: adminStreamController.authStatusStream,
+                          builder:
+                              (BuildContext context, AsyncSnapshot snapshot) {
+                            if (snapshot.data == UserAuth.isAuthorized) {
+                              return Container(
                                 width:
                                     MediaQuery.of(context).size.width / 2 - 30,
                                 child: Column(
@@ -103,8 +106,12 @@ class Offers extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                              )
-                            : OfferImageContainer(offer['image']),
+                              );
+                            } else {
+                              return OfferImageContainer(offer['image']);
+                            }
+                          },
+                        ),
                       ),
                       GestureDetector(
                         onTap: () {
@@ -113,8 +120,13 @@ class Offers extends StatelessWidget {
                             child: OfferDialog(offer['image']),
                           );
                         },
-                        child: 1 == 1
-                            ? Container(
+                        child: StreamBuilder(
+                          initialData: adminStreamController.initialData,
+                          stream: adminStreamController.authStatusStream,
+                          builder:
+                              (BuildContext context, AsyncSnapshot snapshot) {
+                            if (snapshot.data == UserAuth.isAuthorized) {
+                              return Container(
                                 width:
                                     MediaQuery.of(context).size.width / 2 - 30,
                                 child: Column(
@@ -133,7 +145,8 @@ class Offers extends StatelessWidget {
                                             color: Colors.white,
                                             size: 15,
                                           ),
-                                          onPressed: () {},
+                                          onPressed: () => Navigator.pushNamed(
+                                              context, '/addoffer'),
                                           fgColor: SecondaryColor,
                                           shadowColor: SecondaryColorDropShadow,
                                           label: 'Edit',
@@ -143,10 +156,12 @@ class Offers extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                              )
-                            : OfferImageContainer(
-                                offer['image'],
-                              ),
+                              );
+                            } else {
+                              return OfferImageContainer(offer['image']);
+                            }
+                          },
+                        ),
                       ),
                     ],
                   ),

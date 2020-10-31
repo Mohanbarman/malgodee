@@ -1,9 +1,7 @@
-import 'package:ShoppingApp/auth.dart';
+import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:ShoppingApp/components/buttons.dart';
-import 'package:ShoppingApp/flavour.dart';
 import '../../components/app_bar.dart';
 import '../../components/bottom_navigation_bar.dart';
 import '../../components/underlined_text.dart';
@@ -54,9 +52,17 @@ class AllBrands extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 UnderlinedText('All brands'),
-                Authentication.isAuthenticated()
-                    ? Button1('Add brand', '/addbrand')
-                    : SizedBox()
+                StreamBuilder(
+                  stream: adminStreamController.authStatusStream,
+                  initialData: adminStreamController.initialData,
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.data == UserAuth.isAuthorized) {
+                      return Button1('Add brand', '/addbrand');
+                    } else {
+                      return SizedBox();
+                    }
+                  },
+                ),
               ],
             ),
             SizedBox(height: 30),

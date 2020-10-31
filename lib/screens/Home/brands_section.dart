@@ -1,8 +1,7 @@
 import 'package:ShoppingApp/auth.dart';
+import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:ShoppingApp/components/custom_grid.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:ShoppingApp/flavour.dart';
 import 'package:ShoppingApp/components/buttons.dart';
 import '../../components/underlined_text.dart';
 import '../../components/rounded_icon_container.dart';
@@ -37,9 +36,18 @@ class BrandsSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               UnderlinedText('Brands'),
-              Authentication.isAuthenticated()
-                  ? Button1('Add brand', '/addbrand')
-                  : SizedBox()
+              StreamBuilder(
+                // initialData: UserAuth.unauthorized,
+                initialData: adminStreamController.initialData,
+                stream: adminStreamController.authStatusStream,
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.data == UserAuth.isAuthorized) {
+                    return Button1('Add brand', '/addbrand');
+                  } else {
+                    return SizedBox();
+                  }
+                },
+              ),
             ],
           ),
           SizedBox(height: 20),

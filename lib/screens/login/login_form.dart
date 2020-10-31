@@ -156,6 +156,7 @@ onSubmit(context, formKey, emailController, passwordController) async {
       if (formKey.currentState.validate()) {
         Scaffold.of(context).showSnackBar(
           SnackBar(
+            duration: Duration(seconds: 1),
             backgroundColor: AccentColor,
             content: Text('Verifying credentials'),
           ),

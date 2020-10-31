@@ -1,4 +1,5 @@
 import 'package:ShoppingApp/auth.dart';
+import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../styles.dart';
@@ -36,7 +37,14 @@ class Bar extends StatelessWidget {
     Widget logoutButton = FlatButton(
       onPressed: () {
         FirebaseAuth.instance.signOut();
+        adminStreamController.authStatusSink.add(UserAuth.unauthorized);
         Navigator.pop(context);
+        Scaffold.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: DefaultRedColor,
+            content: Text('Signed out'),
+          ),
+        );
       },
       child: Text('Logout'),
     );

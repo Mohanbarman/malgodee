@@ -1,4 +1,5 @@
 import 'package:ShoppingApp/auth.dart';
+import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:ShoppingApp/components/bottom_navigation_bar.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:flutter/material.dart';
@@ -57,19 +58,23 @@ class AllCategories extends StatelessWidget {
         ),
         child: ListView(
           children: [
-            StreamBuilder(
-              stream: Provider.of(context).stream,
-              builder: (context, snapshot) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    UnderlinedText('All categories'),
-                    Authentication.isAuthenticated()
-                        ? Button1('Add category', '/addcategory')
-                        : SizedBox()
-                  ],
-                );
-              },
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                UnderlinedText('All categories'),
+                StreamBuilder(
+                  initialData: adminStreamController.initialData,
+                  stream: adminStreamController.authStatusStream,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData &&
+                        snapshot.data == UserAuth.isAuthorized) {
+                      return Button1('Add category', '/addcategory');
+                    } else {
+                      return SizedBox();
+                    }
+                  },
+                ),
+              ],
             ),
             SizedBox(height: 30),
             CustomGridView(brands),

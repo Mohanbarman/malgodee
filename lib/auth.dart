@@ -1,6 +1,7 @@
 import 'package:ShoppingApp/styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'bloc/admin_features.dart';
 
 class Authentication {
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -11,7 +12,6 @@ class Authentication {
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
-      FirebaseAuth.instance.currentUser;
       Scaffold.of(context)
           .showSnackBar(
             SnackBar(
@@ -22,10 +22,12 @@ class Authentication {
             ),
           )
           .closed
-          .then((_) => Navigator.pushReplacementNamed(this.context, '/'));
-      // print(creds);
-    } on FirebaseAuthException catch (e) {
-      print(e);
+          .then((_) {
+        Navigator.pushReplacementNamed(context, '/');
+      });
+      adminStreamController.authStatusSink.add(UserAuth.isAuthorized);
+      // .then((_) => Navigator.pushReplacementNamed(this.context, '/'));
+    } catch (e) {
       if (e.code == 'user-not-found') {
         Scaffold.of(context).showSnackBar(
           SnackBar(
@@ -40,6 +42,8 @@ class Authentication {
             content: Text('Wrong password'),
           ),
         );
+      } else {
+        print(e);
       }
     }
   }

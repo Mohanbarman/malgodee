@@ -31,7 +31,6 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
 
   Widget createIconButton(
       IconData icon, String label, int index, route, context) {
-    print(_selected_index);
     List<Widget> widgets = <Widget>[
       Positioned(
         top: -3.5,

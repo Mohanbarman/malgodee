@@ -1,6 +1,6 @@
+import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ShoppingApp/flavour.dart';
 import 'package:ShoppingApp/components/app_bar.dart';
 import 'package:ShoppingApp/components/bottom_navigation_bar.dart';
 import 'package:ShoppingApp/components/underlined_text.dart';
@@ -51,9 +51,16 @@ class AllProducts extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 UnderlinedText('Products'),
-                Provider.of<User>(context) == User.authenticated
-                    ? Button1('Add product', '/addproduct')
-                    : null
+                StreamBuilder(
+                  stream: adminStreamController.authStatusStream,
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.data == UserAuth.isAuthorized) {
+                      return Button1('Add product', '/addproduct');
+                    } else {
+                      return SizedBox();
+                    }
+                  },
+                ),
               ],
             ),
             SizedBox(height: ScreenPadding),
@@ -95,8 +102,6 @@ class OfferImageGridItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.pushNamed(context, '/productinfo',
-          arguments: Provider.of<User>(context, listen: false)),
       child: Container(
         width: MediaQuery.of(context).size.width / 2 - 30,
         height: MediaQuery.of(context).size.width / 2 - 30,
