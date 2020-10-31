@@ -1,3 +1,4 @@
+import 'package:ShoppingApp/bloc/login_button_state.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,7 @@ class Authentication {
       Scaffold.of(context)
           .showSnackBar(
             SnackBar(
-              duration: Duration(seconds: 2),
+              duration: Duration(seconds: 1),
               backgroundColor: DefaultGreenColor,
               content: Text('Sign in successfully',
                   style: TextStyle(color: Colors.black)),
@@ -23,12 +24,15 @@ class Authentication {
           )
           .closed
           .then((_) {
+        loginButtonState.loginBtnSink.add(ButtonState.isActive);
+        print('THis ran');
         Navigator.pushReplacementNamed(context, '/');
       });
       adminStreamController.authStatusSink.add(UserAuth.isAuthorized);
       // .then((_) => Navigator.pushReplacementNamed(this.context, '/'));
     } catch (e) {
       if (e.code == 'user-not-found') {
+        loginButtonState.loginBtnSink.add(ButtonState.isActive);
         Scaffold.of(context).showSnackBar(
           SnackBar(
             backgroundColor: DefaultRedColor,
@@ -36,6 +40,7 @@ class Authentication {
           ),
         );
       } else if (e.code == 'wrong-password') {
+        loginButtonState.loginBtnSink.add(ButtonState.isActive);
         Scaffold.of(context).showSnackBar(
           SnackBar(
             backgroundColor: DefaultRedColor,
@@ -43,6 +48,7 @@ class Authentication {
           ),
         );
       } else {
+        loginButtonState.loginBtnSink.add(ButtonState.isActive);
         print(e);
       }
     }

@@ -7,10 +7,10 @@ import 'package:flutter/services.dart';
 import 'route_generator.dart';
 
 void main() async {
-  await Firebase.initializeApp();
   WidgetsFlutterBinding.ensureInitialized();
   adminStreamController.authStatusStream.listen((event) => print(event));
 
+  await Firebase.initializeApp();
   if (FirebaseAuth.instance.currentUser != null) {
     adminStreamController.authStatusSink.add(UserAuth.isAuthorized);
   } else {

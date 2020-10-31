@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:ShoppingApp/auth.dart';
+import 'package:ShoppingApp/bloc/login_button_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -107,39 +108,54 @@ class _LoginFormState extends State<LoginForm> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Material(
-                  borderRadius: BorderRadius.circular(10),
-                  clipBehavior: Clip.hardEdge,
-                  elevation: 20,
-                  shadowColor: SecondaryColorDropShadow,
-                  child: FlatButton(
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 13),
-                    onPressed: () async {
-                      // setState(() {
-                      //   _loginBtnColor = DefaultGreenColor;
-                      // });
-                      onSubmit(
-                        context,
-                        _formKey,
-                        _emailTextController,
-                        _passwordTextController,
-                      );
-                    },
-                    color: _loginBtnColor,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Login', style: UploadButtonTextStyle),
-                        SizedBox(width: ScreenPadding * 2),
-                        Icon(
-                          FeatherIcons.arrowRight,
-                          color: Colors.white,
-                          size: 25,
+                StreamBuilder(
+                  stream: loginButtonState.loginBtnStream,
+                  initialData: ButtonState.isActive,
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData &&
+                        snapshot.data == ButtonState.isActive) {
+                      return Material(
+                        borderRadius: BorderRadius.circular(10),
+                        clipBehavior: Clip.hardEdge,
+                        elevation: 20,
+                        shadowColor: SecondaryColorDropShadow,
+                        child: FlatButton(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 13),
+                          onPressed: () async {
+                            onSubmit(
+                              context,
+                              _formKey,
+                              _emailTextController,
+                              _passwordTextController,
+                            );
+                          },
+                          color: _loginBtnColor,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Login', style: UploadButtonTextStyle),
+                              SizedBox(width: ScreenPadding * 2),
+                              Icon(
+                                FeatherIcons.arrowRight,
+                                color: Colors.white,
+                                size: 25,
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
+                      );
+                    } else if (snapshot.hasData &&
+                        snapshot.data == ButtonState.isLoading) {
+                      return Container(
+                        child: CircularProgressIndicator(
+                          value: null,
+                          backgroundColor: AccentColorShadow,
+                        ),
+                      );
+                    }
+                  },
+                )
               ],
             )
           ],
@@ -150,19 +166,14 @@ class _LoginFormState extends State<LoginForm> {
 }
 
 onSubmit(context, formKey, emailController, passwordController) async {
+  loginButtonState.loginBtnStream.listen((event) => print(event));
   try {
     final result = await InternetAddress.lookup('example.com');
     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
       if (formKey.currentState.validate()) {
-        Scaffold.of(context).showSnackBar(
-          SnackBar(
-            duration: Duration(seconds: 1),
-            backgroundColor: AccentColor,
-            content: Text('Verifying credentials'),
-          ),
-        );
         await Firebase.initializeApp();
-        Authentication(context).signInWithEmail(
+        loginButtonState.loginBtnSink.add(ButtonState.isLoading);
+        await Authentication(context).signInWithEmail(
           emailController.text,
           passwordController.text,
         );
