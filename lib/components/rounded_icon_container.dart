@@ -6,10 +6,11 @@ class RoundedIconContainer extends StatelessWidget {
   final String _title;
   final String _imagePath;
   String _route;
+  Function _onTap;
   bool _viewAllIcon = false;
 
   RoundedIconContainer(this._title, this._imagePath,
-      [this._viewAllIcon, this._route]);
+      [this._viewAllIcon, this._route] ,{ this._onTap});
 
   @override
   Widget build(BuildContext context) {

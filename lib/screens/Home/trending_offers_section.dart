@@ -1,4 +1,3 @@
-import 'package:ShoppingApp/auth.dart';
 import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:flutter/material.dart';
 import '../../components/underlined_text.dart';
@@ -26,7 +25,7 @@ class TrendingOffersSection extends StatelessWidget {
                   if (snapshot.data == UserAuth.isAuthorized) {
                     return Button1('Add offer', '/addoffer');
                   } else {
-                    return SizedBox();
+                    return Button1('View all', '/alloffers');
                   }
                 },
               ),

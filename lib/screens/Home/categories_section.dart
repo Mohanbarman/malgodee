@@ -1,14 +1,23 @@
-import 'package:ShoppingApp/auth.dart';
 import 'package:ShoppingApp/bloc/admin_features.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../../components/underlined_text.dart';
-import '../../components/rounded_icon_container.dart';
+import 'package:ShoppingApp/components/underlined_text.dart';
+import 'package:ShoppingApp/components/rounded_icon_container.dart';
 import 'package:ShoppingApp/components/buttons.dart';
-import '../../styles.dart';
+import 'package:ShoppingApp/styles.dart';
+
+List categories = [
+  {'id': 1, 'title': 'fan', 'image': 'assets/images/fan-category.png'},
+  {'id': 2, 'title': 'fan', 'image': 'assets/images/fan-category.png'},
+  {'id': 3, 'title': 'fan', 'image': 'assets/images/fan-category.png'},
+  {'id': 4, 'title': 'fan', 'image': 'assets/images/fan-category.png'},
+  {'id': 5, 'title': 'fan', 'image': 'assets/images/fan-category.png'},
+  {'id': 6, 'title': 'fan', 'image': 'assets/images/fan-category.png'},
+  {'id': 7, 'title': 'fan', 'image': 'assets/images/fan-category.png'},
+  {'id': 8, 'title': 'fan', 'image': 'assets/images/fan-category.png'},
+  {'id': 9, 'title': 'fan', 'image': 'assets/images/fan-category.png'},
+];
 
 class CategoriesSection extends StatelessWidget {
-  final String _categorySampleImage = 'assets/images/fan-category.png';
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -46,11 +55,20 @@ class CategoriesSection extends StatelessWidget {
               physics: ClampingScrollPhysics(),
               children: [
                 SizedBox(width: ScreenPadding),
-                for (int i = 0; i < 8; i++)
-                  Row(children: [
-                    RoundedIconContainer('Fan', _categorySampleImage),
-                    SizedBox(width: 30)
-                  ]),
+                ...categories.map(
+                  (e) => Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () => print('id : ${e["id"]}'),
+                        child: RoundedIconContainer(
+                          'Fan',
+                          e['image'],
+                        ),
+                      ),
+                      SizedBox(width: 30)
+                    ],
+                  ),
+                ),
                 RoundedIconContainer(
                     'All Categories', null, true, '/categories'),
                 SizedBox(width: 30),

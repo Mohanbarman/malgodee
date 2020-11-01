@@ -6,6 +6,7 @@ import 'package:ShoppingApp/components/app_bar.dart';
 import 'package:ShoppingApp/components/bottom_navigation_bar.dart';
 import 'package:ShoppingApp/components/underlined_text.dart';
 import 'package:ShoppingApp/components/offer_image_container.dart';
+import 'package:ShoppingApp/components/offer_dialog.dart';
 
 String _offer_image_1 = 'assets/images/carousel-item-1.png';
 String _offer_image_2 = 'assets/images/carousel_item_2.png';
@@ -51,9 +52,6 @@ class Offers extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 UnderlinedText('All offers'),
-                // Provider.of<User>(context) == User.authenticated
-                //     ? Button1('Add offer', '/addoffer')
-                //     : SizedBox()
               ],
             ),
             ...offers.map(
@@ -231,40 +229,6 @@ class DeleteButton1 extends StatelessWidget {
         onPressed: this.onPressed,
         splashRadius: 30,
         icon: Icon(FeatherIcons.trash, color: Colors.white, size: 18),
-      ),
-    );
-  }
-}
-
-class OfferDialog extends StatelessWidget {
-  String _image;
-  OfferDialog(this._image);
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.pop(context);
-      },
-      child: Container(
-        color: Colors.black45,
-        child: Center(
-          child: GestureDetector(
-            onTap: () {},
-            child: Container(
-              width: MediaQuery.of(context).size.width - 40,
-              height: MediaQuery.of(context).size.width - 40,
-              clipBehavior: Clip.hardEdge,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(15)),
-                color: Colors.blue,
-              ),
-              child: Image(
-                image: AssetImage(_image),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-        ),
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:ShoppingApp/components/offer_dialog.dart';
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -15,11 +16,14 @@ class OfferCarousel extends StatefulWidget {
 class _OfferCarouselState extends State<OfferCarousel> {
   int _currentIndex = 0;
 
-  List<Widget> cardList = <Widget>[
-    CustomCarouselItem(_carousel_img_1, '/offer/1'),
-    CustomCarouselItem(_carousel_img_2, '/offer/1'),
-    CustomCarouselItem(_carousel_img_1, '/offer/1'),
-    CustomCarouselItem(_carousel_img_2, '/offer/1'),
+  List cardList = [
+    {'id': 1, 'imagePath': _carousel_img_1, 'route': '/offer/1'},
+    {'id': 1, 'imagePath': _carousel_img_2, 'route': '/offer/1'},
+    {'id': 1, 'imagePath': _carousel_img_1, 'route': '/offer/1'},
+    {'id': 1, 'imagePath': _carousel_img_2, 'route': '/offer/1'},
+    {'id': 1, 'imagePath': _carousel_img_2, 'route': '/offer/1'},
+    {'id': 1, 'imagePath': _carousel_img_2, 'route': '/offer/1'},
+    {'id': 1, 'imagePath': _carousel_img_2, 'route': '/offer/1'},
   ];
 
   List<T> map<T>(List list, Function handler) {
@@ -56,10 +60,18 @@ class _OfferCarouselState extends State<OfferCarousel> {
             ),
             items: cardList.map((card) {
               return Builder(builder: (BuildContext context) {
-                return Container(
-                  height: MediaQuery.of(context).size.height * 0.35,
-                  width: MediaQuery.of(context).size.width * 0.45,
-                  child: card,
+                return GestureDetector(
+                  onTap: (() => showDialog(
+                        context: context,
+                        child: OfferDialog(
+                          card['imagePath'],
+                        ),
+                      )),
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.35,
+                    width: MediaQuery.of(context).size.height * 0.21,
+                    child: CustomCarouselItem(card['imagePath'], card['route']),
+                  ),
                 );
               });
             }).toList(),
