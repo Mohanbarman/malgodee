@@ -3,14 +3,19 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import '../styles.dart';
 
 class RoundedIconContainer extends StatelessWidget {
-  final String _title;
-  final String _imagePath;
-  String _route;
-  Function _onTap;
-  bool _viewAllIcon = false;
+  final String title;
+  final String imagePath;
+  String route;
+  Function onTap;
+  bool viewAllIcon = false;
 
-  RoundedIconContainer(this._title, this._imagePath,
-      [this._viewAllIcon, this._route] ,{ this._onTap});
+  RoundedIconContainer({
+    this.title,
+    this.imagePath,
+    this.route,
+    this.onTap,
+    this.viewAllIcon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,25 +31,23 @@ class RoundedIconContainer extends StatelessWidget {
               color: Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(40)),
             ),
-            child: _viewAllIcon == true
+            child: this.viewAllIcon == true
                 ? IconButton(
                     icon: Icon(FeatherIcons.grid, color: DefaultFontColor),
                     onPressed: () {
-                      if (_route != null) Navigator.pushNamed(context, _route);
+                      print('clicked');
                     },
                   )
                 : GestureDetector(
-                    onTap: () {
-                      if (_route != null) Navigator.pushNamed(context, _route);
-                    },
+                    onTap: this.onTap,
                     child: Image(
-                      image: AssetImage(_imagePath),
+                      image: AssetImage(this.imagePath),
                       fit: BoxFit.fitWidth,
                     ),
                   ),
           ),
           SizedBox(height: 10),
-          Text(_title, style: BodyTextStyle1)
+          Text(this.title, style: BodyTextStyle1)
         ],
       ),
     );

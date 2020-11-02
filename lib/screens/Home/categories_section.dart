@@ -1,4 +1,5 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
+import 'package:ShoppingApp/bloc/product_flow_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/components/underlined_text.dart';
 import 'package:ShoppingApp/components/rounded_icon_container.dart';
@@ -58,19 +59,24 @@ class CategoriesSection extends StatelessWidget {
                 ...categories.map(
                   (e) => Row(
                     children: [
-                      GestureDetector(
-                        onTap: () => print('id : ${e["id"]}'),
-                        child: RoundedIconContainer(
-                          'Fan',
-                          e['image'],
-                        ),
+                      RoundedIconContainer(
+                        title: 'Fan',
+                        imagePath: e['image'],
+                        onTap: () {
+                          productFlowBloc.productSink
+                              .add({'category': e['id']});
+                          Navigator.pushNamed(context, '/brands');
+                        },
                       ),
                       SizedBox(width: 30)
                     ],
                   ),
                 ),
                 RoundedIconContainer(
-                    'All Categories', null, true, '/categories'),
+                  title: 'All Categories',
+                  viewAllIcon: true,
+                  route: '/categories',
+                ),
                 SizedBox(width: 30),
               ],
             ),

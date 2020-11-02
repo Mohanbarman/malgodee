@@ -39,131 +39,144 @@ class Offers extends StatelessWidget {
       appBar: CustomAppBar(),
       bottomNavigationBar: CustomBottomNavigationBar(2),
       body: Container(
-        padding: EdgeInsets.only(
-          left: ScreenPadding,
-          top: ScreenPadding,
-          right: ScreenPadding,
-        ),
         child: ListView(
           shrinkWrap: true,
           scrollDirection: Axis.vertical,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                UnderlinedText('All offers'),
-              ],
+            Container(
+              padding: EdgeInsets.only(
+                left: ScreenPadding,
+                top: ScreenPadding,
+                right: ScreenPadding,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  UnderlinedText('All offers'),
+                ],
+              ),
             ),
             ...offers.map(
-              (offer) => Column(
-                children: [
-                  SizedBox(height: ScreenPadding),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            child: OfferDialog(offer['image']),
-                          );
-                        },
-                        child: StreamBuilder(
-                          initialData: adminStreamController.initialData,
-                          stream: adminStreamController.authStatusStream,
-                          builder:
-                              (BuildContext context, AsyncSnapshot snapshot) {
-                            if (snapshot.data == UserAuth.isAuthorized) {
-                              return Container(
-                                width:
-                                    MediaQuery.of(context).size.width / 2 - 30,
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [
-                                    OfferImageContainer(offer['image']),
-                                    SizedBox(height: ScreenPadding),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        IconButtonLTR(
-                                          icon: Icon(
-                                            FeatherIcons.edit2,
-                                            color: Colors.white,
-                                            size: 15,
-                                          ),
-                                          onPressed: () => Navigator.pushNamed(
-                                              context, '/addoffer'),
-                                          fgColor: SecondaryColor,
-                                          shadowColor: SecondaryColorDropShadow,
-                                          label: 'Edit',
-                                        ),
-                                        DeleteButton1(onPressed: () {}),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              );
-                            } else {
-                              return OfferImageContainer(offer['image']);
-                            }
+              (offer) => Container(
+                margin: EdgeInsets.only(
+                  left: ScreenPadding,
+                  top: ScreenPadding,
+                  right: ScreenPadding,
+                ),
+                child: Column(
+                  children: [
+                    SizedBox(height: ScreenPadding),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              child: OfferDialog(offer['image']),
+                            );
                           },
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            child: OfferDialog(offer['image']),
-                          );
-                        },
-                        child: StreamBuilder(
-                          initialData: adminStreamController.initialData,
-                          stream: adminStreamController.authStatusStream,
-                          builder:
-                              (BuildContext context, AsyncSnapshot snapshot) {
-                            if (snapshot.data == UserAuth.isAuthorized) {
-                              return Container(
-                                width:
-                                    MediaQuery.of(context).size.width / 2 - 30,
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [
-                                    OfferImageContainer(offer['image']),
-                                    SizedBox(height: ScreenPadding),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        IconButtonLTR(
-                                          icon: Icon(
-                                            FeatherIcons.edit2,
-                                            color: Colors.white,
-                                            size: 15,
+                          child: StreamBuilder(
+                            initialData: adminStreamController.initialData,
+                            stream: adminStreamController.authStatusStream,
+                            builder:
+                                (BuildContext context, AsyncSnapshot snapshot) {
+                              if (snapshot.data == UserAuth.isAuthorized) {
+                                return Container(
+                                  width: MediaQuery.of(context).size.width / 2 -
+                                      30,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      OfferImageContainer(offer['image']),
+                                      SizedBox(height: ScreenPadding),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          IconButtonLTR(
+                                            icon: Icon(
+                                              FeatherIcons.edit2,
+                                              color: Colors.white,
+                                              size: 15,
+                                            ),
+                                            onPressed: () =>
+                                                Navigator.pushNamed(
+                                                    context, '/addoffer'),
+                                            fgColor: SecondaryColor,
+                                            shadowColor:
+                                                SecondaryColorDropShadow,
+                                            label: 'Edit',
                                           ),
-                                          onPressed: () => Navigator.pushNamed(
-                                              context, '/addoffer'),
-                                          fgColor: SecondaryColor,
-                                          shadowColor: SecondaryColorDropShadow,
-                                          label: 'Edit',
-                                        ),
-                                        DeleteButton1(onPressed: () {}),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              );
-                            } else {
-                              return OfferImageContainer(offer['image']);
-                            }
-                          },
+                                          DeleteButton1(onPressed: () {}),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              } else {
+                                return OfferImageContainer(offer['image']);
+                              }
+                            },
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                        GestureDetector(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              child: OfferDialog(offer['image']),
+                            );
+                          },
+                          child: StreamBuilder(
+                            initialData: adminStreamController.initialData,
+                            stream: adminStreamController.authStatusStream,
+                            builder:
+                                (BuildContext context, AsyncSnapshot snapshot) {
+                              if (snapshot.data == UserAuth.isAuthorized) {
+                                return Container(
+                                  width: MediaQuery.of(context).size.width / 2 -
+                                      30,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      OfferImageContainer(offer['image']),
+                                      SizedBox(height: ScreenPadding),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          IconButtonLTR(
+                                            icon: Icon(
+                                              FeatherIcons.edit2,
+                                              color: Colors.white,
+                                              size: 15,
+                                            ),
+                                            onPressed: () =>
+                                                Navigator.pushNamed(
+                                                    context, '/addoffer'),
+                                            fgColor: SecondaryColor,
+                                            shadowColor:
+                                                SecondaryColorDropShadow,
+                                            label: 'Edit',
+                                          ),
+                                          DeleteButton1(onPressed: () {}),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              } else {
+                                return OfferImageContainer(offer['image']);
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
             SizedBox(height: ScreenPadding),

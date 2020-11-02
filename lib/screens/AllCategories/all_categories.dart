@@ -1,9 +1,7 @@
-import 'package:ShoppingApp/auth.dart';
 import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:ShoppingApp/components/bottom_navigation_bar.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:ShoppingApp/components/buttons.dart';
 import '../../components/app_bar.dart';
 import '../../components/underlined_text.dart';
@@ -12,7 +10,7 @@ import '../../styles.dart';
 
 String categoryLogo = 'assets/images/fan-category.png';
 
-List brands = [
+List categories = [
   {'id': 1, 'title': 'Fans', 'imagePath': categoryLogo},
   {'id': 2, 'title': 'Fans', 'imagePath': categoryLogo},
   {'id': 3, 'title': 'Fans', 'imagePath': categoryLogo},
@@ -77,7 +75,11 @@ class AllCategories extends StatelessWidget {
               ],
             ),
             SizedBox(height: 30),
-            CustomGridView(brands),
+            CustomGridView(
+              items: categories,
+              context: context,
+              referer: Referer.category,
+            ),
           ],
         ),
       ),

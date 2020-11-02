@@ -48,10 +48,12 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       IconButton(
         icon: Icon(icon),
         onPressed: () {
-          setState(() {
-            Navigator.pushNamed(context, route);
-            _selected_index = index;
-          });
+          setState(
+            () {
+              Navigator.pushNamed(context, route);
+              _selected_index = index;
+            },
+          );
         },
         color: index == _selected_index ? Colors.white : Colors.white60,
       ),

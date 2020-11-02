@@ -66,7 +66,11 @@ class AllBrands extends StatelessWidget {
               ],
             ),
             SizedBox(height: 30),
-            CustomGridView(brands),
+            CustomGridView(
+              items: brands,
+              referer: Referer.brand,
+              context: context,
+            ),
           ],
         ),
       ),

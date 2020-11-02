@@ -1,4 +1,3 @@
-import 'package:ShoppingApp/auth.dart';
 import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:flutter/material.dart';
@@ -26,9 +25,9 @@ class ContactUsSection extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    RoundedIconContainer('Call', _callIcon),
+                    RoundedIconContainer(title: 'Call', imagePath: _callIcon),
                     SizedBox(width: 30),
-                    RoundedIconContainer('Chat', _waIcon),
+                    RoundedIconContainer(title: 'Chat', imagePath: _waIcon),
                   ],
                 ),
                 SizedBox(height: 30),

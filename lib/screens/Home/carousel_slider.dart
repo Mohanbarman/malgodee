@@ -18,12 +18,12 @@ class _OfferCarouselState extends State<OfferCarousel> {
 
   List cardList = [
     {'id': 1, 'imagePath': _carousel_img_1, 'route': '/offer/1'},
-    {'id': 1, 'imagePath': _carousel_img_2, 'route': '/offer/1'},
-    {'id': 1, 'imagePath': _carousel_img_1, 'route': '/offer/1'},
-    {'id': 1, 'imagePath': _carousel_img_2, 'route': '/offer/1'},
-    {'id': 1, 'imagePath': _carousel_img_2, 'route': '/offer/1'},
-    {'id': 1, 'imagePath': _carousel_img_2, 'route': '/offer/1'},
-    {'id': 1, 'imagePath': _carousel_img_2, 'route': '/offer/1'},
+    {'id': 2, 'imagePath': _carousel_img_2, 'route': '/offer/1'},
+    {'id': 3, 'imagePath': _carousel_img_1, 'route': '/offer/1'},
+    {'id': 4, 'imagePath': _carousel_img_2, 'route': '/offer/1'},
+    {'id': 5, 'imagePath': _carousel_img_2, 'route': '/offer/1'},
+    {'id': 6, 'imagePath': _carousel_img_2, 'route': '/offer/1'},
+    {'id': 7, 'imagePath': _carousel_img_2, 'route': '/offer/1'},
   ];
 
   List<T> map<T>(List list, Function handler) {

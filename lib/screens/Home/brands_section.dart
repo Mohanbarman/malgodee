@@ -51,8 +51,14 @@ class BrandsSection extends StatelessWidget {
             ],
           ),
           SizedBox(height: 20),
-          CustomGridView(brands,
-              RoundedIconContainer('All Brands', null, true, '/brands')),
+          CustomGridView(
+            items: brands,
+            lastWidget: RoundedIconContainer(
+              title: 'All Brands',
+              viewAllIcon: true,
+              route: '/brands',
+            ),
+          ),
         ],
       ),
     );

@@ -47,6 +47,16 @@ class Authentication {
             content: Text('Wrong password'),
           ),
         );
+      } else if (e.code == 'too-many-requests') {
+        print(e);
+        Scaffold.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: DefaultRedColor,
+            content: Text(
+                'We have blocked all requests from this device due to unusual activity. Try again later'),
+          ),
+        );
+        loginButtonState.loginBtnSink.add(ButtonState.isActive);
       } else {
         loginButtonState.loginBtnSink.add(ButtonState.isActive);
         print(e);

@@ -1,5 +1,6 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../components/underlined_text.dart';
 import '../../components/buttons.dart';
 import '../../components/offer_image_container.dart';
@@ -8,6 +9,7 @@ String _offerImage1 = 'assets/images/carousel_item_2.png';
 String _offerImage2 = 'assets/images/carousel-item-1.png';
 
 class TrendingOffersSection extends StatelessWidget {
+  // final StorageReference storageRef = FirebaseStorage.instance.ref().child('path')
   @override
   Widget build(BuildContext context) {
     return Container(

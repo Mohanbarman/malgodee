@@ -1,6 +1,6 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:ShoppingApp/components/app_bar.dart';
 import 'package:ShoppingApp/components/bottom_navigation_bar.dart';
 import 'package:ShoppingApp/components/underlined_text.dart';
@@ -10,15 +10,15 @@ import 'package:ShoppingApp/components/buttons.dart';
 String fanImage = 'assets/images/fan-product.png';
 
 List products = [
-  {'id': 1, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-  {'id': 2, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-  {'id': 3, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-  {'id': 4, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-  {'id': 5, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-  {'id': 6, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-  {'id': 7, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-  {'id': 8, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-  {'id': 9, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
+  {'id': 01, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
+  {'id': 02, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
+  {'id': 03, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
+  {'id': 04, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
+  {'id': 05, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
+  {'id': 06, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
+  {'id': 07, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
+  {'id': 08, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
+  {'id': 09, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
   {'id': 10, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
   {'id': 11, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
   {'id': 12, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
@@ -34,8 +34,12 @@ List products = [
 ];
 
 class AllProducts extends StatelessWidget {
-  final Map args;
-  AllProducts(this.args);
+  final Map prevRouteInfo;
+
+  AllProducts(this.prevRouteInfo) {
+    print(prevRouteInfo);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,10 +102,36 @@ class OfferImageGridItem extends StatelessWidget {
   final String _imagePath;
   final String _title;
   final double _rating;
+  final databaseReference = FirebaseFirestore.instance;
   OfferImageGridItem(this._imagePath, this._title, this._rating);
+
+  Map<String, dynamic> demoProduct = {
+    'id': '2',
+    'name': 'Example product',
+    'description': 'Example product description',
+    'highlights':
+        'Some example highlights\nAother Highlight\nand some another hightlight'
+  };
+
+  void createDemoProduct() async {
+    await databaseReference.collection('product').add(demoProduct);
+    print('Product created..');
+  }
+
+  void retreiveProducts() async {
+    await databaseReference
+        .collection('product')
+        .get()
+        .then((QuerySnapshot snapshot) {
+      snapshot.docs.forEach((element) => print(element.data()['name']));
+    });
+    print('All products fetched');
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: retreiveProducts,
       child: Container(
         width: MediaQuery.of(context).size.width / 2 - 30,
         height: MediaQuery.of(context).size.width / 2 - 30,

@@ -30,10 +30,16 @@ class RouteGenerator {
       case '/brands':
         return NoAnimationMaterialPageRoute(builder: (_) => AllBrands(args));
       case '/products':
-        return NoAnimationMaterialPageRoute(builder: (_) => AllProducts(args));
+        if (args is Map<String, String>) {
+          return NoAnimationMaterialPageRoute(
+            builder: (_) => AllProducts(args),
+          );
+        }
+        return _errorRoute();
       case '/productinfo':
         return NoAnimationMaterialPageRoute(
-            builder: (_) => EditProduct()); // work left
+          builder: (_) => ProductInfo(),
+        ); // work left
       case '/addcategory':
         return NoAnimationMaterialPageRoute(builder: (_) => AddCategory());
       case '/addbrand':
@@ -42,6 +48,8 @@ class RouteGenerator {
         return NoAnimationMaterialPageRoute(builder: (_) => AddOffer());
       case '/addproduct':
         return NoAnimationMaterialPageRoute(builder: (_) => AddProduct());
+      case '/editproduct':
+        return NoAnimationMaterialPageRoute(builder: (_) => EditProduct());
       default:
         return _errorRoute();
     }

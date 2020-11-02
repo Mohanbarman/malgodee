@@ -1,5 +1,5 @@
 import 'package:ShoppingApp/components/app_bar.dart';
-import 'package:icon_shadow/icon_shadow.dart';
+import 'package:ShoppingApp/models/product.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +8,7 @@ import 'rating_widget.dart';
 import '../../styles.dart';
 import '../../components/bottom_navigation_bar.dart';
 
+// ignore: non_constant_identifier_names
 String _carousel_img_1 = 'assets/images/fan-product.png';
 
 List product = [

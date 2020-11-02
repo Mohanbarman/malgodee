@@ -1,4 +1,5 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
+import 'package:ShoppingApp/bloc/product_flow_bloc.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -8,7 +9,14 @@ import 'route_generator.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  adminStreamController.authStatusStream.listen((event) => print(event));
+  adminStreamController.authStatusStream.listen(
+    (event) => print(event),
+  );
+  productFlowBloc.productStream.listen(
+    (_) => print(
+      productFlowBloc.productStreamRouteInfo,
+    ),
+  );
 
   await Firebase.initializeApp();
   if (FirebaseAuth.instance.currentUser != null) {
