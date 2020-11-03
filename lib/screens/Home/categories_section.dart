@@ -37,7 +37,8 @@ class CategoriesSection extends StatelessWidget {
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData &&
                         snapshot.data == UserAuth.isAuthorized) {
-                      return Button1('Add category', '/addcategory');
+                      return Button1(
+                          title: 'Add category', route: '/addcategory');
                     } else if (snapshot.data == UserAuth.unauthorized) {
                       return SizedBox();
                     }

@@ -28,6 +28,8 @@ List product = [
   },
 ];
 
+// Map routeInfo = {'id': 2};
+
 class ProductInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

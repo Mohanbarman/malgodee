@@ -2,18 +2,22 @@ import 'package:flutter/material.dart';
 import '../styles.dart';
 
 class Button1 extends StatelessWidget {
-  final String _title;
-  final String _route;
-  Button1(this._title, this._route);
+  final String title;
+  final String route;
+  final Function onPress;
+  Button1({this.title, this.route, this.onPress});
 
   @override
   Widget build(BuildContext context) {
     return FlatButton(
-      onPressed: () {
-        Navigator.pushNamed(context, _route);
-      },
+      onPressed: route != null
+          ? () => Navigator.pushNamed(
+                context,
+                route,
+              )
+          : onPress,
       child: Text(
-        _title,
+        title,
         style: Button1TextStyle,
       ),
       color: Colors.white,

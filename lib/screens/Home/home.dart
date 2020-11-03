@@ -22,7 +22,9 @@ class Home extends StatelessWidget {
             OfferCarousel(),
             SizedBox(height: CarouselGapBottom),
             // Offer View all button
-            Column(children: [Button1('View all offers', '/offers')]),
+            Column(children: [
+              Button1(title: 'View all offers', route: '/offers')
+            ]),
             SizedBox(height: SectionsGap),
             CategoriesSection(),
             SizedBox(height: SectionsGap),

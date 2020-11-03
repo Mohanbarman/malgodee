@@ -66,7 +66,8 @@ class AllCategories extends StatelessWidget {
                   builder: (context, snapshot) {
                     if (snapshot.hasData &&
                         snapshot.data == UserAuth.isAuthorized) {
-                      return Button1('Add category', '/addcategory');
+                      return Button1(
+                          title: 'Add category', route: '/addcategory');
                     } else {
                       return SizedBox();
                     }

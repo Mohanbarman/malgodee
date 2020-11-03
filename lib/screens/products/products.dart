@@ -59,7 +59,8 @@ class AllProducts extends StatelessWidget {
                   stream: adminStreamController.authStatusStream,
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.data == UserAuth.isAuthorized) {
-                      return Button1('Add product', '/addproduct');
+                      return Button1(
+                          title: 'Add product', route: '/addproduct');
                     } else {
                       return SizedBox();
                     }

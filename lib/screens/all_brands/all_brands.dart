@@ -57,7 +57,7 @@ class AllBrands extends StatelessWidget {
                   initialData: adminStreamController.initialData,
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.data == UserAuth.isAuthorized) {
-                      return Button1('Add brand', '/addbrand');
+                      return Button1(title: 'Add brand', route: '/addbrand');
                     } else {
                       return SizedBox();
                     }

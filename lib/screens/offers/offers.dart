@@ -89,7 +89,8 @@ class Offers extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.stretch,
                                     children: [
-                                      OfferImageContainer(offer['image']),
+                                      OfferImageContainer(
+                                          imagePath: offer['image']),
                                       SizedBox(height: ScreenPadding),
                                       Row(
                                         mainAxisAlignment:
@@ -116,7 +117,8 @@ class Offers extends StatelessWidget {
                                   ),
                                 );
                               } else {
-                                return OfferImageContainer(offer['image']);
+                                return OfferImageContainer(
+                                    imagePath: offer['image']);
                               }
                             },
                           ),
@@ -141,7 +143,8 @@ class Offers extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.stretch,
                                     children: [
-                                      OfferImageContainer(offer['image']),
+                                      OfferImageContainer(
+                                          imagePath: offer['image']),
                                       SizedBox(height: ScreenPadding),
                                       Row(
                                         mainAxisAlignment:
@@ -168,7 +171,9 @@ class Offers extends StatelessWidget {
                                   ),
                                 );
                               } else {
-                                return OfferImageContainer(offer['image']);
+                                return OfferImageContainer(
+                                  imagePath: offer['image'],
+                                );
                               }
                             },
                           ),
