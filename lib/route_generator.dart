@@ -2,7 +2,7 @@ import 'package:ShoppingApp/screens/all_brands/all_brands.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'screens/Home/home.dart';
-import 'screens/offers/offers.dart';
+import 'screens/all_offers/all_offers.dart';
 import 'screens/login/login.dart';
 import 'screens/AllCategories/all_categories.dart';
 import 'screens/products/products.dart';

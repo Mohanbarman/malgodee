@@ -1,6 +1,4 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
 import '../../components/underlined_text.dart';
@@ -35,47 +33,38 @@ class _TrendingOffersSectionState extends State<TrendingOffersSection> {
                   if (snapshot.data == UserAuth.isAuthorized) {
                     return Button1(
                       title: 'Add offer',
-                      onPress: () {},
+                      onPress: () {
+                        FirebaseStorageApi()
+                          ..trendingOffersFuture(1).then(
+                            (value) => print(value),
+                          );
+                      },
                     );
                   } else {
-                    return Button1(title: 'View all', route: '/alloffers');
+                    return Button1(title: 'View all', route: '/offers');
                   }
                 },
               ),
             ],
           ),
           SizedBox(height: 20),
-          GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: List.generate(
+              2,
+              (index) => FutureBuilder(
+                future: storage.trendingOffersFuture(index),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData)
+                    return (OfferImageContainer(
+                      fromBytes: true,
+                      bytes: snapshot.data,
+                    ));
+                  return OfferImagePlaceholder();
+                },
+              ),
             ),
-            itemBuilder: (context, snapshot) {
-              print(snapshot);
-              return OfferImagePlaceholder();
-            },
           )
-          // FutureBuilder(
-          //   future: storage.trendingOffersFuture(1),
-          //   builder: (context, snapshot) {
-          //     if (snapshot.hasData)
-          //       return (OfferImageContainer(
-          //         fromBytes: true,
-          //         bytes: snapshot.data,
-          //       ));
-          //     return OfferImagePlaceholder();
-          //   },
-          // ),
-          // FutureBuilder(
-          //   future: storage.trendingOffersFuture(2),
-          //   builder: (context, snapshot) {
-          //     if (snapshot.hasData)
-          //       return (OfferImageContainer(
-          //         fromBytes: true,
-          //         bytes: snapshot.data,
-          //       ));
-          //     return OfferImagePlaceholder();
-          //   },
-          // ),
         ],
       ),
     );
