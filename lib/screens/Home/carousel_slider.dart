@@ -55,16 +55,16 @@ class _OfferCarouselState extends State<OfferCarousel> {
                 return Builder(
                   builder: (BuildContext context) {
                     return GestureDetector(
-                      onTap: (() => showDialog(
-                            context: context,
-                            child: OfferDialog(
-                              'imagePath',
-                            ),
-                          )),
+                      // onTap: (() => showDialog(
+                      //       context: context,
+                      //       child: OfferDialog(
+                      //         'imagePath',
+                      //       ),
+                      //     )),
                       child: Container(
                         height: MediaQuery.of(context).size.height * 0.35,
                         width: MediaQuery.of(context).size.height * 0.21,
-                        child: CustomCarouselItem('imagePath', 'route'),
+                        // child: CustomCarouselItem('imagePath', 'route'),
                       ),
                     );
                   },

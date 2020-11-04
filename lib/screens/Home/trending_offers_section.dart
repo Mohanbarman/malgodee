@@ -1,21 +1,12 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
+import 'package:ShoppingApp/components/shimmer_placeholders.dart';
 import '../../components/underlined_text.dart';
 import '../../components/buttons.dart';
 import '../../components/offer_image_container.dart';
 
-String _offerImage1 = 'assets/images/carousel_item_2.png';
-String _offerImage2 = 'assets/images/carousel-item-1.png';
-
-class TrendingOffersSection extends StatefulWidget {
-  @override
-  _TrendingOffersSectionState createState() => _TrendingOffersSectionState();
-}
-
-class _TrendingOffersSectionState extends State<TrendingOffersSection> {
-  final FirebaseStorageApi storage = FirebaseStorageApi();
-
+class TrendingOffersSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -33,12 +24,7 @@ class _TrendingOffersSectionState extends State<TrendingOffersSection> {
                   if (snapshot.data == UserAuth.isAuthorized) {
                     return Button1(
                       title: 'Add offer',
-                      onPress: () {
-                        FirebaseStorageApi()
-                          ..trendingOffersFuture(1).then(
-                            (value) => print(value),
-                          );
-                      },
+                      route: '/addoffer',
                     );
                   } else {
                     return Button1(title: 'View all', route: '/offers');
@@ -48,23 +34,29 @@ class _TrendingOffersSectionState extends State<TrendingOffersSection> {
             ],
           ),
           SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: List.generate(
-              2,
-              (index) => FutureBuilder(
-                future: storage.trendingOffersFuture(index),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData)
-                    return (OfferImageContainer(
-                      fromBytes: true,
-                      bytes: snapshot.data,
-                    ));
-                  return OfferImagePlaceholder();
-                },
-              ),
-            ),
-          )
+          StreamBuilder(
+            stream: FirebaseStorageApi.trendingOffersStream(),
+            builder: (context, snapshot) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: List.generate(
+                  2,
+                  (index) => FutureBuilder(
+                    future: FirebaseStorageApi().trendingOffersFuture(index),
+                    builder: (context, snapshot) {
+                      // print(snapshot.data);
+                      if (snapshot.hasData)
+                        return OfferImageContainer(
+                          fromBytes: true,
+                          bytes: snapshot.data,
+                        );
+                      return OfferImagePlaceholder();
+                    },
+                  ),
+                ),
+              );
+            },
+          ),
         ],
       ),
     );

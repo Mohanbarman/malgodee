@@ -1,22 +1,12 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:ShoppingApp/bloc/product_flow_bloc.dart';
+import 'package:ShoppingApp/components/shimmer_placeholders.dart';
+import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/components/underlined_text.dart';
 import 'package:ShoppingApp/components/rounded_icon_container.dart';
 import 'package:ShoppingApp/components/buttons.dart';
 import 'package:ShoppingApp/styles.dart';
-
-List categories = [
-  {'id': 1, 'title': 'fan', 'image': 'assets/images/fan-category.png'},
-  {'id': 2, 'title': 'fan', 'image': 'assets/images/fan-category.png'},
-  {'id': 3, 'title': 'fan', 'image': 'assets/images/fan-category.png'},
-  {'id': 4, 'title': 'fan', 'image': 'assets/images/fan-category.png'},
-  {'id': 5, 'title': 'fan', 'image': 'assets/images/fan-category.png'},
-  {'id': 6, 'title': 'fan', 'image': 'assets/images/fan-category.png'},
-  {'id': 7, 'title': 'fan', 'image': 'assets/images/fan-category.png'},
-  {'id': 8, 'title': 'fan', 'image': 'assets/images/fan-category.png'},
-  {'id': 9, 'title': 'fan', 'image': 'assets/images/fan-category.png'},
-];
 
 class CategoriesSection extends StatelessWidget {
   @override
@@ -51,37 +41,60 @@ class CategoriesSection extends StatelessWidget {
           SizedBox(height: 20),
           SizedBox(
             height: 90.0,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              shrinkWrap: true,
-              physics: ClampingScrollPhysics(),
-              children: [
-                SizedBox(width: ScreenPadding),
-                ...categories.map(
-                  (e) => Row(
-                    children: [
-                      RoundedIconContainer(
-                        title: 'Fan',
-                        imagePath: e['image'],
-                        onTap: () {
-                          productFlowBloc.productSink
-                              .add({'category': e['id']});
-                          Navigator.pushNamed(context, '/brands');
-                        },
-                      ),
-                      SizedBox(width: 30)
-                    ],
-                  ),
-                ),
-                RoundedIconContainer(
-                  title: 'All Categories',
-                  viewAllIcon: true,
-                  route: '/categories',
-                ),
-                SizedBox(width: 30),
-              ],
+            child: StreamBuilder(
+              stream: FirebaseStorageApi.categoriesStream(),
+              builder: (context, snapshot) {
+                int itemCount =
+                    snapshot.hasData ? snapshot.data.docs.length : 6;
+                return ListView.builder(
+                  itemCount: itemCount,
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                  physics: ClampingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    if (itemCount == ++index) {
+                      return Row(
+                        children: [
+                          SizedBox(width: ScreenPadding),
+                          RoundedIconContainer(
+                            title: 'All categories',
+                            viewAllIcon: true,
+                          ),
+                          SizedBox(width: ScreenPadding),
+                        ],
+                      );
+                    }
+                    if (snapshot.hasData) {
+                      String title = snapshot.data.docs.toList()[index]['name'];
+                      String imagePath =
+                          snapshot.data.docs.toList()[index]['image'];
+                      return Row(
+                        children: [
+                          SizedBox(width: ScreenPadding),
+                          FutureBuilder(
+                            future: FirebaseStorageApi.futureFromImagePath(
+                                imagePath),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return RoundedIconContainer(
+                                  title: title,
+                                  bytes: snapshot.data,
+                                );
+                              }
+                              return CategoriesImagePlaceholder();
+                            },
+                          ),
+                          SizedBox(width: ScreenPadding),
+                        ],
+                      );
+                    }
+                    return CategoriesImagePlaceholder();
+                  },
+                );
+              },
             ),
           ),
+          SizedBox(width: 30),
         ],
       ),
     );

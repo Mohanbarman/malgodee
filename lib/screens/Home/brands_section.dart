@@ -1,14 +1,11 @@
-import 'package:ShoppingApp/auth.dart';
 import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:ShoppingApp/components/custom_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/components/buttons.dart';
-import '../../components/underlined_text.dart';
-import '../../components/rounded_icon_container.dart';
+import 'package:ShoppingApp/components/underlined_text.dart';
+import 'package:ShoppingApp/components/rounded_icon_container.dart';
 
 String _brandsLogo1 = 'assets/images/sample-category.png';
-
-int _gridElementCount = 12;
 
 List brands = [
   {'title': 'Usha', 'imagePath': _brandsLogo1},

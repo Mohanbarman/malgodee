@@ -25,6 +25,7 @@ const LoginInputBgColor = Color(0xffF7F7F7);
 const double ScreenPadding = 20;
 const double SectionsGap = 60;
 const double CarouselGapBottom = 10;
+const double OfferBorderRadius = 20;
 
 // Default Text properties
 const String DefaultFontFamily = "Poppins";

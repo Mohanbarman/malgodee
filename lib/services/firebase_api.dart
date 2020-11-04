@@ -3,44 +3,51 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:async';
 
+int MAX_SIZE = 1024 * 1024 * 10;
+
 class FirebaseStorageApi {
-  int MAX_SIZE = 1024 * 1024 * 10;
   Uint8List imageBytes;
-  List docs = [];
 
   // ignore: non_constant_identifier_names
   // Get the FUTURE of trending offers based on index
   Future trendingOffersFuture(int index) async {
-    await FirebaseFirestore.instance.collection('trending_offers').get().then(
-      (value) {
-        docs = value.docs.toList();
-      },
-    );
+    var x = await FirebaseFirestore.instance
+        .collection('offers')
+        .where('type', isEqualTo: 'trending')
+        .get();
+    List docs = x.docs.toList();
     return FirebaseStorage.instance
         .ref()
         .child(docs[index]['image'])
         .getData(MAX_SIZE);
   }
 
-  // Get the count of regular offers
-  Future regularOffersCount() async {
-    int val = await FirebaseFirestore.instance
-        .collection('regular_offers')
-        .get()
-        .then((value) => value.size);
-    print(val);
-    return val;
+  static Future futureFromImagePath(String path) {
+    return FirebaseStorage.instance.ref().child(path).getData(MAX_SIZE);
   }
 
   // Get the list of regular offers future
-  Future regularOffersFuture() async {
-    await FirebaseFirestore.instance
-        .collection('regular_offers')
-        .get()
-        .then((value) {
-      docs = value.docs.toList();
-    });
-    print(docs);
-    return docs;
+  static Future<List> regularOffersFuture(int index) async {
+    var value = await FirebaseFirestore.instance.collection('offers').get();
+    List docs = value.docs.toList();
+    return FirebaseStorage.instance
+        .ref()
+        .child(docs[index]['image'])
+        .getData(MAX_SIZE);
+  }
+
+  static Stream allOffersStream() {
+    return FirebaseFirestore.instance.collection('offers').snapshots();
+  }
+
+  static Stream trendingOffersStream() {
+    return FirebaseFirestore.instance
+        .collection('offers')
+        .where('type', isEqualTo: 'trending')
+        .snapshots();
+  }
+
+  static Stream categoriesStream() {
+    return FirebaseFirestore.instance.collection('categories').snapshots();
   }
 }

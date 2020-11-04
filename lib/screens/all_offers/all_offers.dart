@@ -1,4 +1,4 @@
-import 'package:ShoppingApp/bloc/admin_features.dart';
+import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -7,29 +7,7 @@ import 'package:ShoppingApp/components/bottom_navigation_bar.dart';
 import 'package:ShoppingApp/components/underlined_text.dart';
 import 'package:ShoppingApp/components/offer_image_container.dart';
 import 'package:ShoppingApp/components/offer_dialog.dart';
-
-String _offer_image_1 = 'assets/images/carousel-item-1.png';
-String _offer_image_2 = 'assets/images/carousel_item_2.png';
-
-List offers = [
-  {'image': _offer_image_1},
-  {'image': _offer_image_2},
-  {'image': _offer_image_2},
-  {'image': _offer_image_1},
-  {'image': _offer_image_2},
-  {'image': _offer_image_2},
-  {'image': _offer_image_1},
-  {'image': _offer_image_2},
-  {'image': _offer_image_2},
-  {'image': _offer_image_1},
-  {'image': _offer_image_2},
-  {'image': _offer_image_2},
-  {'image': _offer_image_1},
-  {'image': _offer_image_2},
-  {'image': _offer_image_2},
-  {'image': _offer_image_1},
-  {'image': _offer_image_2},
-];
+import 'package:ShoppingApp/components/shimmer_placeholders.dart';
 
 class Offers extends StatelessWidget {
   @override
@@ -38,155 +16,69 @@ class Offers extends StatelessWidget {
       backgroundColor: BackgroundColor,
       appBar: CustomAppBar(),
       bottomNavigationBar: CustomBottomNavigationBar(2),
-      body: Container(
-        child: ListView(
-          shrinkWrap: true,
-          scrollDirection: Axis.vertical,
-          children: [
-            Container(
-              padding: EdgeInsets.only(
-                left: ScreenPadding,
-                top: ScreenPadding,
-                right: ScreenPadding,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  UnderlinedText('All offers'),
-                ],
-              ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            child: UnderlinedText('All offers'),
+            padding: EdgeInsets.only(
+              left: ScreenPadding,
+              bottom: ScreenPadding,
+              top: ScreenPadding,
             ),
-            ...offers.map(
-              (offer) => Container(
-                margin: EdgeInsets.only(
-                  left: ScreenPadding,
-                  top: ScreenPadding,
-                  right: ScreenPadding,
+          ),
+          StreamBuilder(
+            stream: FirebaseStorageApi.allOffersStream(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) return OfferImagePlaceholder();
+              int offersLength = snapshot.data.docs.length;
+              return Expanded(
+                child: GridView.builder(
+                  itemCount: offersLength,
+                  padding: EdgeInsets.all(10),
+                  // shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                  ),
+                  itemBuilder: (context, index) {
+                    return FutureBuilder(
+                      future: FirebaseStorageApi.regularOffersFuture(index),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Container(
+                            height: MediaQuery.of(context).size.width / 2 - 30,
+                            width: MediaQuery.of(context).size.width / 2 - 30,
+                            clipBehavior: Clip.hardEdge,
+                            decoration: BoxDecoration(
+                              color: Color(0xff000000 + index),
+                              borderRadius:
+                                  BorderRadius.circular(OfferBorderRadius),
+                            ),
+                            margin: index == 0 || index == 1
+                                ? EdgeInsets.only(
+                                    left: 10, right: 10, bottom: 10)
+                                : EdgeInsets.all(10),
+                            child: Image.memory(
+                              snapshot.data,
+                              fit: BoxFit.cover,
+                            ),
+                          );
+                        }
+                        return Padding(
+                          padding: index == 0 || index == 1
+                              ? EdgeInsets.only(left: 10, right: 10, bottom: 10)
+                              : EdgeInsets.all(10),
+                          child: OfferImagePlaceholder(),
+                        );
+                      },
+                    );
+                  },
                 ),
-                child: Column(
-                  children: [
-                    SizedBox(height: ScreenPadding),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            showDialog(
-                              context: context,
-                              child: OfferDialog(offer['image']),
-                            );
-                          },
-                          child: StreamBuilder(
-                            initialData: adminStreamController.initialData,
-                            stream: adminStreamController.authStatusStream,
-                            builder:
-                                (BuildContext context, AsyncSnapshot snapshot) {
-                              if (snapshot.data == UserAuth.isAuthorized) {
-                                return Container(
-                                  width: MediaQuery.of(context).size.width / 2 -
-                                      30,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: [
-                                      OfferImageContainer(
-                                          imagePath: offer['image']),
-                                      SizedBox(height: ScreenPadding),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          IconButtonLTR(
-                                            icon: Icon(
-                                              FeatherIcons.edit2,
-                                              color: Colors.white,
-                                              size: 15,
-                                            ),
-                                            onPressed: () =>
-                                                Navigator.pushNamed(
-                                                    context, '/addoffer'),
-                                            fgColor: SecondaryColor,
-                                            shadowColor:
-                                                SecondaryColorDropShadow,
-                                            label: 'Edit',
-                                          ),
-                                          DeleteButton1(onPressed: () {}),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              } else {
-                                return OfferImageContainer(
-                                    imagePath: offer['image']);
-                              }
-                            },
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            showDialog(
-                              context: context,
-                              child: OfferDialog(offer['image']),
-                            );
-                          },
-                          child: StreamBuilder(
-                            initialData: adminStreamController.initialData,
-                            stream: adminStreamController.authStatusStream,
-                            builder:
-                                (BuildContext context, AsyncSnapshot snapshot) {
-                              if (snapshot.data == UserAuth.isAuthorized) {
-                                return Container(
-                                  width: MediaQuery.of(context).size.width / 2 -
-                                      30,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: [
-                                      OfferImageContainer(
-                                          imagePath: offer['image']),
-                                      SizedBox(height: ScreenPadding),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          IconButtonLTR(
-                                            icon: Icon(
-                                              FeatherIcons.edit2,
-                                              color: Colors.white,
-                                              size: 15,
-                                            ),
-                                            onPressed: () =>
-                                                Navigator.pushNamed(
-                                                    context, '/addoffer'),
-                                            fgColor: SecondaryColor,
-                                            shadowColor:
-                                                SecondaryColorDropShadow,
-                                            label: 'Edit',
-                                          ),
-                                          DeleteButton1(onPressed: () {}),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              } else {
-                                return OfferImageContainer(
-                                  imagePath: offer['image'],
-                                );
-                              }
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(height: ScreenPadding),
-          ],
-        ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
