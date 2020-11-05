@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 import 'package:ShoppingApp/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
 
 class OfferImageContainer extends StatelessWidget {
   OfferImageContainer({this.imagePath, this.fromBytes, this.bytes});
@@ -27,7 +26,10 @@ class OfferImageContainer extends StatelessWidget {
               imagePath,
               fit: BoxFit.cover,
             )
-          : Image.memory(this.bytes),
+          : Image.memory(
+              this.bytes,
+              fit: BoxFit.cover,
+            ),
     );
   }
 }

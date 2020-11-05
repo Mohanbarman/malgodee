@@ -34,7 +34,6 @@ class BrandsSection extends StatelessWidget {
             children: [
               UnderlinedText('Brands'),
               StreamBuilder(
-                // initialData: UserAuth.unauthorized,
                 initialData: adminStreamController.initialData,
                 stream: adminStreamController.authStatusStream,
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -48,7 +47,7 @@ class BrandsSection extends StatelessWidget {
             ],
           ),
           SizedBox(height: 20),
-          CustomGridView(
+          CustomGridViewX4(
             items: brands,
             lastWidget: RoundedIconContainer(
               title: 'All Brands',

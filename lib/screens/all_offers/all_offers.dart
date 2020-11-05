@@ -5,7 +5,6 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:ShoppingApp/components/app_bar.dart';
 import 'package:ShoppingApp/components/bottom_navigation_bar.dart';
 import 'package:ShoppingApp/components/underlined_text.dart';
-import 'package:ShoppingApp/components/offer_image_container.dart';
 import 'package:ShoppingApp/components/offer_dialog.dart';
 import 'package:ShoppingApp/components/shimmer_placeholders.dart';
 
@@ -46,22 +45,31 @@ class Offers extends StatelessWidget {
                       future: FirebaseStorageApi.regularOffersFuture(index),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
-                          return Container(
-                            height: MediaQuery.of(context).size.width / 2 - 30,
-                            width: MediaQuery.of(context).size.width / 2 - 30,
-                            clipBehavior: Clip.hardEdge,
-                            decoration: BoxDecoration(
-                              color: Color(0xff000000 + index),
-                              borderRadius:
-                                  BorderRadius.circular(OfferBorderRadius),
+                          return GestureDetector(
+                            onTap: () => showDialog(
+                              context: context,
+                              child: OfferDialog(
+                                bytes: snapshot.data,
+                              ),
                             ),
-                            margin: index == 0 || index == 1
-                                ? EdgeInsets.only(
-                                    left: 10, right: 10, bottom: 10)
-                                : EdgeInsets.all(10),
-                            child: Image.memory(
-                              snapshot.data,
-                              fit: BoxFit.cover,
+                            child: Container(
+                              height:
+                                  MediaQuery.of(context).size.width / 2 - 30,
+                              width: MediaQuery.of(context).size.width / 2 - 30,
+                              clipBehavior: Clip.hardEdge,
+                              decoration: BoxDecoration(
+                                color: BackgroundColor,
+                                borderRadius:
+                                    BorderRadius.circular(OfferBorderRadius),
+                              ),
+                              margin: index == 0 || index == 1
+                                  ? EdgeInsets.only(
+                                      left: 10, right: 10, bottom: 10)
+                                  : EdgeInsets.all(10),
+                              child: Image.memory(
+                                snapshot.data,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           );
                         }

@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:async';
 
-int MAX_SIZE = 1024 * 1024 * 10;
+int MAX_SIZE = 1024 * 1024 * 5;
 
 class FirebaseStorageApi {
   Uint8List imageBytes;
@@ -36,8 +36,13 @@ class FirebaseStorageApi {
         .getData(MAX_SIZE);
   }
 
-  static Stream allOffersStream() {
-    return FirebaseFirestore.instance.collection('offers').snapshots();
+  static Stream allOffersStream({int limit}) {
+    return limit == null
+        ? FirebaseFirestore.instance.collection('offers').snapshots()
+        : FirebaseFirestore.instance
+            .collection('offers')
+            .limit(limit)
+            .snapshots();
   }
 
   static Stream trendingOffersStream() {

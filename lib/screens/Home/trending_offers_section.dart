@@ -1,4 +1,5 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
+import 'package:ShoppingApp/components/offer_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:ShoppingApp/components/shimmer_placeholders.dart';
@@ -46,9 +47,17 @@ class TrendingOffersSection extends StatelessWidget {
                     builder: (context, snapshot) {
                       // print(snapshot.data);
                       if (snapshot.hasData)
-                        return OfferImageContainer(
-                          fromBytes: true,
-                          bytes: snapshot.data,
+                        return GestureDetector(
+                          onTap: () => showDialog(
+                            context: context,
+                            child: OfferDialog(
+                              bytes: snapshot.data,
+                            ),
+                          ),
+                          child: OfferImageContainer(
+                            fromBytes: true,
+                            bytes: snapshot.data,
+                          ),
                         );
                       return OfferImagePlaceholder();
                     },

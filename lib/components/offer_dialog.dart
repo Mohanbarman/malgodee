@@ -1,8 +1,11 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 class OfferDialog extends StatelessWidget {
-  String _image;
-  OfferDialog(this._image);
+  String image;
+  Uint8List bytes;
+  OfferDialog({this.image, this.bytes});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -23,7 +26,7 @@ class OfferDialog extends StatelessWidget {
                 color: Colors.blue,
               ),
               child: Image(
-                image: AssetImage(_image),
+                image: bytes == null ? AssetImage(image) : MemoryImage(bytes),
                 fit: BoxFit.cover,
               ),
             ),

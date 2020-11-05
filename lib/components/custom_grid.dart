@@ -4,12 +4,12 @@ import 'rounded_icon_container.dart';
 
 enum Referer { category, brand }
 
-class CustomGridView extends StatelessWidget {
+class CustomGridViewX4 extends StatelessWidget {
   final List items;
   final Widget lastWidget;
   final Referer referer;
   final BuildContext context;
-  CustomGridView({
+  CustomGridViewX4({
     this.items,
     this.lastWidget,
     this.referer,
@@ -24,7 +24,7 @@ class CustomGridView extends StatelessWidget {
         physics: ClampingScrollPhysics(),
         shrinkWrap: true,
         mainAxisSpacing: 30,
-        children: allWIdgets(
+        children: _allWIdgets(
           items: this.items,
           lastWidget: this.lastWidget,
         ),
@@ -32,7 +32,7 @@ class CustomGridView extends StatelessWidget {
     );
   }
 
-  List<Widget> allWIdgets({List items, Widget lastWidget, String route}) {
+  List<Widget> _allWIdgets({List items, Widget lastWidget}) {
     List allItems = items;
     List<Widget> allWidgets = allItems
         .map(
