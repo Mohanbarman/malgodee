@@ -1,16 +1,18 @@
 import 'package:ShoppingApp/bloc/product_flow_bloc.dart';
+import 'package:ShoppingApp/components/shimmer_placeholders.dart';
+import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:flutter/material.dart';
 import 'rounded_icon_container.dart';
 
 enum Referer { category, brand }
 
 class CustomGridViewX4 extends StatelessWidget {
-  final List items;
+  final Stream itemsStream;
   final Widget lastWidget;
   final Referer referer;
   final BuildContext context;
   CustomGridViewX4({
-    this.items,
+    @required this.itemsStream,
     this.lastWidget,
     this.referer,
     this.context,
@@ -19,58 +21,47 @@ class CustomGridViewX4 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: GridView.count(
-        crossAxisCount: 4,
-        physics: ClampingScrollPhysics(),
-        shrinkWrap: true,
-        mainAxisSpacing: 30,
-        children: _allWIdgets(
-          items: this.items,
-          lastWidget: this.lastWidget,
-        ),
+      child: StreamBuilder(
+        stream: this.itemsStream,
+        builder: (context, snapshot) {
+          int itemCount =
+              snapshot.hasData == true ? snapshot.data.docs.length + 1 : 11;
+          return GridView.builder(
+            physics: ClampingScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: itemCount,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+            ),
+            itemBuilder: (context, index) {
+              if (!snapshot.hasData) return CategoriesImagePlaceholder();
+
+              if (lastWidget is Widget && index + 1 == itemCount) {
+                print('index $index : $itemCount');
+                return lastWidget;
+              }
+
+              if (index + 1 == itemCount) {
+                return SizedBox();
+              }
+
+              String title = snapshot.data.docs[index]['name'];
+              String imagePath = snapshot.data.docs[index]['image'];
+
+              return FutureBuilder(
+                future: FirebaseStorageApi.futureFromImagePath(imagePath),
+                builder: (context, snapshot1) {
+                  if (!snapshot1.hasData) return CategoriesImagePlaceholder();
+                  return RoundedIconContainer(
+                    title: title,
+                    bytes: snapshot1.data,
+                  );
+                },
+              );
+            },
+          );
+        },
       ),
     );
-  }
-
-  List<Widget> _allWIdgets({List items, Widget lastWidget}) {
-    List allItems = items;
-    List<Widget> allWidgets = allItems
-        .map(
-          (item) => RoundedIconContainer(
-            title: item['title'],
-            imagePath: item['imagePath'],
-            onTap: () {
-              productFlowBloc.productSink.add({'brand': item['id']});
-              if (this.referer == Referer.brand) {
-                if (productFlowBloc.productStreamRouteInfo['category'] ==
-                    null) {
-                  return Navigator.pushNamed(context, '/categories');
-                } else {
-                  return Navigator.pushNamed(
-                    context,
-                    '/productInfo',
-                    arguments: productFlowBloc.productStreamRouteInfo,
-                  );
-                }
-              }
-              if (this.referer == Referer.category) {
-                if (productFlowBloc.productStreamRouteInfo['brand'] == null) {
-                  return Navigator.pushNamed(context, '/brands');
-                } else {
-                  return Navigator.pushNamed(
-                    context,
-                    '/productInfo',
-                    arguments: productFlowBloc.productStreamRouteInfo,
-                  );
-                }
-              }
-            },
-          ),
-        )
-        .toList();
-    if (lastWidget is Widget) {
-      allWidgets.add(lastWidget);
-    }
-    return (allWidgets);
   }
 }

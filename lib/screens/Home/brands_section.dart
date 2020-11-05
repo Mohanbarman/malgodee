@@ -1,5 +1,6 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:ShoppingApp/components/custom_grid.dart';
+import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/components/buttons.dart';
 import 'package:ShoppingApp/components/underlined_text.dart';
@@ -48,7 +49,10 @@ class BrandsSection extends StatelessWidget {
           ),
           SizedBox(height: 20),
           CustomGridViewX4(
-            items: brands,
+            itemsStream: FirebaseStorageApi.streamOfCollection(
+              collection: 'brands',
+              limit: 10,
+            ),
             lastWidget: RoundedIconContainer(
               title: 'All Brands',
               viewAllIcon: true,

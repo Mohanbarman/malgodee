@@ -43,7 +43,7 @@ class CategoriesImagePlaceholder extends StatelessWidget {
             width: 50,
             decoration: BoxDecoration(
               color: BackgroundColor,
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: BorderRadius.circular(2),
             ),
           ),
         )

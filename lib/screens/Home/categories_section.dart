@@ -42,7 +42,10 @@ class CategoriesSection extends StatelessWidget {
           SizedBox(
             height: 90.0,
             child: StreamBuilder(
-              stream: FirebaseStorageApi.categoriesStream(),
+              stream: FirebaseStorageApi.streamOfCollection(
+                collection: 'categories',
+                limit: 5,
+              ),
               builder: (context, snapshot) {
                 int itemCount =
                     snapshot.hasData ? snapshot.data.docs.length : 6;

@@ -52,7 +52,12 @@ class FirebaseStorageApi {
         .snapshots();
   }
 
-  static Stream categoriesStream() {
-    return FirebaseFirestore.instance.collection('categories').snapshots();
+  static Stream streamOfCollection({String collection, int limit}) {
+    return limit == null
+        ? FirebaseFirestore.instance.collection(collection).snapshots()
+        : FirebaseFirestore.instance
+            .collection(collection)
+            .limit(limit + 1)
+            .snapshots();
   }
 }

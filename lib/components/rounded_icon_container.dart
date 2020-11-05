@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import '../styles.dart';
 
-// ignore: must_be_immutable
 class RoundedIconContainer extends StatelessWidget {
   final String title;
   final String imagePath;
@@ -40,7 +39,12 @@ class RoundedIconContainer extends StatelessWidget {
                 ? IconButton(
                     icon: Icon(FeatherIcons.grid, color: DefaultFontColor),
                     onPressed: () {
-                      print('clicked');
+                      if (route != null) {
+                        Navigator.pushNamed(context, route);
+                      }
+                      if (onTap != null) {
+                        onTap();
+                      }
                     },
                   )
                 : GestureDetector(

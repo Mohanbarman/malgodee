@@ -76,11 +76,11 @@ class AllCategories extends StatelessWidget {
               ],
             ),
             SizedBox(height: 30),
-            CustomGridViewX4(
-              items: categories,
-              context: context,
-              referer: Referer.category,
-            ),
+            // CustomGridViewX4(
+            //   items: categories,
+            //   context: context,
+            //   referer: Referer.category,
+            // ),
           ],
         ),
       ),
