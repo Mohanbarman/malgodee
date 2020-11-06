@@ -6,22 +6,6 @@ import 'package:ShoppingApp/components/buttons.dart';
 import 'package:ShoppingApp/components/underlined_text.dart';
 import 'package:ShoppingApp/components/rounded_icon_container.dart';
 
-String _brandsLogo1 = 'assets/images/sample-category.png';
-
-List brands = [
-  {'title': 'Usha', 'imagePath': _brandsLogo1},
-  {'title': 'Usha', 'imagePath': _brandsLogo1},
-  {'title': 'Usha', 'imagePath': _brandsLogo1},
-  {'title': 'Usha', 'imagePath': _brandsLogo1},
-  {'title': 'Usha', 'imagePath': _brandsLogo1},
-  {'title': 'Usha', 'imagePath': _brandsLogo1},
-  {'title': 'Usha', 'imagePath': _brandsLogo1},
-  {'title': 'Usha', 'imagePath': _brandsLogo1},
-  {'title': 'Usha', 'imagePath': _brandsLogo1},
-  {'title': 'Usha', 'imagePath': _brandsLogo1},
-  {'title': 'Usha', 'imagePath': _brandsLogo1},
-];
-
 class BrandsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
