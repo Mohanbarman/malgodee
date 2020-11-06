@@ -37,7 +37,6 @@ class CustomGridViewX4 extends StatelessWidget {
               if (!snapshot.hasData) return CategoriesImagePlaceholder();
 
               if (lastWidget is Widget && index + 1 == itemCount) {
-                print('index $index : $itemCount');
                 return lastWidget;
               }
 

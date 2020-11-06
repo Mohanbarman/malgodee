@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:async';
 
+// ignore: non_constant_identifier_names
 int MAX_SIZE = 1024 * 1024 * 5;
 
 class FirebaseStorageApi {

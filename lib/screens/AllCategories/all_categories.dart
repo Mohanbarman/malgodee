@@ -1,5 +1,6 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:ShoppingApp/components/bottom_navigation_bar.dart';
+import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/components/buttons.dart';
@@ -76,11 +77,13 @@ class AllCategories extends StatelessWidget {
               ],
             ),
             SizedBox(height: 30),
-            // CustomGridViewX4(
-            //   items: categories,
-            //   context: context,
-            //   referer: Referer.category,
-            // ),
+            CustomGridViewX4(
+              itemsStream: FirebaseStorageApi.streamOfCollection(
+                collection: 'categories',
+              ),
+              context: context,
+              referer: Referer.category,
+            ),
           ],
         ),
       ),

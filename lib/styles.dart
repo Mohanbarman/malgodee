@@ -13,7 +13,7 @@ const SecondaryColor = Color(0xffFFBE4A);
 const BackgroundColor = Color(0xfff2f2f2);
 const Neumorphism1 = Colors.black12;
 const Neumorphism2 = Colors.white;
-const LightBoxShadow = Color(0x11000000);
+const LightBoxShadow = Color(0x0F000000);
 const DefaultGreenColor = Color(0xff40E78D);
 const DefaultRedColor = Color(0xffFF6565);
 const DefaultShadowGreenColor = Color(0x8040E78D);
@@ -137,4 +137,24 @@ const TextStyle InputPlaceholderTextStyle = TextStyle(
   color: Colors.black26,
   fontFamily: DefaultFontFamily,
   fontSize: BodyTextSize - 2,
+);
+
+const TextStyle inputErrorTextStyle = TextStyle(
+  color: Colors.red,
+  fontFamily: DefaultFontFamily,
+  fontSize: BodyTextSize - 3,
+  fontWeight: FontWeight.w500,
+  shadows: [
+    Shadow(
+      color: DefaultShadowRedColor,
+      offset: Offset(2, 2),
+      blurRadius: 10,
+    ),
+  ],
+);
+
+const BoxShadow textInputShadow = BoxShadow(
+  color: LightBoxShadow,
+  blurRadius: 20,
+  offset: Offset(0, 0),
 );

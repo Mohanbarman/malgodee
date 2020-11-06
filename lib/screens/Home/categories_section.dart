@@ -62,6 +62,7 @@ class CategoriesSection extends StatelessWidget {
                           RoundedIconContainer(
                             title: 'All categories',
                             viewAllIcon: true,
+                            route: '/categories',
                           ),
                           SizedBox(width: ScreenPadding),
                         ],

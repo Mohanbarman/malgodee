@@ -1,14 +1,19 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
+import 'package:ShoppingApp/bloc/phone_number_field_bloc.dart';
+import 'package:ShoppingApp/components/custom_text_field.dart';
+import 'package:flutter/services.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/components/underlined_text.dart';
 import 'package:ShoppingApp/components/rounded_icon_container.dart';
-import 'package:ShoppingApp/components/input_custom_decoration.dart';
-
-String _callIcon = 'assets/images/call-icon.png';
-String _waIcon = 'assets/images/wa-icon.png';
 
 class ContactUsSection extends StatelessWidget {
+  String _callIcon = 'assets/images/call-icon.png';
+  String _waIcon = 'assets/images/wa-icon.png';
+
+  final PhoneNumberFieldBloc _callingNumberBloc = PhoneNumberFieldBloc();
+  final PhoneNumberFieldBloc _wpNumberBloc = PhoneNumberFieldBloc();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -41,36 +46,20 @@ class ContactUsSection extends StatelessWidget {
                 children: [
                   UnderlinedText('Edit contact number'),
                   SizedBox(height: ScreenPadding),
-                  Row(
-                    children: [
-                      Text('Calling number', style: LoginFormLabelStyle)
-                    ],
-                  ),
-                  SizedBox(height: ScreenPadding / 2),
-                  inputCustomDeocration(
-                    TextFormField(
-                      keyboardType: TextInputType.phone,
-                      controller: TextEditingController(text: '8098018239'),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                      ),
-                    ),
+                  CustomTextField(
+                    keyboardType: TextInputType.number,
+                    maxLength: 10,
+                    shadow: textInputShadow,
+                    textBloc: _callingNumberBloc,
+                    title: 'Calling number',
                   ),
                   SizedBox(height: ScreenPadding),
-                  Row(
-                    children: [
-                      Text('Whatsapp number', style: LoginFormLabelStyle)
-                    ],
-                  ),
-                  SizedBox(height: ScreenPadding / 2),
-                  inputCustomDeocration(
-                    TextFormField(
-                      keyboardType: TextInputType.phone,
-                      controller: TextEditingController(text: '8098018239'),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                      ),
-                    ),
+                  CustomTextField(
+                    keyboardType: TextInputType.number,
+                    maxLength: 10,
+                    shadow: textInputShadow,
+                    textBloc: _wpNumberBloc,
+                    title: 'Whatsapp number',
                   ),
                   SizedBox(height: ScreenPadding * 2),
                 ],
