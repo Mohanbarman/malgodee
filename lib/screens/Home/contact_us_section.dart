@@ -8,8 +8,8 @@ import 'package:ShoppingApp/components/underlined_text.dart';
 import 'package:ShoppingApp/components/rounded_icon_container.dart';
 
 class ContactUsSection extends StatelessWidget {
-  String _callIcon = 'assets/images/call-icon.png';
-  String _waIcon = 'assets/images/wa-icon.png';
+  final String _callIcon = 'assets/images/call-icon.png';
+  final String _waIcon = 'assets/images/wa-icon.png';
 
   final PhoneNumberFieldBloc _callingNumberBloc = PhoneNumberFieldBloc();
   final PhoneNumberFieldBloc _wpNumberBloc = PhoneNumberFieldBloc();

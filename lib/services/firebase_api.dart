@@ -53,12 +53,29 @@ class FirebaseStorageApi {
         .snapshots();
   }
 
-  static Stream streamOfCollection({String collection, int limit}) {
-    return limit == null
-        ? FirebaseFirestore.instance.collection(collection).snapshots()
-        : FirebaseFirestore.instance
-            .collection(collection)
-            .limit(limit + 1)
-            .snapshots();
-  }
+  static Stream streamOfCollection({
+    String collection,
+    int limit,
+    String where,
+    String isEqualsTo,
+  }) =>
+      limit == null
+          ? FirebaseFirestore.instance.collection(collection).snapshots()
+          : FirebaseFirestore.instance
+              .collection(collection)
+              .limit(limit + 1)
+              .snapshots();
+
+  static Stream streamOfCollectionFiltered({
+    String collection,
+    int limit,
+    String where,
+    String isEqualsTo,
+  }) =>
+      limit == null
+          ? FirebaseFirestore.instance.collection(collection).snapshots()
+          : FirebaseFirestore.instance
+              .collection(collection)
+              .limit(limit + 1)
+              .snapshots();
 }

@@ -1,4 +1,5 @@
 import 'package:ShoppingApp/components/input_custom_decoration.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +8,7 @@ class CustomTextField extends StatelessWidget {
   final int maxLength;
   final BoxShadow shadow;
   final textBloc;
+  final Stream collectionStream;
   final String title;
 
   TextEditingController _textEditingController = TextEditingController();
@@ -17,6 +19,7 @@ class CustomTextField extends StatelessWidget {
     this.shadow,
     this.textBloc,
     this.title,
+    this.collectionStream,
   });
 
   @override
@@ -31,21 +34,43 @@ class CustomTextField extends StatelessWidget {
             builder: (context, snapshot) {
               return Column(
                 children: [
-                  inputCustomDeocration(
-                    TextFormField(
-                      keyboardType: keyboardType,
-                      controller: _textEditingController,
-                      maxLength: maxLength,
-                      onChanged: this.textBloc.updateText,
-                      decoration: InputDecoration(
-                        counterText: "",
-                        border: InputBorder.none,
-                      ),
-                    ),
+                  StreamBuilder(
+                    stream: collectionStream,
+                    builder: (context, collectionSnapshot) {
+                      _textEditingController.text =
+                          collectionSnapshot.data.docs[0]['phone_number'];
+                      return inputCustomDeocration(
+                        TextFormField(
+                          controller: _textEditingController,
+                          keyboardType: keyboardType,
+                          maxLength: maxLength,
+                          onChanged: this.textBloc.updateText,
+                          decoration: InputDecoration(
+                            counterText: "",
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                   snapshot.hasError == true
                       ? errorTextContainer(snapshot.error)
                       : SizedBox(),
+                  SizedBox(height: ScreenPadding),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      RaisedButton(
+                        onPressed: () {},
+                        child: Text('Cancel'),
+                      ),
+                      SizedBox(width: ScreenPadding),
+                      RaisedButton(
+                        onPressed: () {},
+                        child: Text('Save'),
+                      ),
+                    ],
+                  )
                 ],
               );
             },
