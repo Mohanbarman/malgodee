@@ -1,4 +1,6 @@
+import 'package:ShoppingApp/models/offer.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
+import 'package:ShoppingApp/shared/localstorage.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -42,7 +44,14 @@ class Offers extends StatelessWidget {
                   ),
                   itemBuilder: (context, index) {
                     return FutureBuilder(
-                      future: FirebaseStorageApi.regularOffersFuture(index),
+                      future: LocalStorage.loadData(
+                        model: OfferModel(
+                          id: snapshot.data.docs[index].id,
+                          title: snapshot.data.docs[index]['title'],
+                          description: snapshot.data.docs[index]['description'],
+                          remoteImage: snapshot.data.docs[index]['image'],
+                        ),
+                      ),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return GestureDetector(

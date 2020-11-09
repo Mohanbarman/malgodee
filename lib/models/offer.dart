@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -7,21 +5,32 @@ class OfferModel {
   String id;
   String title;
   String description;
-  Uint8List image;
+  String remoteImage;
+  String localImage;
 
-  fromMap(QueryDocumentSnapshot doc) async {
-    this.id = doc['id'];
-    this.title = doc['title'];
-    this.description = doc['description'];
-    this.image = await FirebaseStorageApi.futureFromImagePath(doc['image']);
-  }
+  OfferModel({
+    this.id,
+    this.title,
+    this.description,
+    this.remoteImage,
+    this.localImage,
+  });
 
-  toJson() {
+  toJsonRemote() {
     return {
       'id': this.id,
       'title': this.title,
       'description': this.description,
-      'image': this.image,
+      'image': this.remoteImage,
+    };
+  }
+
+  toJsonLocal() {
+    return {
+      'id': this.id,
+      'title': this.title,
+      'description': this.description,
+      'image': this.localImage,
     };
   }
 }

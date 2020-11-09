@@ -1,7 +1,9 @@
 import 'package:ShoppingApp/components/offer_dialog.dart';
 import 'package:ShoppingApp/components/offer_image_container.dart';
 import 'package:ShoppingApp/components/shimmer_placeholders.dart';
+import 'package:ShoppingApp/models/offer.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
+import 'package:ShoppingApp/shared/localstorage.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,7 +31,14 @@ class _OfferCarouselState extends State<OfferCarousel> {
     return snapshot.data.docs
         .map(
           (d) => FutureBuilder(
-            future: FirebaseStorageApi.futureFromImagePath(d['image']),
+            future: LocalStorage.loadData(
+              model: OfferModel(
+                id: d.id,
+                title: d['title'],
+                description: d['description'],
+                remoteImage: d['image'],
+              ),
+            ),
             builder: (context, snapshot2) {
               if (snapshot2.hasData) {
                 return GestureDetector(

@@ -1,10 +1,11 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:ShoppingApp/components/offer_dialog.dart';
+import 'package:ShoppingApp/shared/localstorage.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:ShoppingApp/components/shimmer_placeholders.dart';
 import 'package:ShoppingApp/models/offer.dart';
-import 'shared/localstorage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../components/underlined_text.dart';
 import '../../components/buttons.dart';
 import '../../components/offer_image_container.dart';
@@ -40,21 +41,21 @@ class TrendingOffersSection extends StatelessWidget {
           StreamBuilder(
             stream: FirebaseStorageApi.trendingOffersStream(),
             builder: (context, snapshot) {
+              if (!snapshot.hasData) return OfferImagePlaceholder();
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: List.generate(
                   2,
                   (index) {
                     return FutureBuilder(
-                      future:
-                          LocalStorage.exists(id: snapshot.data.docs[index].id)
-                              ? LocalStorage.loadData(
-                                  id: snapshot.data.docs[index].id)
-                              : LocalStorage.saveData(
-                                  model: OfferModel().fromMap(
-                                    snapshot.data.docs[index],
-                                  ),
-                                ),
+                      future: LocalStorage.loadData(
+                        model: OfferModel(
+                          id: snapshot.data.docs[index].id,
+                          title: snapshot.data.docs[index]['title'],
+                          description: snapshot.data.docs[index]['description'],
+                          remoteImage: snapshot.data.docs[index]['image'],
+                        ),
+                      ),
                       builder: (context, snapshot) {
                         if (snapshot.hasData)
                           return GestureDetector(
