@@ -1,19 +1,36 @@
 import 'dart:async';
-import 'package:ShoppingApp/shared/localstorage.dart';
+import 'dart:typed_data';
 
 class ImagePickBloc {
-  StreamController _controller = StreamController.broadcast();
+  Uint8List cachedImageBytes;
+  String cachedImagePath;
 
-  get stream => _controller.stream;
-  get sink => _controller.sink;
+  StreamController _imageBytesController = StreamController.broadcast();
+  StreamController _imagePathController = StreamController.broadcast();
+
+  get imageBytesStream => _imageBytesController.stream;
+  get imageBytesSink => _imageBytesController.sink;
+
+  get imagePathStream => _imagePathController.stream;
+  get imagePathSink => _imagePathController.sink;
 
   void dispose() {
-    _controller.close();
+    _imageBytesController.close();
+    _imagePathController.close();
   }
 
   ImagePickBloc() {
-    _controller.stream.listen((event) async {
-      print(await LocalStorage.saveImage(bytes: event, filename: 'photo.png'));
-    });
+    _imageBytesController.stream.listen(
+      (event) async {
+        cachedImageBytes = event;
+      },
+    );
+    _imagePathController.stream.listen(
+      (event) async {
+        cachedImagePath = event;
+      },
+    );
   }
 }
+
+ImagePickBloc pickedImageBloc = ImagePickBloc();

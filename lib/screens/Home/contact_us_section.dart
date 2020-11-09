@@ -2,6 +2,7 @@ import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:ShoppingApp/bloc/phone_number_field_bloc.dart';
 import 'package:ShoppingApp/components/custom_text_field.dart';
 import 'package:ShoppingApp/components/shimmer_placeholders.dart';
+import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:flutter/services.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:flutter/material.dart';
@@ -54,6 +55,10 @@ class ContactUsSection extends StatelessWidget {
                     shadow: textInputShadow,
                     textBloc: _callingNumberBloc,
                     title: 'Calling number',
+                    collectionName: 'calling_number',
+                    collectionStream: FirebaseStorageApi.streamOfCollection(
+                      collection: 'calling_number',
+                    ),
                   ),
                   SizedBox(height: ScreenPadding),
                   CustomTextField(
@@ -62,6 +67,10 @@ class ContactUsSection extends StatelessWidget {
                     shadow: textInputShadow,
                     textBloc: _wpNumberBloc,
                     title: 'Whatsapp number',
+                    collectionName: 'whatsapp_number',
+                    collectionStream: FirebaseStorageApi.streamOfCollection(
+                      collection: 'whatsapp_number',
+                    ),
                   ),
                   SizedBox(height: ScreenPadding * 2),
                 ],

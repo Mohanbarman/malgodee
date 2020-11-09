@@ -52,6 +52,22 @@ class CategoriesImagePlaceholder extends StatelessWidget {
   }
 }
 
+class TextInputShimmer extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return defaultShimmer(
+      child: Container(
+        height: 50,
+        width: MediaQuery.of(context).size.width - ScreenPadding * 2,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: BackgroundColor,
+        ),
+      ),
+    );
+  }
+}
+
 Widget defaultShimmer({Widget child}) {
   return Shimmer.fromColors(
     child: child,

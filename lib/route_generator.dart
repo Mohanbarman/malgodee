@@ -30,11 +30,9 @@ class RouteGenerator {
       case '/brands':
         return NoAnimationMaterialPageRoute(builder: (_) => AllBrands(args));
       case '/products':
-        if (args is Map<String, String>) {
-          return NoAnimationMaterialPageRoute(
-            builder: (_) => AllProducts(args),
-          );
-        }
+        return NoAnimationMaterialPageRoute(
+          builder: (_) => AllProducts(args),
+        );
         return _errorRoute();
       case '/productinfo':
         return NoAnimationMaterialPageRoute(

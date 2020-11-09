@@ -1,7 +1,10 @@
 import 'package:ShoppingApp/components/input_custom_decoration.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:ShoppingApp/components/shimmer_placeholders.dart';
+import 'package:ShoppingApp/models/phone_number.dart';
+import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextInputType keyboardType;
@@ -10,6 +13,7 @@ class CustomTextField extends StatelessWidget {
   final textBloc;
   final Stream collectionStream;
   final String title;
+  final String collectionName;
 
   TextEditingController _textEditingController = TextEditingController();
 
@@ -20,6 +24,7 @@ class CustomTextField extends StatelessWidget {
     this.textBloc,
     this.title,
     this.collectionStream,
+    this.collectionName,
   });
 
   @override
@@ -32,14 +37,26 @@ class CustomTextField extends StatelessWidget {
           StreamBuilder(
             stream: this.textBloc.textStream,
             builder: (context, snapshot) {
-              return Column(
-                children: [
-                  StreamBuilder(
-                    stream: collectionStream,
-                    builder: (context, collectionSnapshot) {
-                      _textEditingController.text =
-                          collectionSnapshot.data.docs[0]['phone_number'];
-                      return inputCustomDeocration(
+              return StreamBuilder(
+                stream: collectionStream,
+                builder: (context, collectionSnapshot) {
+                  if (!collectionSnapshot.hasData) return TextInputShimmer();
+
+                  String _collectionSnapshotNumber =
+                      collectionSnapshot.data.docs[0]['phone_number'];
+                  String _collectionSnapshotId =
+                      collectionSnapshot.data.docs[0].id;
+
+                  if (_textEditingController.value.text.length < 1) {
+                    _textEditingController.value = TextEditingValue(
+                      text: _collectionSnapshotNumber,
+                    );
+                    textBloc.updateText(_collectionSnapshotNumber);
+                  }
+
+                  return Column(
+                    children: [
+                      inputCustomDeocration(
                         TextFormField(
                           controller: _textEditingController,
                           keyboardType: keyboardType,
@@ -50,28 +67,36 @@ class CustomTextField extends StatelessWidget {
                             border: InputBorder.none,
                           ),
                         ),
-                      );
-                    },
-                  ),
-                  snapshot.hasError == true
-                      ? errorTextContainer(snapshot.error)
-                      : SizedBox(),
-                  SizedBox(height: ScreenPadding),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      RaisedButton(
-                        onPressed: () {},
-                        child: Text('Cancel'),
                       ),
                       SizedBox(width: ScreenPadding),
-                      RaisedButton(
-                        onPressed: () {},
-                        child: Text('Save'),
-                      ),
+                      snapshot.hasError == true
+                          ? errorTextContainer(snapshot.error)
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                RaisedButton(
+                                  onPressed: () {},
+                                  child: Text('Cancel'),
+                                ),
+                                SizedBox(width: ScreenPadding),
+                                RaisedButton(
+                                  onPressed: () {
+                                    FirebaseStorageApi.updateDocument(
+                                      model: PhoneNumberModel(
+                                        id: _collectionSnapshotId,
+                                        phone_number:
+                                            _textEditingController.value.text,
+                                      ),
+                                      collection: collectionName,
+                                    );
+                                  },
+                                  child: Text('Save'),
+                                ),
+                              ],
+                            )
                     ],
-                  )
-                ],
+                  );
+                },
               );
             },
           ),

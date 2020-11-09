@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:ShoppingApp/components/shimmer_placeholders.dart';
 import 'package:ShoppingApp/models/offer.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../components/underlined_text.dart';
 import '../../components/buttons.dart';
 import '../../components/offer_image_container.dart';
@@ -48,7 +47,7 @@ class TrendingOffersSection extends StatelessWidget {
                   2,
                   (index) {
                     return FutureBuilder(
-                      future: LocalStorage.loadData(
+                      future: LocalStorage.loadOfferData(
                         model: OfferModel(
                           id: snapshot.data.docs[index].id,
                           title: snapshot.data.docs[index]['title'],

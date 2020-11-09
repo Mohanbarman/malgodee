@@ -1,6 +1,9 @@
+import 'dart:io';
+import 'package:uuid/uuid.dart';
 import 'package:ShoppingApp/bloc/image_pick_bloc.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:ShoppingApp/components/bottom_navigation_bar.dart';
+import 'package:ShoppingApp/services/firebase_api.dart';
+import 'package:ShoppingApp/shared/localstorage.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/components/app_bar.dart';
 import 'package:ShoppingApp/styles.dart';
@@ -11,7 +14,6 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:async';
 
 class AddOffer extends StatelessWidget {
-  ImagePickBloc pickedImageBloc = ImagePickBloc();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,7 +78,21 @@ class UploadDetailsForm extends StatelessWidget {
                 title: 'Save',
                 fgColor: DefaultGreenColor,
                 shadowColor: DefaultShadowGreenColor,
-                onPressed: () {},
+                onPressed: () async {
+                  if (pickedImageBloc.cachedImageBytes != null) {
+                    var uuid = Uuid();
+                    String filename = uuid.v1();
+                    FirebaseStorageApi.uploadFile(
+                      file: File(
+                        await LocalStorage.saveImage(
+                          bytes: pickedImageBloc.cachedImageBytes,
+                          filename: filename,
+                        ),
+                      ),
+                      filename: filename,
+                    );
+                  }
+                },
               ),
               HighlightedShadowButton(
                 title: 'Cancel',
@@ -163,11 +179,20 @@ class UploadButton extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(50),
             ),
-            onPressed: () async {
+            onPressed: () {
               _pickImage().then(
-                (value) => value.readAsBytes().then(
-                      (bytes) => pickedImageBloc.sink.add(bytes),
-                    ),
+                (value) async {
+                  var uuid = Uuid();
+                  String filename = uuid.v4() + value.path.split('.')[-1];
+                  value.readAsBytes().then(
+                        (bytes) => pickedImageBloc.sink.add(bytes),
+                      );
+                  pickedImageBloc.imagePathSink.add(value);
+                  LocalStorage.saveImage(
+                    bytes: await value.readAsBytes(),
+                    filename: filename,
+                  );
+                },
               );
             },
             color: SecondaryColor,

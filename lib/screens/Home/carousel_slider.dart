@@ -31,7 +31,7 @@ class _OfferCarouselState extends State<OfferCarousel> {
     return snapshot.data.docs
         .map(
           (d) => FutureBuilder(
-            future: LocalStorage.loadData(
+            future: LocalStorage.loadOfferData(
               model: OfferModel(
                 id: d.id,
                 title: d['title'],

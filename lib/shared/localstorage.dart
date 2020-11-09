@@ -1,13 +1,13 @@
-import 'dart:io';
-import 'dart:convert';
-import 'dart:typed_data';
-import 'package:ShoppingApp/models/offer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ShoppingApp/models/offer.dart';
+import 'dart:typed_data';
+import 'dart:convert';
+import 'dart:io';
 
 class LocalStorage {
-  static Future loadData({OfferModel model}) async {
+  static Future loadOfferData({OfferModel model}) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     if (await exists(id: model.id) == true) {
       return await File(
@@ -16,11 +16,11 @@ class LocalStorage {
         )['image'],
       ).readAsBytes();
     }
-    await saveData(model: model);
+    await saveOfferData(model: model);
     return FirebaseStorageApi.futureFromImagePath(model.remoteImage);
   }
 
-  static saveData({dynamic model}) async {
+  static saveOfferData({OfferModel model}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String localImagePath = await saveImage(
       bytes: await FirebaseStorageApi.futureFromImagePath(model.remoteImage),

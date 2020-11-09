@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -10,7 +11,6 @@ class FirebaseStorageApi {
   Uint8List imageBytes;
 
   // ignore: non_constant_identifier_names
-  // Get the FUTURE of trending offers based on index
   Future trendingOffersFuture(int index) async {
     var x = await FirebaseFirestore.instance
         .collection('offers')
@@ -76,6 +76,20 @@ class FirebaseStorageApi {
           ? FirebaseFirestore.instance.collection(collection).snapshots()
           : FirebaseFirestore.instance
               .collection(collection)
+              .where('type', isEqualTo: 'whatsapp')
               .limit(limit + 1)
               .snapshots();
+
+  static updateDocument({model, String collection}) {
+    CollectionReference ref = FirebaseFirestore.instance.collection(collection);
+    ref.doc(model.id).update(model.toJson());
+  }
+
+  static Future<void> uploadFile({File file, String filename}) async {
+    StorageReference ref = FirebaseStorage.instance.ref().child(filename);
+    final StorageUploadTask uploadTask = ref.putFile(file);
+    await uploadTask.onComplete;
+    print('successfully uploaded to $filename');
+    return filename;
+  }
 }

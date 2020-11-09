@@ -44,7 +44,7 @@ class Offers extends StatelessWidget {
                   ),
                   itemBuilder: (context, index) {
                     return FutureBuilder(
-                      future: LocalStorage.loadData(
+                      future: LocalStorage.loadOfferData(
                         model: OfferModel(
                           id: snapshot.data.docs[index].id,
                           title: snapshot.data.docs[index]['title'],
