@@ -1,3 +1,4 @@
+import 'package:ShoppingApp/bloc/image_pick_bloc.dart';
 import 'package:ShoppingApp/components/bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/components/app_bar.dart';
@@ -5,8 +6,11 @@ import 'package:ShoppingApp/styles.dart';
 import 'package:ShoppingApp/components/underlined_text.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:ShoppingApp/components/buttons.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:async';
 
 class AddOffer extends StatelessWidget {
+  ImagePickBloc pickedImageBloc = ImagePickBloc();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,11 +20,12 @@ class AddOffer extends StatelessWidget {
         shrinkWrap: true,
         children: [
           Title(),
-          ImagePlaceholder(),
+          ImagePlaceholder(pickedImageBloc),
           SizedBox(height: 30),
-          UploadButton(),
+          UploadButton(pickedImageBloc),
           SizedBox(height: 30),
           UploadDetailsForm(),
+          SizedBox(height: 30),
         ],
       ),
     );
@@ -56,7 +61,7 @@ class UploadDetailsForm extends StatelessWidget {
                 color: Colors.grey[300],
                 borderRadius: BorderRadius.circular(10)),
             child: TextField(
-              maxLines: 8,
+              maxLines: 5,
               decoration: InputDecoration(
                 border: InputBorder.none,
               ),
@@ -101,26 +106,43 @@ class Title extends StatelessWidget {
 }
 
 class ImagePlaceholder extends StatelessWidget {
+  final pickedImageBloc;
+  ImagePlaceholder(this.pickedImageBloc);
+
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.center,
-      child: Container(
-        height: 200,
-        width: 200,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-        ),
-        child: Center(
-          child: Text('No image selected', style: PlaceholderTextAddItem),
-        ),
+      child: StreamBuilder(
+        stream: pickedImageBloc.stream,
+        builder: (context, snapshot) {
+          return Container(
+            height: 250,
+            width: 250,
+            clipBehavior: Clip.hardEdge,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(OfferBorderRadius),
+            ),
+            child: snapshot.hasData == false
+                ? Center(
+                    child: Text('No image selected',
+                        style: PlaceholderTextAddItem),
+                  )
+                : Image.memory(
+                    snapshot.data,
+                    fit: BoxFit.cover,
+                  ),
+          );
+        },
       ),
     );
   }
 }
 
 class UploadButton extends StatelessWidget {
+  final pickedImageBloc;
+  UploadButton(this.pickedImageBloc);
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -140,7 +162,13 @@ class UploadButton extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(50),
             ),
-            onPressed: () {},
+            onPressed: () async {
+              _pickImage().then(
+                (value) => value.readAsBytes().then(
+                      (bytes) => pickedImageBloc.sink.add(bytes),
+                    ),
+              );
+            },
             color: SecondaryColor,
             label: Text('Select an image', style: UploadButtonTextStyle),
             icon: Icon(FeatherIcons.upload, color: Colors.white),
@@ -149,5 +177,9 @@ class UploadButton extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<PickedFile> _pickImage() async {
+    return await ImagePicker().getImage(source: ImageSource.gallery);
   }
 }

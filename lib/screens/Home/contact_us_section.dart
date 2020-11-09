@@ -1,6 +1,7 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:ShoppingApp/bloc/phone_number_field_bloc.dart';
 import 'package:ShoppingApp/components/custom_text_field.dart';
+import 'package:ShoppingApp/components/shimmer_placeholders.dart';
 import 'package:flutter/services.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,7 @@ class ContactUsSection extends StatelessWidget {
         initialData: adminStreamController.initialData,
         stream: adminStreamController.authStatusStream,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (!snapshot.hasData) return OfferImagePlaceholder();
           if (snapshot.data == UserAuth.unauthorized) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.center,

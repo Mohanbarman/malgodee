@@ -3,6 +3,8 @@ import 'package:ShoppingApp/components/offer_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:ShoppingApp/components/shimmer_placeholders.dart';
+import 'package:ShoppingApp/models/offer.dart';
+import 'shared/localstorage.dart';
 import '../../components/underlined_text.dart';
 import '../../components/buttons.dart';
 import '../../components/offer_image_container.dart';
@@ -42,26 +44,35 @@ class TrendingOffersSection extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: List.generate(
                   2,
-                  (index) => FutureBuilder(
-                    future: FirebaseStorageApi().trendingOffersFuture(index),
-                    builder: (context, snapshot) {
-                      // print(snapshot.data);
-                      if (snapshot.hasData)
-                        return GestureDetector(
-                          onTap: () => showDialog(
-                            context: context,
-                            child: OfferDialog(
+                  (index) {
+                    return FutureBuilder(
+                      future:
+                          LocalStorage.exists(id: snapshot.data.docs[index].id)
+                              ? LocalStorage.loadData(
+                                  id: snapshot.data.docs[index].id)
+                              : LocalStorage.saveData(
+                                  model: OfferModel().fromMap(
+                                    snapshot.data.docs[index],
+                                  ),
+                                ),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData)
+                          return GestureDetector(
+                            onTap: () => showDialog(
+                              context: context,
+                              child: OfferDialog(
+                                bytes: snapshot.data,
+                              ),
+                            ),
+                            child: OfferImageContainer(
+                              fromBytes: true,
                               bytes: snapshot.data,
                             ),
-                          ),
-                          child: OfferImageContainer(
-                            fromBytes: true,
-                            bytes: snapshot.data,
-                          ),
-                        );
-                      return OfferImagePlaceholder();
-                    },
-                  ),
+                          );
+                        return OfferImagePlaceholder();
+                      },
+                    );
+                  },
                 ),
               );
             },

@@ -4,6 +4,7 @@ import 'package:ShoppingApp/components/shimmer_placeholders.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import '../../styles.dart';
 
@@ -14,6 +15,7 @@ class OfferCarousel extends StatefulWidget {
 
 class _OfferCarouselState extends State<OfferCarousel> {
   int _currentIndex = 0;
+  final prefs = SharedPreferences.getInstance();
 
   List<T> map<T>(List list, Function handler) {
     List<T> result = [];

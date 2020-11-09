@@ -1,14 +1,20 @@
+import 'dart:typed_data';
+
+import 'package:ShoppingApp/services/firebase_api.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class OfferModel {
   String id;
   String title;
   String description;
-  String image;
+  Uint8List image;
 
-  OfferModel.fromMap(Map doc)
-      : id = doc['id'],
-        title = doc['title'],
-        description = doc['description'],
-        image = doc['image'];
+  fromMap(QueryDocumentSnapshot doc) async {
+    this.id = doc['id'];
+    this.title = doc['title'];
+    this.description = doc['description'];
+    this.image = await FirebaseStorageApi.futureFromImagePath(doc['image']);
+  }
 
   toJson() {
     return {
