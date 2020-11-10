@@ -38,7 +38,7 @@ class TrendingOffersSection extends StatelessWidget {
           ),
           SizedBox(height: 20),
           StreamBuilder(
-            stream: FirebaseStorageApi.trendingOffersStream(),
+            stream: FirebaseStorageApi.streamOfCollection(collection: 'offers'),
             builder: (context, snapshot) {
               if (!snapshot.hasData) return OfferImagePlaceholder();
               return Row(

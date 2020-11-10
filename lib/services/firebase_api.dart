@@ -92,4 +92,15 @@ class FirebaseStorageApi {
     print('successfully uploaded to $filename');
     return filename;
   }
+
+  static Future<void> addData({Map data, String collection}) async {
+    print(data);
+    CollectionReference ref = FirebaseFirestore.instance.collection(collection);
+    ref.add(data);
+  }
+
+  static deleteDoc({String id, String collection}) async {
+    CollectionReference ref = FirebaseFirestore.instance.collection(collection);
+    await ref.doc(id).delete();
+  }
 }

@@ -1,12 +1,24 @@
+import 'dart:io';
+import 'package:ShoppingApp/models/brand.dart';
+import 'package:ShoppingApp/models/category.dart';
+import 'package:uuid/uuid.dart';
+import 'package:ShoppingApp/bloc/image_pick_bloc.dart';
 import 'package:ShoppingApp/components/bottom_navigation_bar.dart';
+import 'package:ShoppingApp/services/firebase_api.dart';
+import 'package:ShoppingApp/shared/localstorage.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/components/app_bar.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:ShoppingApp/components/underlined_text.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:ShoppingApp/components/buttons.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:async';
 
 class AddBrand extends StatelessWidget {
+  TextEditingController _titleController = TextEditingController();
+  TextEditingController _descriptionController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,11 +28,15 @@ class AddBrand extends StatelessWidget {
         shrinkWrap: true,
         children: [
           Title(),
-          ImagePlaceholder(),
+          ImagePlaceholder(pickedImageBloc),
           SizedBox(height: 30),
-          UploadButton(),
+          UploadButton(pickedImageBloc),
           SizedBox(height: 30),
-          UploadDetailsForm(),
+          UploadDetailsForm(
+            titleController: _titleController,
+            descriptionController: _descriptionController,
+          ),
+          SizedBox(height: 30),
         ],
       ),
     );
@@ -28,6 +44,11 @@ class AddBrand extends StatelessWidget {
 }
 
 class UploadDetailsForm extends StatelessWidget {
+  final TextEditingController titleController;
+  final TextEditingController descriptionController;
+
+  UploadDetailsForm({this.titleController, this.descriptionController});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -42,6 +63,7 @@ class UploadDetailsForm extends StatelessWidget {
                 color: Colors.grey[300],
                 borderRadius: BorderRadius.circular(10)),
             child: TextField(
+              controller: titleController,
               decoration: InputDecoration(
                 border: InputBorder.none,
               ),
@@ -53,10 +75,12 @@ class UploadDetailsForm extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: ScreenPadding),
             decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(10)),
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(10),
+            ),
             child: TextField(
-              maxLines: 8,
+              controller: descriptionController,
+              maxLines: 5,
               decoration: InputDecoration(
                 border: InputBorder.none,
               ),
@@ -70,7 +94,7 @@ class UploadDetailsForm extends StatelessWidget {
                 title: 'Save',
                 fgColor: DefaultGreenColor,
                 shadowColor: DefaultShadowGreenColor,
-                onPressed: () {},
+                onPressed: _save,
               ),
               HighlightedShadowButton(
                 title: 'Cancel',
@@ -84,6 +108,35 @@ class UploadDetailsForm extends StatelessWidget {
       ),
     );
   }
+
+  void _save() async {
+    if (pickedImageBloc.cachedImageBytes != null &&
+        pickedImageBloc.cachedImagePath != null) {
+      var uuid = Uuid();
+      var id = uuid.v1();
+      print(id);
+      String filename =
+          id.toString() + '.' + pickedImageBloc.cachedImagePath.split('.').last;
+      await FirebaseStorageApi.uploadFile(
+        file: File(
+          await LocalStorage.saveImage(
+            bytes: pickedImageBloc.cachedImageBytes,
+            filename: filename,
+          ),
+        ),
+        filename: filename,
+      );
+      await FirebaseStorageApi.addData(
+        data: BrandModel(
+          name: titleController.value.text,
+          description: descriptionController.value.text,
+          image: filename,
+        ).toJson(),
+        collection: 'brands',
+      );
+      print('data added');
+    }
+  }
 }
 
 class Title extends StatelessWidget {
@@ -93,7 +146,7 @@ class Title extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: ScreenPadding),
         child: Center(
-          child: UnderlinedText('Add a Brand').noUnderline(),
+          child: UnderlinedText('Add a brand').noUnderline(),
         ),
       ),
     );
@@ -101,26 +154,43 @@ class Title extends StatelessWidget {
 }
 
 class ImagePlaceholder extends StatelessWidget {
+  final pickedImageBloc;
+  ImagePlaceholder(this.pickedImageBloc);
+
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.center,
-      child: Container(
-        height: 200,
-        width: 200,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-        ),
-        child: Center(
-          child: Text('No image selected', style: PlaceholderTextAddItem),
-        ),
+      child: StreamBuilder(
+        stream: pickedImageBloc.imageBytesStream,
+        builder: (context, snapshot) {
+          return Container(
+            height: 200,
+            width: 200,
+            clipBehavior: Clip.hardEdge,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+            ),
+            child: snapshot.hasData == false
+                ? Center(
+                    child: Text('No image selected',
+                        style: PlaceholderTextAddItem),
+                  )
+                : Image.memory(
+                    snapshot.data,
+                    fit: BoxFit.cover,
+                  ),
+          );
+        },
       ),
     );
   }
 }
 
 class UploadButton extends StatelessWidget {
+  final pickedImageBloc;
+  UploadButton(this.pickedImageBloc);
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -140,7 +210,14 @@ class UploadButton extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(50),
             ),
-            onPressed: () {},
+            onPressed: () {
+              _pickImage().then(
+                (value) async {
+                  pickedImageBloc.imageBytesSink.add(await value.readAsBytes());
+                  pickedImageBloc.imagePathSink.add(value.path);
+                },
+              );
+            },
             color: SecondaryColor,
             label: Text('Select an image', style: UploadButtonTextStyle),
             icon: Icon(FeatherIcons.upload, color: Colors.white),
@@ -149,5 +226,9 @@ class UploadButton extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<PickedFile> _pickImage() async {
+    return await ImagePicker().getImage(source: ImageSource.gallery);
   }
 }

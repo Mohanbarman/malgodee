@@ -1,6 +1,3 @@
-import 'package:ShoppingApp/services/firebase_api.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class OfferModel {
   String id;
   String title;
@@ -17,20 +14,18 @@ class OfferModel {
   });
 
   toJsonRemote() {
-    return {
-      'id': this.id,
+    return Map<String, dynamic>.from({
       'title': this.title,
       'description': this.description,
       'image': this.remoteImage,
-    };
+    });
   }
 
   toJsonLocal() {
-    return {
-      'id': this.id,
+    return Map<String, dynamic>.from({
       'title': this.title,
       'description': this.description,
       'image': this.localImage,
-    };
+    });
   }
 }

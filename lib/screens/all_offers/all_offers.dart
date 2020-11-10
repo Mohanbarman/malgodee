@@ -30,9 +30,9 @@ class Offers extends StatelessWidget {
           ),
           StreamBuilder(
             stream: FirebaseStorageApi.allOffersStream(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) return OfferImagePlaceholder();
-              int offersLength = snapshot.data.docs.length;
+            builder: (context, snapshotOffer) {
+              if (!snapshotOffer.hasData) return OfferImagePlaceholder();
+              int offersLength = snapshotOffer.data.docs.length;
               return Expanded(
                 child: GridView.builder(
                   itemCount: offersLength,
@@ -41,15 +41,18 @@ class Offers extends StatelessWidget {
                   scrollDirection: Axis.vertical,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
+                    childAspectRatio: MediaQuery.of(context).size.width /
+                        (MediaQuery.of(context).size.height / 1.8),
                   ),
                   itemBuilder: (context, index) {
                     return FutureBuilder(
                       future: LocalStorage.loadOfferData(
                         model: OfferModel(
-                          id: snapshot.data.docs[index].id,
-                          title: snapshot.data.docs[index]['title'],
-                          description: snapshot.data.docs[index]['description'],
-                          remoteImage: snapshot.data.docs[index]['image'],
+                          id: snapshotOffer.data.docs[index].id,
+                          title: snapshotOffer.data.docs[index]['title'],
+                          description: snapshotOffer.data.docs[index]
+                              ['description'],
+                          remoteImage: snapshotOffer.data.docs[index]['image'],
                         ),
                       ),
                       builder: (context, snapshot) {
@@ -57,28 +60,53 @@ class Offers extends StatelessWidget {
                           return GestureDetector(
                             onTap: () => showDialog(
                               context: context,
-                              child: OfferDialog(
-                                bytes: snapshot.data,
-                              ),
+                              child: OfferDialog(bytes: snapshot.data),
                             ),
-                            child: Container(
-                              height:
-                                  MediaQuery.of(context).size.width / 2 - 30,
-                              width: MediaQuery.of(context).size.width / 2 - 30,
-                              clipBehavior: Clip.hardEdge,
-                              decoration: BoxDecoration(
-                                color: BackgroundColor,
-                                borderRadius:
-                                    BorderRadius.circular(OfferBorderRadius),
-                              ),
-                              margin: index == 0 || index == 1
-                                  ? EdgeInsets.only(
-                                      left: 10, right: 10, bottom: 10)
-                                  : EdgeInsets.all(10),
-                              child: Image.memory(
-                                snapshot.data,
-                                fit: BoxFit.cover,
-                              ),
+                            child: Column(
+                              children: [
+                                Container(
+                                  height:
+                                      MediaQuery.of(context).size.width / 2 -
+                                          30,
+                                  width: MediaQuery.of(context).size.width / 2 -
+                                      30,
+                                  clipBehavior: Clip.hardEdge,
+                                  decoration: BoxDecoration(
+                                    color: BackgroundColor,
+                                    borderRadius: BorderRadius.circular(
+                                        OfferBorderRadius),
+                                  ),
+                                  margin: index == 0 || index == 1
+                                      ? EdgeInsets.only(
+                                          left: 10, right: 10, bottom: 10)
+                                      : EdgeInsets.all(10),
+                                  child: Image.memory(
+                                    snapshot.data,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.edit),
+                                      onPressed: () {
+                                        print('edit clicked');
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.delete_forever),
+                                      onPressed: () {
+                                        FirebaseStorageApi.deleteDoc(
+                                            id: snapshotOffer
+                                                .data.docs[index].id,
+                                            collection: 'offers');
+                                      },
+                                    )
+                                  ],
+                                ),
+                              ],
                             ),
                           );
                         }
