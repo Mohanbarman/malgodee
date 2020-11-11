@@ -28,6 +28,7 @@ class ImagePickBloc {
     _imagePathController.stream.listen(
       (event) async {
         cachedImagePath = event;
+        print(event);
       },
     );
   }

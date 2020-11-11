@@ -25,6 +25,7 @@ dependencies:
   shared_preferences:
   path_provider:
   uuid:
+  flutter_multiselect: ^0.5.1
 
 dev_dependencies:
   flutter_test:

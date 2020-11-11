@@ -21,6 +21,7 @@ class FirebaseStorageApi {
         .ref()
         .child(docs[index]['image'])
         .getData(MAX_SIZE);
+    // return null;
   }
 
   static Future futureFromImagePath(String path) {

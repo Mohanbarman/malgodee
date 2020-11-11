@@ -24,16 +24,15 @@ class LocalStorage {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String localImagePath = await saveImage(
       bytes: await FirebaseStorageApi.futureFromImagePath(model.remoteImage),
-      filename: '${model.id}.png',
+      filename: model.localImage ?? model.remoteImage,
     );
-    print('Image saved to $localImagePath');
     model.localImage = localImagePath;
     print(model.localImage);
     prefs.setString(model.id, json.encode(model.toJsonLocal()));
-    print('Offer saved with key ${model.id}');
   }
 
   static saveImage({Uint8List bytes, String filename}) async {
+    print(filename);
     Directory _applicationDir = await getApplicationDocumentsDirectory();
     String _path = _applicationDir.path;
     File _fileRef = File(_path + '/' + filename);

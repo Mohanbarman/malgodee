@@ -53,7 +53,7 @@ class RoundedIconContainer extends StatelessWidget {
                       image: bytes == null
                           ? AssetImage(this.imagePath)
                           : MemoryImage(bytes),
-                      fit: BoxFit.fitWidth,
+                      fit: BoxFit.cover,
                     ),
                   ),
           ),

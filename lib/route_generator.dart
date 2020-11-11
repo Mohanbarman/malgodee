@@ -1,3 +1,4 @@
+import 'package:ShoppingApp/editing_screens/edit_offer_screen.dart';
 import 'package:ShoppingApp/screens/all_brands/all_brands.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -48,6 +49,8 @@ class RouteGenerator {
         return NoAnimationMaterialPageRoute(builder: (_) => AddProduct());
       case '/editproduct':
         return NoAnimationMaterialPageRoute(builder: (_) => EditProduct());
+      case '/editoffer':
+        return NoAnimationMaterialPageRoute(builder: (_) => EditOffer());
       default:
         return _errorRoute();
     }

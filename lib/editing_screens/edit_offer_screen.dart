@@ -1,4 +1,5 @@
 import 'package:ShoppingApp/models/offer.dart';
+import 'package:uuid/uuid.dart';
 import 'package:ShoppingApp/bloc/image_pick_bloc.dart';
 import 'package:ShoppingApp/components/bottom_navigation_bar.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
@@ -10,11 +11,10 @@ import 'package:ShoppingApp/components/underlined_text.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:ShoppingApp/components/buttons.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:uuid/uuid.dart';
 import 'dart:async';
 import 'dart:io';
 
-class AddOffer extends StatelessWidget {
+class EditOffer extends StatelessWidget {
   TextEditingController _titleController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
 

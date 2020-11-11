@@ -2,6 +2,7 @@ import 'package:ShoppingApp/models/offer.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:ShoppingApp/shared/localstorage.dart';
 import 'package:ShoppingApp/styles.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:ShoppingApp/components/app_bar.dart';
@@ -45,78 +46,85 @@ class Offers extends StatelessWidget {
                         (MediaQuery.of(context).size.height / 1.8),
                   ),
                   itemBuilder: (context, index) {
-                    return FutureBuilder(
-                      future: LocalStorage.loadOfferData(
-                        model: OfferModel(
-                          id: snapshotOffer.data.docs[index].id,
-                          title: snapshotOffer.data.docs[index]['title'],
-                          description: snapshotOffer.data.docs[index]
-                              ['description'],
-                          remoteImage: snapshotOffer.data.docs[index]['image'],
-                        ),
-                      ),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return GestureDetector(
-                            onTap: () => showDialog(
-                              context: context,
-                              child: OfferDialog(bytes: snapshot.data),
+                    return Column(
+                      children: [
+                        FutureBuilder(
+                          future: LocalStorage.loadOfferData(
+                            model: OfferModel(
+                              id: snapshotOffer.data.docs[index].id,
+                              title: snapshotOffer.data.docs[index]['title'],
+                              description: snapshotOffer.data.docs[index]
+                                  ['description'],
+                              remoteImage: snapshotOffer.data.docs[index]
+                                  ['image'],
                             ),
-                            child: Column(
-                              children: [
-                                Container(
-                                  height:
-                                      MediaQuery.of(context).size.width / 2 -
-                                          30,
-                                  width: MediaQuery.of(context).size.width / 2 -
-                                      30,
-                                  clipBehavior: Clip.hardEdge,
-                                  decoration: BoxDecoration(
-                                    color: BackgroundColor,
-                                    borderRadius: BorderRadius.circular(
-                                        OfferBorderRadius),
-                                  ),
-                                  margin: index == 0 || index == 1
-                                      ? EdgeInsets.only(
-                                          left: 10, right: 10, bottom: 10)
-                                      : EdgeInsets.all(10),
-                                  child: Image.memory(
-                                    snapshot.data,
-                                    fit: BoxFit.cover,
-                                  ),
+                          ),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return GestureDetector(
+                                onTap: () => showDialog(
+                                  context: context,
+                                  child: OfferDialog(bytes: snapshot.data),
                                 ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                child: Column(
                                   children: [
-                                    IconButton(
-                                      icon: Icon(Icons.edit),
-                                      onPressed: () {
-                                        print('edit clicked');
-                                      },
+                                    Container(
+                                      height:
+                                          MediaQuery.of(context).size.width /
+                                                  2 -
+                                              30,
+                                      width: MediaQuery.of(context).size.width /
+                                              2 -
+                                          30,
+                                      clipBehavior: Clip.hardEdge,
+                                      decoration: BoxDecoration(
+                                        color: BackgroundColor,
+                                        borderRadius: BorderRadius.circular(
+                                            OfferBorderRadius),
+                                      ),
+                                      margin: index == 0 || index == 1
+                                          ? EdgeInsets.only(
+                                              left: 10, right: 10, bottom: 10)
+                                          : EdgeInsets.all(10),
+                                      child: Image.memory(
+                                        snapshot.data,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
-                                    IconButton(
-                                      icon: Icon(Icons.delete_forever),
-                                      onPressed: () {
-                                        FirebaseStorageApi.deleteDoc(
-                                            id: snapshotOffer
-                                                .data.docs[index].id,
-                                            collection: 'offers');
-                                      },
-                                    )
                                   ],
                                 ),
-                              ],
+                              );
+                            }
+                            return Padding(
+                              padding: index == 0 || index == 1
+                                  ? EdgeInsets.only(
+                                      left: 10, right: 10, bottom: 10)
+                                  : EdgeInsets.all(10),
+                              child: OfferImagePlaceholder(),
+                            );
+                          },
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.edit),
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/editoffer');
+                                print('hello');
+                              },
                             ),
-                          );
-                        }
-                        return Padding(
-                          padding: index == 0 || index == 1
-                              ? EdgeInsets.only(left: 10, right: 10, bottom: 10)
-                              : EdgeInsets.all(10),
-                          child: OfferImagePlaceholder(),
-                        );
-                      },
+                            IconButton(
+                              icon: Icon(Icons.delete_forever),
+                              onPressed: () {
+                                FirebaseStorageApi.deleteDoc(
+                                    id: snapshotOffer.data.docs[index].id,
+                                    collection: 'offers');
+                              },
+                            )
+                          ],
+                        ),
+                      ],
                     );
                   },
                 ),

@@ -1,10 +1,11 @@
 import 'package:ShoppingApp/components/bottom_navigation_bar.dart';
-import 'package:flutter/material.dart';
-import 'package:ShoppingApp/components/app_bar.dart';
-import 'package:ShoppingApp/styles.dart';
-import 'package:ShoppingApp/components/underlined_text.dart';
+import 'package:flutter_multiselect/flutter_multiselect.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:ShoppingApp/components/underlined_text.dart';
+import 'package:ShoppingApp/components/app_bar.dart';
 import 'package:ShoppingApp/components/buttons.dart';
+import 'package:ShoppingApp/styles.dart';
+import 'package:flutter/material.dart';
 
 class AddProduct extends StatelessWidget {
   @override
@@ -16,7 +17,6 @@ class AddProduct extends StatelessWidget {
         shrinkWrap: true,
         children: [
           Title(),
-          // SizedBox(height: 30),
           Padding(
             padding: const EdgeInsets.all(ScreenPadding),
             child: Text('Product Image', style: AddFieldLabelStyle),
@@ -30,14 +30,78 @@ class AddProduct extends StatelessWidget {
   }
 }
 
-class UploadDetailsForm extends StatelessWidget {
+class UploadDetailsForm extends StatefulWidget {
+  @override
+  _UploadDetailsFormState createState() => _UploadDetailsFormState();
+}
+
+class _UploadDetailsFormState extends State<UploadDetailsForm> {
+  String dropdownValue = 'fan';
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: ScreenPadding * 1.5),
       child: Column(
         children: [
-          Row(children: [Text('Brand Title', style: AddFieldLabelStyle)]),
+          Row(
+            children: [
+              DropdownButton(
+                value: dropdownValue,
+                items: <String>['fan', 'tubelight', 'cooler', 'light']
+                    .map(
+                      (e) => DropdownMenuItem(
+                        child: Text(e),
+                        value: e,
+                      ),
+                    )
+                    .toList(),
+                onChanged: (String value) {
+                  setState(() {
+                    dropdownValue = value;
+                  });
+                },
+              )
+            ],
+          ),
+          MultiSelect(
+            autovalidate: false,
+            titleText: 'title',
+            validator: (value) {
+              if (value == null) {
+                return 'Please select one or more option(s)';
+              }
+            },
+            errorText: 'Please select one or more option(s)',
+            dataSource: [
+              {
+                "display": "Australia",
+                "value": 1,
+              },
+              {
+                "display": "Canada",
+                "value": 2,
+              },
+              {
+                "display": "India",
+                "value": 3,
+              },
+              {
+                "display": "United States",
+                "value": 4,
+              }
+            ],
+            textField: 'display',
+            valueField: 'value',
+            filterable: true,
+            required: true,
+            value: null,
+            onSaved: (value) {
+              print('The value is $value');
+            },
+          ),
+          SizedBox(height: 15),
+          Row(children: [Text('Product Title', style: AddFieldLabelStyle)]),
           SizedBox(height: 15),
           Container(
             padding: EdgeInsets.symmetric(horizontal: ScreenPadding),
@@ -51,7 +115,9 @@ class UploadDetailsForm extends StatelessWidget {
             ),
           ),
           SizedBox(height: 40),
-          Row(children: [Text('Brand Description', style: AddFieldLabelStyle)]),
+          Row(children: [
+            Text('Product Description', style: AddFieldLabelStyle)
+          ]),
           SizedBox(height: 15),
           Container(
             padding: EdgeInsets.symmetric(horizontal: ScreenPadding),
