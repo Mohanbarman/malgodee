@@ -12,46 +12,66 @@ class FirebaseStorageApi {
 
   // ignore: non_constant_identifier_names
   Future trendingOffersFuture(int index) async {
-    var x = await FirebaseFirestore.instance
-        .collection('offers')
-        .where('type', isEqualTo: 'trending')
-        .get();
-    List docs = x.docs.toList();
-    return FirebaseStorage.instance
-        .ref()
-        .child(docs[index]['image'])
-        .getData(MAX_SIZE);
-    // return null;
+    try {
+      var x = await FirebaseFirestore.instance
+          .collection('offers')
+          .where('type', isEqualTo: 'trending')
+          .get();
+      List docs = x.docs.toList();
+      return FirebaseStorage.instance
+          .ref()
+          .child(docs[index]['image'])
+          .getData(MAX_SIZE);
+      // return null;
+    } catch (e) {
+      print(e);
+    }
   }
 
   static Future futureFromImagePath(String path) {
-    return FirebaseStorage.instance.ref().child(path).getData(MAX_SIZE);
+    try {
+      return FirebaseStorage.instance.ref().child(path).getData(MAX_SIZE);
+    } catch (e) {
+      print(e);
+    }
   }
 
   // Get the list of regular offers future
   static Future<List> regularOffersFuture(int index) async {
-    var value = await FirebaseFirestore.instance.collection('offers').get();
-    List docs = value.docs.toList();
-    return FirebaseStorage.instance
-        .ref()
-        .child(docs[index]['image'])
-        .getData(MAX_SIZE);
+    try {
+      var value = await FirebaseFirestore.instance.collection('offers').get();
+      List docs = value.docs.toList();
+      return FirebaseStorage.instance
+          .ref()
+          .child(docs[index]['image'])
+          .getData(MAX_SIZE);
+    } catch (e) {
+      print(e);
+    }
   }
 
   static Stream allOffersStream({int limit}) {
-    return limit == null
-        ? FirebaseFirestore.instance.collection('offers').snapshots()
-        : FirebaseFirestore.instance
-            .collection('offers')
-            .limit(limit)
-            .snapshots();
+    try {
+      return limit == null
+          ? FirebaseFirestore.instance.collection('offers').snapshots()
+          : FirebaseFirestore.instance
+              .collection('offers')
+              .limit(limit)
+              .snapshots();
+    } catch (e) {
+      print(e);
+    }
   }
 
   static Stream trendingOffersStream() {
-    return FirebaseFirestore.instance
-        .collection('offers')
-        .where('type', isEqualTo: 'trending')
-        .snapshots();
+    try {
+      return FirebaseFirestore.instance
+          .collection('offers')
+          .where('type', isEqualTo: 'trending')
+          .snapshots();
+    } catch (e) {
+      print(e);
+    }
   }
 
   static Stream streamOfCollection({
@@ -59,49 +79,78 @@ class FirebaseStorageApi {
     int limit,
     String where,
     String isEqualsTo,
-  }) =>
-      limit == null
+  }) {
+    try {
+      return limit == null
           ? FirebaseFirestore.instance.collection(collection).snapshots()
           : FirebaseFirestore.instance
               .collection(collection)
               .limit(limit + 1)
               .snapshots();
+    } catch (e) {
+      print(e);
+    }
+  }
 
   static Stream streamOfCollectionFiltered({
     String collection,
     int limit,
     String where,
     String isEqualsTo,
-  }) =>
-      limit == null
+  }) {
+    try {
+      return limit == null
           ? FirebaseFirestore.instance.collection(collection).snapshots()
           : FirebaseFirestore.instance
               .collection(collection)
               .where('type', isEqualTo: 'whatsapp')
               .limit(limit + 1)
               .snapshots();
+    } catch (e) {
+      print(e);
+    }
+  }
 
   static updateDocument({model, String collection}) {
-    CollectionReference ref = FirebaseFirestore.instance.collection(collection);
-    ref.doc(model.id).update(model.toJson());
+    try {
+      CollectionReference ref =
+          FirebaseFirestore.instance.collection(collection);
+      ref.doc(model.id).update(model.toJson());
+    } catch (e) {
+      print(e);
+    }
   }
 
   static Future<void> uploadFile({File file, String filename}) async {
-    StorageReference ref = FirebaseStorage.instance.ref().child(filename);
-    final StorageUploadTask uploadTask = ref.putFile(file);
-    await uploadTask.onComplete;
-    print('successfully uploaded to $filename');
-    return filename;
+    try {
+      StorageReference ref = FirebaseStorage.instance.ref().child(filename);
+      final StorageUploadTask uploadTask = ref.putFile(file);
+      await uploadTask.onComplete;
+      print('successfully uploaded to $filename');
+      return filename;
+    } catch (e) {
+      print(e);
+    }
   }
 
   static Future<void> addData({Map data, String collection}) async {
-    print(data);
-    CollectionReference ref = FirebaseFirestore.instance.collection(collection);
-    ref.add(data);
+    try {
+      print(data);
+      CollectionReference ref =
+          FirebaseFirestore.instance.collection(collection);
+      ref.add(data);
+    } catch (e) {
+      print(e);
+    }
   }
 
   static deleteDoc({String id, String collection}) async {
-    CollectionReference ref = FirebaseFirestore.instance.collection(collection);
-    await ref.doc(id).delete();
+    try {
+      CollectionReference ref =
+          FirebaseFirestore.instance.collection(collection);
+      await ref.doc(id).delete();
+    } catch (e) {
+      print(e);
+    }
   }
 }

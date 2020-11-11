@@ -1,12 +1,14 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:ShoppingApp/bloc/product_flow_bloc.dart';
 import 'package:ShoppingApp/components/shimmer_placeholders.dart';
+import 'package:ShoppingApp/models/category.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
-import 'package:flutter/material.dart';
 import 'package:ShoppingApp/components/underlined_text.dart';
 import 'package:ShoppingApp/components/rounded_icon_container.dart';
 import 'package:ShoppingApp/components/buttons.dart';
+import 'package:ShoppingApp/shared/localstorage.dart';
 import 'package:ShoppingApp/styles.dart';
+import 'package:flutter/material.dart';
 
 class CategoriesSection extends StatelessWidget {
   @override
@@ -28,7 +30,9 @@ class CategoriesSection extends StatelessWidget {
                     if (snapshot.hasData &&
                         snapshot.data == UserAuth.isAuthorized) {
                       return Button1(
-                          title: 'Add category', route: '/addcategory');
+                        title: 'Add category',
+                        route: '/addcategory',
+                      );
                     } else if (snapshot.data == UserAuth.unauthorized) {
                       return SizedBox();
                     }
@@ -46,9 +50,9 @@ class CategoriesSection extends StatelessWidget {
                 collection: 'categories',
                 limit: 5,
               ),
-              builder: (context, snapshot) {
+              builder: (context, querySnapshot) {
                 int itemCount =
-                    snapshot.hasData ? snapshot.data.docs.length : 6;
+                    querySnapshot.hasData ? querySnapshot.data.docs.length : 6;
                 return ListView.builder(
                   itemCount: itemCount,
                   scrollDirection: Axis.horizontal,
@@ -68,21 +72,34 @@ class CategoriesSection extends StatelessWidget {
                         ],
                       );
                     }
-                    if (snapshot.hasData) {
-                      String title = snapshot.data.docs.toList()[index]['name'];
+                    if (querySnapshot.hasData) {
+                      String name =
+                          querySnapshot.data.docs.toList()[index]['name'];
                       String imagePath =
-                          snapshot.data.docs.toList()[index]['image'];
+                          querySnapshot.data.docs.toList()[index]['image'];
+                      String id = querySnapshot.data.docs.toList()[index].id;
                       return Row(
                         children: [
                           SizedBox(width: ScreenPadding),
                           FutureBuilder(
-                            future: FirebaseStorageApi.futureFromImagePath(
-                                imagePath),
+                            future: LocalStorage.loadData(
+                              model: CategoryModel(
+                                name: name,
+                                image: imagePath,
+                                id: id,
+                              ),
+                            ),
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
                                 return RoundedIconContainer(
-                                  title: title,
+                                  title: name,
                                   bytes: snapshot.data,
+                                  onTap: () {
+                                    // productFlowBloc.productSink.add({
+                                    //   'category':
+                                    //       querySnapshot.data.docs[index].id
+                                    // });
+                                  },
                                 );
                               }
                               return CategoriesImagePlaceholder();

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'route_generator.dart';
 
 void main() async {
@@ -17,6 +18,9 @@ void main() async {
       productFlowBloc.productStreamRouteInfo,
     ),
   );
+
+  // SharedPreferences prefs = await SharedPreferences.getInstance();
+  // prefs.clear();
 
   await Firebase.initializeApp();
   if (FirebaseAuth.instance.currentUser != null) {

@@ -1,4 +1,9 @@
 import 'package:ShoppingApp/components/bottom_navigation_bar.dart';
+import 'package:ShoppingApp/components/shimmer_placeholders.dart';
+import 'package:ShoppingApp/models/brand.dart';
+import 'package:ShoppingApp/models/category.dart';
+import 'package:ShoppingApp/services/firebase_api.dart';
+import 'package:ShoppingApp/shared/localstorage.dart';
 import 'package:flutter_multiselect/flutter_multiselect.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:ShoppingApp/components/underlined_text.dart';
@@ -24,6 +29,7 @@ class AddProduct extends StatelessWidget {
           ImageRow(),
           SizedBox(height: 30),
           UploadDetailsForm(),
+          SizedBox(height: 30),
         ],
       ),
     );
@@ -44,62 +50,69 @@ class _UploadDetailsFormState extends State<UploadDetailsForm> {
       padding: EdgeInsets.symmetric(horizontal: ScreenPadding * 1.5),
       child: Column(
         children: [
-          Row(
-            children: [
-              DropdownButton(
+          StreamBuilder(
+            stream: FirebaseStorageApi.streamOfCollection(
+              collection: 'brands',
+            ),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) return TextInputShimmer();
+              return DropdownButton(
                 value: dropdownValue,
-                items: <String>['fan', 'tubelight', 'cooler', 'light']
+                items: snapshot.data.docs
+                    .toList()
                     .map(
-                      (e) => DropdownMenuItem(
-                        child: Text(e),
-                        value: e,
-                      ),
+                      (e) {
+                        print(e.id);
+                        return DropdownMenuItem<String>(
+                          child: Text(e['name']),
+                          value: e['name'],
+                        );
+                      },
                     )
-                    .toList(),
+                    .toList()
+                    .cast<DropdownMenuItem<String>>(),
                 onChanged: (String value) {
                   setState(() {
                     dropdownValue = value;
                   });
                 },
-              )
-            ],
-          ),
-          MultiSelect(
-            autovalidate: false,
-            titleText: 'title',
-            validator: (value) {
-              if (value == null) {
-                return 'Please select one or more option(s)';
-              }
-            },
-            errorText: 'Please select one or more option(s)',
-            dataSource: [
-              {
-                "display": "Australia",
-                "value": 1,
-              },
-              {
-                "display": "Canada",
-                "value": 2,
-              },
-              {
-                "display": "India",
-                "value": 3,
-              },
-              {
-                "display": "United States",
-                "value": 4,
-              }
-            ],
-            textField: 'display',
-            valueField: 'value',
-            filterable: true,
-            required: true,
-            value: null,
-            onSaved: (value) {
-              print('The value is $value');
+              );
             },
           ),
+          StreamBuilder(
+              stream: FirebaseStorageApi.streamOfCollection(
+                collection: 'categories',
+              ),
+              builder: (context, snapshot) {
+                return MultiSelect(
+                  autovalidate: true,
+                  titleText: 'title',
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Please select one or more option(s)';
+                    }
+                    return null;
+                  },
+                  errorText: 'Please select one or more option(s)',
+                  dataSource: snapshot.data.docs
+                      .toList()
+                      .map(
+                        (e) => {
+                          'value': e.id,
+                          'display': e['name'],
+                        },
+                      )
+                      .toList(),
+                  textField: 'display',
+                  valueField: 'value',
+                  filterable: true,
+                  required: true,
+                  onSaved: (value) {
+                    print('value saved');
+                    print('The value is $value');
+                  },
+                );
+              }),
           SizedBox(height: 15),
           Row(children: [Text('Product Title', style: AddFieldLabelStyle)]),
           SizedBox(height: 15),

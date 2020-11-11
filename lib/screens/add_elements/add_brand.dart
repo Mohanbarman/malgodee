@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:ShoppingApp/models/brand.dart';
-import 'package:ShoppingApp/models/category.dart';
 import 'package:uuid/uuid.dart';
 import 'package:ShoppingApp/bloc/image_pick_bloc.dart';
 import 'package:ShoppingApp/components/bottom_navigation_bar.dart';
@@ -117,24 +116,28 @@ class UploadDetailsForm extends StatelessWidget {
       print(id);
       String filename =
           id.toString() + '.' + pickedImageBloc.cachedImagePath.split('.').last;
-      await FirebaseStorageApi.uploadFile(
-        file: File(
-          await LocalStorage.saveImage(
-            bytes: pickedImageBloc.cachedImageBytes,
-            filename: filename,
+      try {
+        await FirebaseStorageApi.uploadFile(
+          file: File(
+            await LocalStorage.saveImage(
+              bytes: pickedImageBloc.cachedImageBytes,
+              filename: filename,
+            ),
           ),
-        ),
-        filename: filename,
-      );
-      await FirebaseStorageApi.addData(
-        data: BrandModel(
-          name: titleController.value.text,
-          description: descriptionController.value.text,
-          image: filename,
-        ).toJson(),
-        collection: 'brands',
-      );
-      print('data added');
+          filename: filename,
+        );
+        await FirebaseStorageApi.addData(
+          data: BrandModel(
+            name: titleController.value.text,
+            description: descriptionController.value.text,
+            image: filename,
+          ).toJson(),
+          collection: 'brands',
+        );
+        print('data added');
+      } catch (e) {
+        print('Upload failed : $e');
+      }
     }
   }
 }

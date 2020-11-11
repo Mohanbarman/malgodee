@@ -1,6 +1,8 @@
 import 'package:ShoppingApp/bloc/product_flow_bloc.dart';
 import 'package:ShoppingApp/components/shimmer_placeholders.dart';
+import 'package:ShoppingApp/models/brand.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
+import 'package:ShoppingApp/shared/localstorage.dart';
 import 'package:flutter/material.dart';
 import 'rounded_icon_container.dart';
 
@@ -44,15 +46,23 @@ class CustomGridViewX4 extends StatelessWidget {
                 return SizedBox();
               }
 
-              String title = snapshot.data.docs[index]['name'];
+              String name = snapshot.data.docs[index]['name'];
               String imagePath = snapshot.data.docs[index]['image'];
+              String id = snapshot.data.docs[index].id;
 
               return FutureBuilder(
-                future: FirebaseStorageApi.futureFromImagePath(imagePath),
+                // future: FirebaseStorageApi.futureFromImagePath(imagePath),
+                future: LocalStorage.loadData(
+                  model: BrandModel(
+                    name: name,
+                    image: imagePath,
+                    id: id,
+                  ),
+                ),
                 builder: (context, snapshot1) {
                   if (!snapshot1.hasData) return CategoriesImagePlaceholder();
                   return RoundedIconContainer(
-                    title: title,
+                    title: name,
                     bytes: snapshot1.data,
                   );
                 },

@@ -26,6 +26,11 @@ dependencies:
   path_provider:
   uuid:
   flutter_multiselect: ^0.5.1
+  # logs:
+  #   git: 
+  #     url: https://github.com/pq/logs
+  #     ref: master
+
 
 dev_dependencies:
   flutter_test:
