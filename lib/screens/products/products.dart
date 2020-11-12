@@ -1,4 +1,5 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
+import 'package:ShoppingApp/bloc/product_flow_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/components/app_bar.dart';
@@ -37,7 +38,7 @@ class AllProducts extends StatelessWidget {
   final Map prevRouteInfo;
 
   AllProducts(this.prevRouteInfo) {
-    print(prevRouteInfo);
+    productFlowBloc.routeStateSink.add(ProductRoute.clearData);
   }
 
   @override
@@ -47,8 +48,12 @@ class AllProducts extends StatelessWidget {
       bottomNavigationBar: CustomBottomNavigationBar(0),
       backgroundColor: BackgroundColor,
       body: Container(
-        padding:
-            EdgeInsets.fromLTRB(ScreenPadding, ScreenPadding, ScreenPadding, 0),
+        padding: EdgeInsets.fromLTRB(
+          ScreenPadding,
+          ScreenPadding,
+          ScreenPadding,
+          0,
+        ),
         child: ListView(
           children: [
             Row(
@@ -56,9 +61,11 @@ class AllProducts extends StatelessWidget {
               children: [
                 UnderlinedText('Products'),
                 StreamBuilder(
+                  initialData: adminStreamController.initialData,
                   stream: adminStreamController.authStatusStream,
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    if (true) {
+                    if (snapshot.hasData &&
+                        snapshot.data == UserAuth.isAuthorized) {
                       return Button1(
                           title: 'Add product', route: '/addproduct');
                     } else {

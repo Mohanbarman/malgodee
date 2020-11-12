@@ -7,25 +7,29 @@ class ProductBloc {
   final StreamController _productRouteState = StreamController.broadcast();
   Map productStreamRouteInfo = {'category': null, 'brand': null};
 
-  void handleProductRouteData(data, sink) {
+  void _handleProductRouteData(data) {
     if (data.containsKey('brand'))
       this.productStreamRouteInfo['brand'] = data['brand'];
     else if (data.containsKey('category'))
       this.productStreamRouteInfo['category'] = data['category'];
-    sink.add(data);
+    print(this.productStreamRouteInfo);
   }
 
-  void handleStateData(data, sink) {
+  void _handleProductRouteState(data) {
     if (data == ProductRoute.clearData) {
-      this.productStreamRouteInfo = {'category': null, 'brand': null};
+      this.productStreamRouteInfo['brand'] = null;
+      this.productStreamRouteInfo['category'] = null;
+      print(this.productStreamRouteInfo);
     }
   }
 
-  get productStream => _productController.stream
-      .transform(StreamTransformer.fromHandlers(handleData: handleStateData));
+  ProductBloc() {
+    productStream.listen(_handleProductRouteData);
+    routeStateStream.listen(_handleProductRouteState);
+  }
 
-  get routeStateStream => _productRouteState.stream.transform(
-      StreamTransformer.fromHandlers(handleData: handleProductRouteData));
+  get productStream => _productController.stream;
+  get routeStateStream => _productRouteState.stream;
 
   get productSink => _productController.sink;
   get routeStateSink => _productRouteState.sink;

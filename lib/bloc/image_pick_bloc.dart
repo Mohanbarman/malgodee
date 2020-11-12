@@ -1,5 +1,5 @@
-import 'dart:async';
 import 'dart:typed_data';
+import 'dart:async';
 
 class ImagePickBloc {
   Uint8List cachedImageBytes;
@@ -17,6 +17,11 @@ class ImagePickBloc {
   void dispose() {
     _imageBytesController.close();
     _imagePathController.close();
+  }
+
+  void clear() {
+    this.cachedImageBytes = null;
+    this.cachedImagePath = null;
   }
 
   ImagePickBloc() {

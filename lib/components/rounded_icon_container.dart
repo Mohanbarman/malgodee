@@ -1,7 +1,6 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'dart:typed_data';
 import '../styles.dart';
 
 class RoundedIconContainer extends StatelessWidget {
@@ -11,6 +10,7 @@ class RoundedIconContainer extends StatelessWidget {
   Function onTap;
   bool viewAllIcon = false;
   Uint8List bytes;
+  Function onLongPress;
 
   RoundedIconContainer({
     this.title,
@@ -19,6 +19,7 @@ class RoundedIconContainer extends StatelessWidget {
     this.onTap,
     this.viewAllIcon,
     this.bytes,
+    this.onLongPress,
   });
 
   @override
@@ -42,13 +43,14 @@ class RoundedIconContainer extends StatelessWidget {
                       if (route != null) {
                         Navigator.pushNamed(context, route);
                       }
-                      if (onTap != null) {
+                      if (this.onTap != null) {
                         onTap();
                       }
                     },
                   )
                 : GestureDetector(
-                    onTap: this.onTap,
+                    onTap: this.onTap ?? null,
+                    onLongPress: this.onLongPress ?? null,
                     child: Image(
                       image: bytes == null
                           ? AssetImage(this.imagePath)

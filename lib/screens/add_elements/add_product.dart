@@ -1,7 +1,6 @@
 import 'package:ShoppingApp/components/bottom_navigation_bar.dart';
 import 'package:ShoppingApp/components/shimmer_placeholders.dart';
-import 'package:ShoppingApp/models/brand.dart';
-import 'package:ShoppingApp/models/category.dart';
+import 'package:ShoppingApp/models/product.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:ShoppingApp/shared/localstorage.dart';
 import 'package:flutter_multiselect/flutter_multiselect.dart';
@@ -11,6 +10,9 @@ import 'package:ShoppingApp/components/app_bar.dart';
 import 'package:ShoppingApp/components/buttons.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
+import 'dart:async';
+import 'dart:io';
 
 class AddProduct extends StatelessWidget {
   @override
@@ -42,7 +44,12 @@ class UploadDetailsForm extends StatefulWidget {
 }
 
 class _UploadDetailsFormState extends State<UploadDetailsForm> {
-  String dropdownValue = 'fan';
+  String dropdownValue;
+
+  TextEditingController _titleController = TextEditingController();
+  TextEditingController _descriptionController = TextEditingController();
+
+  List<String> categories = [];
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +72,7 @@ class _UploadDetailsFormState extends State<UploadDetailsForm> {
                         print(e.id);
                         return DropdownMenuItem<String>(
                           child: Text(e['name']),
-                          value: e['name'],
+                          value: e.id,
                         );
                       },
                     )
@@ -74,6 +81,7 @@ class _UploadDetailsFormState extends State<UploadDetailsForm> {
                 onChanged: (String value) {
                   setState(() {
                     dropdownValue = value;
+                    print('selected : $value');
                   });
                 },
               );
@@ -91,7 +99,7 @@ class _UploadDetailsFormState extends State<UploadDetailsForm> {
                     if (value == null) {
                       return 'Please select one or more option(s)';
                     }
-                    return null;
+                    this.categories = value.cast<String>();
                   },
                   errorText: 'Please select one or more option(s)',
                   dataSource: snapshot.data.docs
@@ -107,10 +115,6 @@ class _UploadDetailsFormState extends State<UploadDetailsForm> {
                   valueField: 'value',
                   filterable: true,
                   required: true,
-                  onSaved: (value) {
-                    print('value saved');
-                    print('The value is $value');
-                  },
                 );
               }),
           SizedBox(height: 15),
@@ -122,6 +126,7 @@ class _UploadDetailsFormState extends State<UploadDetailsForm> {
                 color: Colors.grey[300],
                 borderRadius: BorderRadius.circular(10)),
             child: TextField(
+              controller: _titleController,
               decoration: InputDecoration(
                 border: InputBorder.none,
               ),
@@ -138,6 +143,7 @@ class _UploadDetailsFormState extends State<UploadDetailsForm> {
                 color: Colors.grey[300],
                 borderRadius: BorderRadius.circular(10)),
             child: TextField(
+              controller: _descriptionController,
               maxLines: 8,
               decoration: InputDecoration(
                 border: InputBorder.none,
@@ -152,7 +158,7 @@ class _UploadDetailsFormState extends State<UploadDetailsForm> {
                 title: 'Save',
                 fgColor: DefaultGreenColor,
                 shadowColor: DefaultShadowGreenColor,
-                onPressed: () {},
+                onPressed: _save,
               ),
               HighlightedShadowButton(
                 title: 'Cancel',
@@ -165,6 +171,31 @@ class _UploadDetailsFormState extends State<UploadDetailsForm> {
         ],
       ),
     );
+  }
+
+  void _save() {
+    List<String> uploadedPaths = [];
+    _addProductBloc.path.forEach((element) async {
+      var uuid = Uuid();
+      String filenameuuid = uuid.v1();
+      String filename = '$filenameuuid.${element.split('.').last}';
+      uploadedPaths.add(filename);
+      FirebaseStorageApi.uploadFile(
+        file: File(element),
+        filename: filename,
+      );
+    });
+
+    FirebaseStorageApi.addData(
+      collection: 'products',
+      data: ProductModel(
+        name: _titleController.value.text,
+        description: _descriptionController.value.text,
+        images: uploadedPaths,
+        categories: categories,
+        brand: dropdownValue,
+      ).toJson(),
+    ).then((value) => print('product added'));
   }
 }
 
@@ -185,47 +216,114 @@ class ImageRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 200,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        shrinkWrap: true,
-        physics: ClampingScrollPhysics(),
-        children: [
-          SizedBox(width: ScreenPadding),
-          GestureDetector(
-            onTap: () {},
-            child: Container(
-              height: 50,
-              width: 200,
-              clipBehavior: Clip.hardEdge,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child: Stack(
+      child: StreamBuilder(
+        stream: _addProductBloc.stream,
+        builder: (context, snapshot) {
+          int itemCount = _addProductBloc.path.length + 1;
+          return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            itemCount: itemCount,
+            physics: ClampingScrollPhysics(),
+            itemBuilder: (context, index) {
+              if (index + 1 == itemCount) {
+                return Row(
+                  children: [
+                    SizedBox(width: ScreenPadding),
+                    imagePickerButton(),
+                    SizedBox(width: ScreenPadding),
+                  ],
+                );
+              }
+              return Row(
                 children: [
-                  Center(
-                    child: Icon(
-                      FeatherIcons.upload,
-                      size: 70,
-                      color: DefaultGreenColor,
+                  SizedBox(width: ScreenPadding),
+                  Container(
+                    height: 200,
+                    width: 200,
+                    clipBehavior: Clip.hardEdge,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: Image.file(
+                      File(_addProductBloc.path[index]),
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  Positioned(
-                    bottom: 15,
-                    child: Container(
-                      width: 200,
-                      child: Center(
-                          child:
-                              Text('900x900', style: PlaceholderTextAddItem)),
-                    ),
-                  )
                 ],
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  Widget imagePickerButton() {
+    return GestureDetector(
+      onTap: () {
+        LocalStorage.pickImage().then(
+          (value) => _addProductBloc.add(value.path),
+        );
+      },
+      child: Container(
+        height: 200,
+        width: 200,
+        clipBehavior: Clip.hardEdge,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: Stack(
+          children: [
+            Center(
+              child: Icon(
+                FeatherIcons.upload,
+                size: 70,
+                color: DefaultGreenColor,
               ),
             ),
-          ),
-          SizedBox(width: ScreenPadding),
-        ],
+            Positioned(
+              bottom: 15,
+              child: Container(
+                width: 200,
+                child: Center(
+                  child: Text(
+                    '900x900',
+                    style: PlaceholderTextAddItem,
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
 }
+
+class AddProductBloc {
+  StreamController<String> _controller = StreamController<String>.broadcast();
+  List<String> path = [];
+
+  void add(String path) {
+    _controller.sink.add(path);
+  }
+
+  get stream => _controller.stream;
+
+  AddProductBloc() {
+    _controller.stream.listen((e) {
+      path.add(e);
+      print('added : $e');
+      print('current list : $path');
+    });
+  }
+
+  void dispose() {
+    _controller.close();
+  }
+}
+
+AddProductBloc _addProductBloc = AddProductBloc();

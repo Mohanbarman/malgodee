@@ -14,15 +14,30 @@ import 'package:uuid/uuid.dart';
 import 'dart:async';
 import 'dart:io';
 
-class AddCategory extends StatelessWidget {
-  TextEditingController _titleController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
+class EditCategory extends StatelessWidget {
+  CategoryModel categoryModel;
+  TextEditingController _titleController;
+  TextEditingController _descriptionController;
+
+  EditCategory({CategoryModel categoryModel}) {
+    this.categoryModel = categoryModel;
+    this._titleController = TextEditingController(text: categoryModel.name);
+    this._descriptionController = TextEditingController(
+      text: categoryModel.description,
+    );
+
+    pickedImageBloc.clear();
+
+    LocalStorage.loadData(model: categoryModel).then(
+      (bytes) => pickedImageBloc.imageBytesSink.add(bytes),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(),
-      bottomNavigationBar: CustomBottomNavigationBar(null),
+      // bottomNavigationBar: CustomBottomNavigationBar(null),
       body: ListView(
         shrinkWrap: true,
         children: [
@@ -34,6 +49,7 @@ class AddCategory extends StatelessWidget {
           UploadDetailsForm(
             titleController: _titleController,
             descriptionController: _descriptionController,
+            model: this.categoryModel,
           ),
           SizedBox(height: 30),
         ],
@@ -45,8 +61,13 @@ class AddCategory extends StatelessWidget {
 class UploadDetailsForm extends StatelessWidget {
   final TextEditingController titleController;
   final TextEditingController descriptionController;
+  final model;
 
-  UploadDetailsForm({this.titleController, this.descriptionController});
+  UploadDetailsForm({
+    this.titleController,
+    this.descriptionController,
+    this.model,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +102,7 @@ class UploadDetailsForm extends StatelessWidget {
             ),
             child: TextField(
               controller: descriptionController,
-              maxLines: 5,
+              maxLines: 10,
               decoration: InputDecoration(
                 border: InputBorder.none,
               ),
@@ -96,14 +117,38 @@ class UploadDetailsForm extends StatelessWidget {
                 fgColor: DefaultGreenColor,
                 shadowColor: DefaultShadowGreenColor,
                 onPressed: () {
-                  _save().then((value) => Navigator.pop(context));
+                  _save().then(
+                    (_) => Navigator.pushReplacementNamed(
+                      context,
+                      '/allcategories',
+                    ),
+                  );
                 },
               ),
               HighlightedShadowButton(
-                title: 'Cancel',
+                title: 'Delete',
                 fgColor: DefaultRedColor,
                 shadowColor: DefaultShadowRedColor,
-                onPressed: () => Navigator.pop(context),
+                onPressed: () {
+                  FirebaseStorageApi.deleteDoc(
+                    id: model.id,
+                    collection: 'categories',
+                  )
+                      .then(
+                        (value) => Scaffold.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: DefaultRedColor,
+                            content: Text('Deleting category'),
+                          ),
+                        ),
+                      )
+                      .then(
+                        (value) => Navigator.pushReplacementNamed(
+                          context,
+                          '/allcategories',
+                        ),
+                      );
+                },
               ),
             ],
           ),
@@ -115,25 +160,38 @@ class UploadDetailsForm extends StatelessWidget {
   Future _save() async {
     if (pickedImageBloc.cachedImageBytes != null &&
         pickedImageBloc.cachedImagePath != null) {
+      print('this ran');
       var uuid = Uuid();
       var id = uuid.v1();
       print(pickedImageBloc.cachedImagePath);
       String filename =
           id.toString() + '.' + pickedImageBloc.cachedImagePath.split('.').last;
-      FirebaseStorageApi.uploadFile(
+      await FirebaseStorageApi.uploadFile(
         file: File(pickedImageBloc.cachedImagePath),
         filename: filename,
       );
-      FirebaseStorageApi.addData(
-        data: CategoryModel(
+      await FirebaseStorageApi.updateDocument(
+        model: CategoryModel(
           name: titleController.value.text,
           description: descriptionController.value.text,
           image: filename,
-        ).toJson(),
+          id: model.id,
+        ),
         collection: 'categories',
       );
-      return true;
+    } else {
+      await FirebaseStorageApi.updateDocument(
+        model: CategoryModel(
+          name: titleController.value.text,
+          description: descriptionController.value.text,
+          id: model.id,
+          image: model.image,
+        ),
+        collection: 'categories',
+      );
     }
+
+    return true;
   }
 }
 
@@ -144,7 +202,7 @@ class Title extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: ScreenPadding),
         child: Center(
-          child: UnderlinedText('Add a category').noUnderline(),
+          child: UnderlinedText('Edit category').noUnderline(),
         ),
       ),
     );
@@ -172,10 +230,8 @@ class ImagePlaceholder extends StatelessWidget {
             ),
             child: snapshot.hasData == false
                 ? Center(
-                    child: Text(
-                      'No image selected',
-                      style: PlaceholderTextAddItem,
-                    ),
+                    child: Text('No image selected',
+                        style: PlaceholderTextAddItem),
                   )
                 : Image.memory(
                     snapshot.data,

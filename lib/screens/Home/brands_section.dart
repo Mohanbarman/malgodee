@@ -1,4 +1,5 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
+import 'package:ShoppingApp/bloc/product_flow_bloc.dart';
 import 'package:ShoppingApp/components/custom_grid.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,14 @@ class BrandsSection extends StatelessWidget {
           ),
           SizedBox(height: 20),
           CustomGridViewX4(
+            onTap: (id) {
+              productFlowBloc.productSink.add({'brand': id});
+              Navigator.pushNamed(
+                context,
+                '/allcategories',
+                arguments: productFlowBloc.productStreamRouteInfo,
+              );
+            },
             itemsStream: FirebaseStorageApi.streamOfCollection(
               collection: 'brands',
               limit: 10,

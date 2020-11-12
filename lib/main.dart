@@ -10,17 +10,9 @@ import 'route_generator.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  adminStreamController.authStatusStream.listen(
-    (event) => print(event),
-  );
-  productFlowBloc.productStream.listen(
-    (_) => print(
-      productFlowBloc.productStreamRouteInfo,
-    ),
-  );
-
-  // SharedPreferences prefs = await SharedPreferences.getInstance();
-  // prefs.clear();
+  // productFlowBloc.productStream.listen((e) {
+  //   print(e);
+  // });
 
   await Firebase.initializeApp();
   if (FirebaseAuth.instance.currentUser != null) {

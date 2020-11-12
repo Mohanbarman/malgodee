@@ -1,3 +1,4 @@
+import 'package:ShoppingApp/editing_screens/edit_category.dart';
 import 'package:ShoppingApp/editing_screens/edit_offer_screen.dart';
 import 'package:ShoppingApp/screens/all_brands/all_brands.dart';
 import 'package:flutter/cupertino.dart';
@@ -25,20 +26,20 @@ class RouteGenerator {
         return NoAnimationMaterialPageRoute(builder: (_) => Offers());
       case '/login':
         return NoAnimationMaterialPageRoute(builder: (_) => Login());
-      case '/categories':
+      case '/allcategories':
         return NoAnimationMaterialPageRoute(
-            builder: (_) => AllCategories(args));
-      case '/brands':
+          builder: (_) => AllCategories(args),
+        );
+      case '/allbrands':
         return NoAnimationMaterialPageRoute(builder: (_) => AllBrands(args));
       case '/products':
         return NoAnimationMaterialPageRoute(
           builder: (_) => AllProducts(args),
         );
-        return _errorRoute();
       case '/productinfo':
         return NoAnimationMaterialPageRoute(
           builder: (_) => ProductInfo(),
-        ); // work left
+        );
       case '/addcategory':
         return NoAnimationMaterialPageRoute(builder: (_) => AddCategory());
       case '/addbrand':
@@ -51,6 +52,12 @@ class RouteGenerator {
         return NoAnimationMaterialPageRoute(builder: (_) => EditProduct());
       case '/editoffer':
         return NoAnimationMaterialPageRoute(builder: (_) => EditOffer());
+      case '/editcategory':
+        return NoAnimationMaterialPageRoute(
+          builder: (_) => EditCategory(
+            categoryModel: args,
+          ),
+        );
       default:
         return _errorRoute();
     }
@@ -67,7 +74,10 @@ class RouteGenerator {
           ),
           body: Center(
             child: Container(
-              child: Text('Something went wrong Page not found :('),
+              child: Text(
+                'Something went wrong Page not found :(',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ),
         );

@@ -66,7 +66,15 @@ class CategoriesSection extends StatelessWidget {
                           RoundedIconContainer(
                             title: 'All categories',
                             viewAllIcon: true,
-                            route: '/categories',
+                            route: '/allcategories',
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                '/allcategories',
+                                arguments:
+                                    productFlowBloc.productStreamRouteInfo,
+                              );
+                            },
                           ),
                           SizedBox(width: ScreenPadding),
                         ],
@@ -95,10 +103,18 @@ class CategoriesSection extends StatelessWidget {
                                   title: name,
                                   bytes: snapshot.data,
                                   onTap: () {
-                                    // productFlowBloc.productSink.add({
-                                    //   'category':
-                                    //       querySnapshot.data.docs[index].id
-                                    // });
+                                    productFlowBloc.productSink.add(
+                                      {
+                                        'category':
+                                            querySnapshot.data.docs[index].id
+                                      },
+                                    );
+                                    Navigator.pushNamed(
+                                      context,
+                                      '/allbrands',
+                                      arguments: productFlowBloc
+                                          .productStreamRouteInfo,
+                                    );
                                   },
                                 );
                               }

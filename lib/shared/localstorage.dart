@@ -1,3 +1,4 @@
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:path_provider/path_provider.dart';
@@ -34,24 +35,18 @@ class LocalStorage {
     prefs.setString(model.id, json.encode(model.toJsonLocal()));
   }
 
-  static loadData({dynamic model}) async {
+  static Future loadData({dynamic model}) async {
     try {
       Directory dir = await getApplicationDocumentsDirectory();
       String appDirPath = dir.path;
-      String path = '$appDirPath/${model.id}';
-      print('checking : $path');
+      String path = '$appDirPath/${model.image}';
       if (await File(path).exists() == true) {
-        print('exists $path');
         return await File(path).readAsBytes();
       }
       Uint8List imageBytes = await FirebaseStorageApi.futureFromImagePath(
         model.image,
       );
-
-      await saveImage(
-        bytes: imageBytes,
-        filename: model.id,
-      );
+      await saveImage(bytes: imageBytes, filename: model.image);
 
       return imageBytes;
     } catch (e) {
@@ -72,5 +67,9 @@ class LocalStorage {
   static exists({String id}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.containsKey(id);
+  }
+
+  static Future pickImage() {
+    return ImagePicker().getImage(source: ImageSource.gallery);
   }
 }

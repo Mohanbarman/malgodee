@@ -1,7 +1,5 @@
-import 'package:ShoppingApp/bloc/product_flow_bloc.dart';
 import 'package:ShoppingApp/components/shimmer_placeholders.dart';
 import 'package:ShoppingApp/models/brand.dart';
-import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:ShoppingApp/shared/localstorage.dart';
 import 'package:flutter/material.dart';
 import 'rounded_icon_container.dart';
@@ -11,13 +9,17 @@ enum Referer { category, brand }
 class CustomGridViewX4 extends StatelessWidget {
   final Stream itemsStream;
   final Widget lastWidget;
-  final Referer referer;
+  final String referer;
   final BuildContext context;
+  final Function onTap;
+  final Function onLongPress;
   CustomGridViewX4({
     @required this.itemsStream,
     this.lastWidget,
     this.referer,
     this.context,
+    this.onTap,
+    this.onLongPress,
   });
 
   @override
@@ -38,20 +40,16 @@ class CustomGridViewX4 extends StatelessWidget {
             itemBuilder: (context, index) {
               if (!snapshot.hasData) return CategoriesImagePlaceholder();
 
-              if (lastWidget is Widget && index + 1 == itemCount) {
+              if (lastWidget is Widget && index + 1 == itemCount)
                 return lastWidget;
-              }
 
-              if (index + 1 == itemCount) {
-                return SizedBox();
-              }
+              if (index + 1 == itemCount) return SizedBox();
 
               String name = snapshot.data.docs[index]['name'];
               String imagePath = snapshot.data.docs[index]['image'];
               String id = snapshot.data.docs[index].id;
 
               return FutureBuilder(
-                // future: FirebaseStorageApi.futureFromImagePath(imagePath),
                 future: LocalStorage.loadData(
                   model: BrandModel(
                     name: name,
@@ -64,6 +62,20 @@ class CustomGridViewX4 extends StatelessWidget {
                   return RoundedIconContainer(
                     title: name,
                     bytes: snapshot1.data,
+                    onLongPress: () {
+                          onLongPress(
+                            id: snapshot.data.docs[index].id,
+                            name: snapshot.data.docs[index]['name'],
+                            image: snapshot.data.docs[index]['image'],
+                            description: snapshot.data.docs[index]
+                                ['description'],
+                          );
+                        } ??
+                        () {},
+                    onTap: () {
+                          onTap(id);
+                        } ??
+                        () {},
                   );
                 },
               );

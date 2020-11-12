@@ -1,26 +1,34 @@
-class Product {
+class ProductModel {
   String id;
   String name;
-  String img;
+  List<String> images;
+  List<String> categories;
+  String brand;
   String description;
-  List highlights;
 
-  Product({this.id, this.name, this.img, this.description, this.highlights});
+  ProductModel({
+    this.id,
+    this.name,
+    this.images,
+    this.description,
+    this.categories,
+    this.brand,
+  });
 
-  Product.fromMap(Map snapshot, String id)
+  ProductModel.fromMap(Map snapshot, String id)
       : id = id ?? '',
         name = snapshot['name'] ?? '',
-        img = snapshot['img'] ?? '',
-        description = snapshot['description'] ?? '',
-        highlights = snapshot['highlights'].split('\n') ?? '';
+        images = snapshot['images'] ?? '',
+        description = snapshot['description'] ?? '';
 
   toJson() {
-    return {
+    return Map<String, dynamic>.from({
       'id': this.id,
       'name': this.name,
-      'img': this.img,
+      'images': this.images,
       'description': this.description,
-      'highlights': this.highlights,
-    };
+      'categories': this.categories,
+      'brand': this.brand,
+    });
   }
 }

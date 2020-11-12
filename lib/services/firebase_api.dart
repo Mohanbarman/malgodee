@@ -125,9 +125,8 @@ class FirebaseStorageApi {
     try {
       StorageReference ref = FirebaseStorage.instance.ref().child(filename);
       final StorageUploadTask uploadTask = ref.putFile(file);
-      await uploadTask.onComplete;
-      print('successfully uploaded to $filename');
-      return filename;
+      uploadTask.onComplete
+          .then((value) => print('successfully uploaded to $filename'));
     } catch (e) {
       print(e);
     }
@@ -144,7 +143,7 @@ class FirebaseStorageApi {
     }
   }
 
-  static deleteDoc({String id, String collection}) async {
+  static Future deleteDoc({String id, String collection}) async {
     try {
       CollectionReference ref =
           FirebaseFirestore.instance.collection(collection);
