@@ -49,7 +49,7 @@ class BrandsSection extends StatelessWidget {
             lastWidget: RoundedIconContainer(
               title: 'All Brands',
               viewAllIcon: true,
-              route: '/brands',
+              route: '/allbrands',
             ),
           ),
         ],

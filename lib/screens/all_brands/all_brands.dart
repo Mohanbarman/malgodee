@@ -1,13 +1,14 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
-import 'package:ShoppingApp/bloc/product_flow_bloc.dart';
+import 'package:ShoppingApp/components/bottom_navigation_bar.dart';
+import 'package:ShoppingApp/models/category.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/components/buttons.dart';
 import '../../components/app_bar.dart';
-import '../../components/bottom_navigation_bar.dart';
 import '../../components/underlined_text.dart';
 import '../../components/custom_grid.dart';
+import '../../styles.dart';
 
 class AllBrands extends StatelessWidget {
   final Map args;
@@ -19,8 +20,12 @@ class AllBrands extends StatelessWidget {
       bottomNavigationBar: CustomBottomNavigationBar(null),
       backgroundColor: BackgroundColor,
       body: Container(
-        padding:
-            EdgeInsets.fromLTRB(ScreenPadding, ScreenPadding, ScreenPadding, 0),
+        padding: EdgeInsets.fromLTRB(
+          ScreenPadding,
+          ScreenPadding,
+          ScreenPadding,
+          0,
+        ),
         child: ListView(
           children: [
             Row(
@@ -28,10 +33,11 @@ class AllBrands extends StatelessWidget {
               children: [
                 UnderlinedText('All brands'),
                 StreamBuilder(
-                  stream: adminStreamController.authStatusStream,
                   initialData: adminStreamController.initialData,
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    if (snapshot.data == UserAuth.isAuthorized) {
+                  stream: adminStreamController.authStatusStream,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData &&
+                        snapshot.data == UserAuth.isAuthorized) {
                       return Button1(title: 'Add brand', route: '/addbrand');
                     } else {
                       return SizedBox();
@@ -45,18 +51,25 @@ class AllBrands extends StatelessWidget {
               itemsStream: FirebaseStorageApi.streamOfCollection(
                 collection: 'brands',
               ),
-              onTap: (String id) {
-                productFlowBloc.productSink.add({'brand': id});
-                if (productFlowBloc.productStreamRouteInfo['category'] !=
-                    null) {
-                  Navigator.pushNamed(
-                    context,
-                    '/products',
-                    arguments: productFlowBloc.productStreamRouteInfo,
-                  );
-                }
-              },
               context: context,
+              referer: 'brand',
+              onLongPress: ({
+                String id,
+                String name,
+                String image,
+                String description,
+              }) {
+                Navigator.pushNamed(
+                  context,
+                  '/editcategory',
+                  arguments: CategoryModel(
+                    id: id,
+                    name: name,
+                    image: image,
+                    description: description,
+                  ),
+                );
+              },
             ),
           ],
         ),

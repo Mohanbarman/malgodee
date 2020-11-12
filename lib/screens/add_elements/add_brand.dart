@@ -1,10 +1,7 @@
-import 'dart:io';
 import 'package:ShoppingApp/models/brand.dart';
-import 'package:uuid/uuid.dart';
 import 'package:ShoppingApp/bloc/image_pick_bloc.dart';
 import 'package:ShoppingApp/components/bottom_navigation_bar.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
-import 'package:ShoppingApp/shared/localstorage.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/components/app_bar.dart';
 import 'package:ShoppingApp/styles.dart';
@@ -12,7 +9,9 @@ import 'package:ShoppingApp/components/underlined_text.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:ShoppingApp/components/buttons.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 import 'dart:async';
+import 'dart:io';
 
 class AddBrand extends StatelessWidget {
   TextEditingController _titleController = TextEditingController();
@@ -93,7 +92,9 @@ class UploadDetailsForm extends StatelessWidget {
                 title: 'Save',
                 fgColor: DefaultGreenColor,
                 shadowColor: DefaultShadowGreenColor,
-                onPressed: _save,
+                onPressed: () {
+                  _save().then((value) => Navigator.pop(context));
+                },
               ),
               HighlightedShadowButton(
                 title: 'Cancel',
@@ -108,36 +109,27 @@ class UploadDetailsForm extends StatelessWidget {
     );
   }
 
-  void _save() async {
+  Future _save() async {
     if (pickedImageBloc.cachedImageBytes != null &&
         pickedImageBloc.cachedImagePath != null) {
       var uuid = Uuid();
       var id = uuid.v1();
-      print(id);
+      print(pickedImageBloc.cachedImagePath);
       String filename =
           id.toString() + '.' + pickedImageBloc.cachedImagePath.split('.').last;
-      try {
-        await FirebaseStorageApi.uploadFile(
-          file: File(
-            await LocalStorage.saveImage(
-              bytes: pickedImageBloc.cachedImageBytes,
-              filename: filename,
-            ),
-          ),
-          filename: filename,
-        );
-        await FirebaseStorageApi.addData(
-          data: BrandModel(
-            name: titleController.value.text,
-            description: descriptionController.value.text,
-            image: filename,
-          ).toJson(),
-          collection: 'brands',
-        );
-        print('data added');
-      } catch (e) {
-        print('Upload failed : $e');
-      }
+      FirebaseStorageApi.uploadFile(
+        file: File(pickedImageBloc.cachedImagePath),
+        filename: filename,
+      );
+      FirebaseStorageApi.addData(
+        data: BrandModel(
+          name: titleController.value.text,
+          description: descriptionController.value.text,
+          image: filename,
+        ).toJson(),
+        collection: 'brands',
+      );
+      return true;
     }
   }
 }
@@ -177,8 +169,10 @@ class ImagePlaceholder extends StatelessWidget {
             ),
             child: snapshot.hasData == false
                 ? Center(
-                    child: Text('No image selected',
-                        style: PlaceholderTextAddItem),
+                    child: Text(
+                      'No image selected',
+                      style: PlaceholderTextAddItem,
+                    ),
                   )
                 : Image.memory(
                     snapshot.data,
