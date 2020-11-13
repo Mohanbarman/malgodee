@@ -32,9 +32,9 @@ class RouteGenerator {
         );
       case '/allbrands':
         return NoAnimationMaterialPageRoute(builder: (_) => AllBrands(args));
-      case '/products':
+      case '/allproducts':
         return NoAnimationMaterialPageRoute(
-          builder: (_) => AllProducts(args),
+          builder: (_) => AllProducts(),
         );
       case '/productinfo':
         return NoAnimationMaterialPageRoute(
@@ -49,9 +49,15 @@ class RouteGenerator {
       case '/addproduct':
         return NoAnimationMaterialPageRoute(builder: (_) => AddProduct());
       case '/editproduct':
-        return NoAnimationMaterialPageRoute(builder: (_) => EditProduct());
+        if (args == null) {
+          throw 'A product model is required for EditProduct screen';
+        }
+        return NoAnimationMaterialPageRoute(
+          builder: (_) => EditProduct(model: args),
+        );
       case '/editoffer':
-        return NoAnimationMaterialPageRoute(builder: (_) => EditOffer());
+        return NoAnimationMaterialPageRoute(
+            builder: (_) => EditOffer(model: args));
       case '/editcategory':
         return NoAnimationMaterialPageRoute(
           builder: (_) => EditCategory(

@@ -72,10 +72,11 @@ class CustomGridViewX4 extends StatelessWidget {
                           );
                         } ??
                         () {},
-                    onTap: () {
-                          onTap(id);
-                        } ??
-                        () {},
+                    onTap: onTap != null
+                        ? () {
+                            onTap();
+                          }
+                        : () {},
                   );
                 },
               );

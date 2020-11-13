@@ -20,7 +20,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       height: 55,
       child: Row(
         children: [
-          createIconButton(Icons.phone, 'Phone', 0, '/call', context),
+          createIconButton(Icons.phone, 'Phone', 0, '/allproducts', context),
           createIconButton(Icons.chat_bubble, 'Chat', 1, '/chat', context),
           createIconButton(Icons.local_offer, 'Offer', 2, '/offers', context),
           createIconButton(Icons.home_filled, 'Home', 3, '/', context),

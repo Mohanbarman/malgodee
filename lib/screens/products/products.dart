@@ -1,6 +1,8 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
-import 'package:ShoppingApp/bloc/product_flow_bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ShoppingApp/models/offer.dart';
+import 'package:ShoppingApp/models/product.dart';
+import 'package:ShoppingApp/services/firebase_api.dart';
+import 'package:ShoppingApp/shared/localstorage.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/components/app_bar.dart';
 import 'package:ShoppingApp/components/bottom_navigation_bar.dart';
@@ -8,39 +10,7 @@ import 'package:ShoppingApp/components/underlined_text.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:ShoppingApp/components/buttons.dart';
 
-String fanImage = 'assets/images/fan-product.png';
-
-List products = [
-  {'id': 01, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-  {'id': 02, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-  {'id': 03, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-  {'id': 04, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-  {'id': 05, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-  {'id': 06, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-  {'id': 07, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-  {'id': 08, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-  {'id': 09, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-  {'id': 10, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-  {'id': 11, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-  {'id': 12, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-  {'id': 13, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-  {'id': 14, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-  {'id': 15, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-  {'id': 16, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-  {'id': 17, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-  {'id': 18, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-  {'id': 19, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-  {'id': 20, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-  {'id': 21, 'title': 'havells Stealth', 'rating': 4.9, 'image': fanImage},
-];
-
 class AllProducts extends StatelessWidget {
-  final Map prevRouteInfo;
-
-  AllProducts(this.prevRouteInfo) {
-    productFlowBloc.routeStateSink.add(ProductRoute.clearData);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,7 +24,7 @@ class AllProducts extends StatelessWidget {
           ScreenPadding,
           0,
         ),
-        child: ListView(
+        child: Column(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -75,13 +45,57 @@ class AllProducts extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: ScreenPadding),
-            productRow(),
-            productRow(),
-            productRow(),
-            productRow(),
-            productRow(),
-            productRow(),
+            Expanded(
+              child: StreamBuilder(
+                stream: FirebaseStorageApi.streamOfCollection(
+                  collection: 'products',
+                ),
+                builder: (context, snapshot) {
+                  int productsLength =
+                      snapshot.hasData ? snapshot.data.docs.length : 10;
+                  return GridView.builder(
+                    itemCount: productsLength,
+                    shrinkWrap: true,
+                    cacheExtent: 100,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                    ),
+                    itemBuilder: (context, index) {
+                      if (!snapshot.hasData) return SizedBox();
+                      ProductModel productModel = ProductModel(
+                        id: snapshot.data.docs[index].id,
+                        brand: snapshot.data.docs[index]['brand'],
+                        categories: snapshot.data.docs[index]['categories']
+                            .cast<String>(),
+                        description: snapshot.data.docs[index]['description'],
+                        images:
+                            snapshot.data.docs[index]['images'].cast<String>(),
+                        name: snapshot.data.docs[index]['name'],
+                      );
+                      return GestureDetector(
+                        onLongPress: () {
+                          print('Long pressed');
+                          Navigator.pushNamed(
+                            context,
+                            '/editproduct',
+                            arguments: productModel,
+                          );
+                        },
+                        child: ProductGridItem(
+                          title: productModel.name,
+                          image: LocalStorage.loadData(
+                            model: OfferModel(
+                              id: productModel.id,
+                              image: productModel.images[0],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -89,117 +103,60 @@ class AllProducts extends StatelessWidget {
   }
 }
 
-Column productRow() {
-  return (Column(
-    children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          OfferImageGridItem(products[0]['image'], products[0]['title'],
-              products[0]['rating']),
-          OfferImageGridItem(
-              products[0]['image'], products[0]['title'], products[0]['rating'])
-        ],
-      ),
-      SizedBox(height: ScreenPadding),
-    ],
-  ));
-}
-
-class OfferImageGridItem extends StatelessWidget {
-  final String _imagePath;
-  final String _title;
-  final double _rating;
-  final databaseReference = FirebaseFirestore.instance;
-  OfferImageGridItem(this._imagePath, this._title, this._rating);
-
-  Map<String, dynamic> demoProduct = {
-    'id': '2',
-    'name': 'Example product',
-    'description': 'Example product description',
-    'highlights':
-        'Some example highlights\nAother Highlight\nand some another hightlight'
-  };
-
-  void createDemoProduct() async {
-    await databaseReference.collection('product').add(demoProduct);
-    print('Product created..');
-  }
-
-  void retreiveProducts() async {
-    await databaseReference
-        .collection('product')
-        .get()
-        .then((QuerySnapshot snapshot) {
-      snapshot.docs.forEach((element) => print(element.data()['name']));
-    });
-    print('All products fetched');
-  }
+class ProductGridItem extends StatelessWidget {
+  String title;
+  Future image;
+  ProductGridItem({this.title, this.image});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: retreiveProducts,
-      child: Container(
-        width: MediaQuery.of(context).size.width / 2 - 30,
-        height: MediaQuery.of(context).size.width / 2 - 30,
-        clipBehavior: Clip.hardEdge,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-        ),
-        child: Stack(
-          children: [
-            Image(
-              image: AssetImage(_imagePath),
-              fit: BoxFit.contain,
+    return Container(
+      width: MediaQuery.of(context).size.width / 2 - 30,
+      height: MediaQuery.of(context).size.width / 2 - 30,
+      clipBehavior: Clip.hardEdge,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
+      child: Stack(
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width / 2 - 20,
+            height: MediaQuery.of(context).size.width / 2 - 20,
+            child: FutureBuilder(
+              future: image,
+              builder: (context, imageSnapshot) {
+                print(imageSnapshot.hasData);
+                if (!imageSnapshot.hasData) return SizedBox();
+                return Image(
+                  fit: BoxFit.cover,
+                  image: MemoryImage(imageSnapshot.data),
+                );
+              },
             ),
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [
-                      Colors.black26,
-                      Colors.white10,
-                    ]),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                colors: [
+                  Colors.black54,
+                  Colors.transparent,
+                ],
               ),
             ),
-            Positioned(
-              right: 10,
-              top: 10,
-              child: Container(
-                width: 80,
-                height: 35,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Icon(Icons.star, size: 20, color: Colors.black38),
-                    Text(
-                      _rating.toString(),
-                      style: TextStyle(color: DefaultFontColor),
-                    ),
-                  ],
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white24,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(5),
-                  ),
-                ),
+          ),
+          Positioned(
+            bottom: 0,
+            child: Container(
+              width: MediaQuery.of(context).size.width / 2 - 60,
+              height: 50,
+              child: Center(
+                child: Text(title, style: TextStyle(color: Colors.white)),
               ),
             ),
-            Positioned(
-              bottom: 0,
-              child: Container(
-                width: MediaQuery.of(context).size.width / 2 - 30,
-                height: 50,
-                child: Center(
-                  child: Text(_title, style: ProductGridItemTitle),
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

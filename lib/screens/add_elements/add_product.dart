@@ -15,6 +15,8 @@ import 'dart:async';
 import 'dart:io';
 
 class AddProduct extends StatelessWidget {
+  AddProductBloc _addProductBloc = AddProductBloc();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,9 +30,9 @@ class AddProduct extends StatelessWidget {
             padding: const EdgeInsets.all(ScreenPadding),
             child: Text('Product Image', style: AddFieldLabelStyle),
           ),
-          ImageRow(),
+          ImageRow(bloc: _addProductBloc),
           SizedBox(height: 30),
-          UploadDetailsForm(),
+          UploadDetailsForm(bloc: _addProductBloc),
           SizedBox(height: 30),
         ],
       ),
@@ -39,8 +41,12 @@ class AddProduct extends StatelessWidget {
 }
 
 class UploadDetailsForm extends StatefulWidget {
+  AddProductBloc bloc;
+  UploadDetailsForm({this.bloc});
+
   @override
-  _UploadDetailsFormState createState() => _UploadDetailsFormState();
+  _UploadDetailsFormState createState() =>
+      _UploadDetailsFormState(bloc: this.bloc);
 }
 
 class _UploadDetailsFormState extends State<UploadDetailsForm> {
@@ -48,6 +54,9 @@ class _UploadDetailsFormState extends State<UploadDetailsForm> {
 
   TextEditingController _titleController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
+  AddProductBloc bloc;
+
+  _UploadDetailsFormState({this.bloc});
 
   List<String> categories = [];
 
@@ -174,8 +183,9 @@ class _UploadDetailsFormState extends State<UploadDetailsForm> {
   }
 
   void _save() {
+    print(bloc.path);
     List<String> uploadedPaths = [];
-    _addProductBloc.path.forEach((element) async {
+    bloc.path.forEach((element) async {
       var uuid = Uuid();
       String filenameuuid = uuid.v1();
       String filename = '$filenameuuid.${element.split('.').last}';
@@ -212,14 +222,17 @@ class Title extends StatelessWidget {
 }
 
 class ImageRow extends StatelessWidget {
+  AddProductBloc bloc;
+  ImageRow({this.bloc});
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 200,
       child: StreamBuilder(
-        stream: _addProductBloc.stream,
+        stream: bloc.stream,
         builder: (context, snapshot) {
-          int itemCount = _addProductBloc.path.length + 1;
+          int itemCount = bloc.path.length + 1;
           return ListView.builder(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
@@ -247,7 +260,7 @@ class ImageRow extends StatelessWidget {
                       borderRadius: BorderRadius.circular(30),
                     ),
                     child: Image.file(
-                      File(_addProductBloc.path[index]),
+                      File(bloc.path[index]),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -264,7 +277,7 @@ class ImageRow extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         LocalStorage.pickImage().then(
-          (value) => _addProductBloc.add(value.path),
+          (value) => bloc.add(value.path),
         );
       },
       child: Container(
@@ -325,5 +338,3 @@ class AddProductBloc {
     _controller.close();
   }
 }
-
-AddProductBloc _addProductBloc = AddProductBloc();

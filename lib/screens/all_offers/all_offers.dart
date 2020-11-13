@@ -2,7 +2,6 @@ import 'package:ShoppingApp/models/offer.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:ShoppingApp/shared/localstorage.dart';
 import 'package:ShoppingApp/styles.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:ShoppingApp/components/app_bar.dart';
@@ -110,16 +109,28 @@ class Offers extends StatelessWidget {
                             IconButton(
                               icon: Icon(Icons.edit),
                               onPressed: () {
-                                Navigator.pushNamed(context, '/editoffer');
-                                print('hello');
+                                Navigator.pushNamed(
+                                  context,
+                                  '/editoffer',
+                                  arguments: OfferModel(
+                                    title: snapshotOffer.data.docs[index]
+                                        ['title'],
+                                    id: snapshotOffer.data.docs[index].id,
+                                    description: snapshotOffer.data.docs[index]
+                                        ['description'],
+                                    image: snapshotOffer.data.docs[index]
+                                        ['image'],
+                                  ),
+                                );
                               },
                             ),
                             IconButton(
                               icon: Icon(Icons.delete_forever),
                               onPressed: () {
                                 FirebaseStorageApi.deleteDoc(
-                                    id: snapshotOffer.data.docs[index].id,
-                                    collection: 'offers');
+                                  id: snapshotOffer.data.docs[index].id,
+                                  collection: 'offers',
+                                );
                               },
                             )
                           ],

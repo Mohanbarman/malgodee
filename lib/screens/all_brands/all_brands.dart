@@ -1,4 +1,5 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
+import 'package:ShoppingApp/bloc/product_flow_bloc.dart';
 import 'package:ShoppingApp/components/bottom_navigation_bar.dart';
 import 'package:ShoppingApp/models/category.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
@@ -53,6 +54,16 @@ class AllBrands extends StatelessWidget {
               ),
               context: context,
               referer: 'brand',
+              onTap: () {
+                if (productFlowBloc.productStreamRouteInfo['category'] !=
+                    null) {
+                  Navigator.pushNamed(
+                    context,
+                    '/allproducts',
+                    arguments: productFlowBloc.productStreamRouteInfo,
+                  );
+                }
+              },
               onLongPress: ({
                 String id,
                 String name,

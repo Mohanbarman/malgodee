@@ -15,8 +15,22 @@ import 'dart:async';
 import 'dart:io';
 
 class EditOffer extends StatelessWidget {
-  TextEditingController _titleController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
+  TextEditingController _titleController;
+  TextEditingController _descriptionController;
+  OfferModel model;
+  String imagePath;
+
+  EditOffer({this.model}) {
+    _titleController = TextEditingController(text: model.title);
+    _descriptionController = TextEditingController(text: model.description);
+    imagePath = model.remoteImage;
+    model = model;
+
+    pickedImageBloc.imagePathSink.add(imagePath);
+    LocalStorage.loadOfferData(model: this.model).then(
+      (value) => pickedImageBloc.imageBytesSink.add(value),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +48,7 @@ class EditOffer extends StatelessWidget {
           UploadDetailsForm(
             titleController: _titleController,
             descriptionController: _descriptionController,
+            model: this.model,
           ),
           SizedBox(height: 30),
         ],
@@ -46,7 +61,13 @@ class UploadDetailsForm extends StatelessWidget {
   final TextEditingController titleController;
   final TextEditingController descriptionController;
 
-  UploadDetailsForm({this.titleController, this.descriptionController});
+  final OfferModel model;
+
+  UploadDetailsForm({
+    this.titleController,
+    this.descriptionController,
+    this.model,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +114,7 @@ class UploadDetailsForm extends StatelessWidget {
                 fgColor: DefaultGreenColor,
                 shadowColor: DefaultShadowGreenColor,
                 onPressed: () async {
-                  await _save(context);
+                  await _save(this.model);
                 },
               ),
               HighlightedShadowButton(
@@ -109,34 +130,38 @@ class UploadDetailsForm extends StatelessWidget {
     );
   }
 
-  Future _save(context) async {
+  Future _save(OfferModel model) async {
     if (pickedImageBloc.cachedImageBytes != null &&
         pickedImageBloc.cachedImagePath != null) {
-      print(pickedImageBloc.cachedImagePath);
+      print('this ran');
       var uuid = Uuid();
       var id = uuid.v1();
-      print(id);
+      print(pickedImageBloc.cachedImagePath);
       String filename =
           id.toString() + '.' + pickedImageBloc.cachedImagePath.split('.').last;
       await FirebaseStorageApi.uploadFile(
-        file: File(
-          await LocalStorage.saveImage(
-            bytes: pickedImageBloc.cachedImageBytes,
-            filename: filename,
-          ),
-        ),
+        file: File(pickedImageBloc.cachedImagePath),
         filename: filename,
       );
-      await FirebaseStorageApi.addData(
-        data: OfferModel(
-          description: descriptionController.value.text,
-          remoteImage: filename,
+      await FirebaseStorageApi.updateDocument(
+        model: OfferModel(
           title: titleController.value.text,
-        ).toJsonRemote(),
+          description: descriptionController.value.text,
+          image: filename,
+          id: model.id,
+        ),
         collection: 'offers',
       );
-      Navigator.pushReplacementNamed(context, '/');
-      print('data added');
+    } else {
+      await FirebaseStorageApi.updateDocument(
+        model: OfferModel(
+          title: titleController.value.text,
+          description: descriptionController.value.text,
+          id: model.id,
+          image: model.image,
+        ),
+        collection: 'offers',
+      );
     }
   }
 }

@@ -54,6 +54,27 @@ class LocalStorage {
     }
   }
 
+  static Future loadImage(String filename) async {
+    try {
+      print(filename);
+      Directory dir = await getApplicationDocumentsDirectory();
+      String appDirPath = dir.path;
+      String path = '$appDirPath$filename';
+      if (await File(path).exists() == true) {
+        print('exists');
+        return await File(path).readAsBytes();
+      }
+      Uint8List imageBytes = await FirebaseStorageApi.futureFromImagePath(
+        filename,
+      );
+      print('$imageBytes');
+      await saveImage(bytes: imageBytes, filename: filename);
+      return imageBytes;
+    } catch (e) {
+      print(e);
+    }
+  }
+
   static saveImage({Uint8List bytes, String filename}) async {
     print(filename);
     Directory _applicationDir = await getApplicationDocumentsDirectory();
