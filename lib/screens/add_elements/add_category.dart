@@ -119,15 +119,16 @@ class UploadDetailsForm extends StatelessWidget {
       print(pickedImageBloc.cachedImagePath);
       String filename =
           id.toString() + '.' + pickedImageBloc.cachedImagePath.split('.').last;
-      FirebaseStorageApi.uploadFile(
+      String url = await FirebaseStorageApi.uploadFile(
         file: File(pickedImageBloc.cachedImagePath),
         filename: filename,
       );
-      FirebaseStorageApi.addData(
+      print('image : ' + url);
+      await FirebaseStorageApi.addData(
         data: CategoryModel(
           name: titleController.value.text,
           description: descriptionController.value.text,
-          image: filename,
+          image: url,
         ).toJson(),
         collection: 'categories',
       );

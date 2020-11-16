@@ -117,7 +117,7 @@ class UploadDetailsForm extends StatelessWidget {
       print(pickedImageBloc.cachedImagePath);
       String filename =
           id.toString() + '.' + pickedImageBloc.cachedImagePath.split('.').last;
-      FirebaseStorageApi.uploadFile(
+      String url = await FirebaseStorageApi.uploadFile(
         file: File(pickedImageBloc.cachedImagePath),
         filename: filename,
       );
@@ -125,7 +125,7 @@ class UploadDetailsForm extends StatelessWidget {
         data: BrandModel(
           name: titleController.value.text,
           description: descriptionController.value.text,
-          image: filename,
+          image: url,
         ).toJson(),
         collection: 'brands',
       );

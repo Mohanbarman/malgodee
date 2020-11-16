@@ -1,11 +1,12 @@
 import 'dart:typed_data';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class OfferDialog extends StatelessWidget {
   String image;
   Uint8List bytes;
-  OfferDialog({this.image, this.bytes});
+  String imageUrl;
+  OfferDialog({this.image, this.bytes, this.imageUrl});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -25,10 +26,17 @@ class OfferDialog extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(15)),
                 color: Colors.blue,
               ),
-              child: Image(
-                image: bytes == null ? AssetImage(image) : MemoryImage(bytes),
-                fit: BoxFit.cover,
-              ),
+              child: imageUrl == null
+                  ? Image(
+                      image: bytes == null
+                          ? AssetImage(image)
+                          : MemoryImage(bytes),
+                      fit: BoxFit.cover,
+                    )
+                  : CachedNetworkImage(
+                      imageUrl: imageUrl,
+                      fit: BoxFit.cover,
+                    ),
             ),
           ),
         ),

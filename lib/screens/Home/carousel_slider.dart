@@ -4,11 +4,12 @@ import 'package:ShoppingApp/widgets/shimmer_placeholders.dart';
 import 'package:ShoppingApp/models/offer.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:ShoppingApp/services/localstorage.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import '../../styles.dart';
+import 'dart:typed_data';
 
 class OfferCarousel extends StatefulWidget {
   @override
@@ -17,7 +18,6 @@ class OfferCarousel extends StatefulWidget {
 
 class _OfferCarouselState extends State<OfferCarousel> {
   int _currentIndex = 0;
-  final prefs = SharedPreferences.getInstance();
 
   List<T> map<T>(List list, Function handler) {
     List<T> result = [];
@@ -25,41 +25,6 @@ class _OfferCarouselState extends State<OfferCarousel> {
       result.add(handler(i, list[i]));
     }
     return result;
-  }
-
-  List<Widget> snapshotsToWidgets(snapshot) {
-    return snapshot.data.docs
-        .map(
-          (d) => FutureBuilder(
-            future: LocalStorage.loadOfferData(
-              model: OfferModel(
-                id: d.id,
-                title: d['title'],
-                description: d['description'],
-                remoteImage: d['image'],
-              ),
-            ),
-            builder: (context, snapshot2) {
-              if (snapshot2.hasData) {
-                return GestureDetector(
-                  onTap: () => showDialog(
-                    context: context,
-                    child: OfferDialog(
-                      bytes: snapshot2.data,
-                    ),
-                  ),
-                  child: OfferImageContainer(
-                    bytes: snapshot2.data,
-                    fromBytes: true,
-                  ),
-                );
-              }
-              return OfferImagePlaceholder();
-            },
-          ),
-        )
-        .toList()
-        .cast<Widget>();
   }
 
   @override
@@ -70,10 +35,13 @@ class _OfferCarouselState extends State<OfferCarousel> {
       child: Column(
         children: <Widget>[
           StreamBuilder(
-            stream: FirebaseStorageApi.allOffersStream(limit: 5),
+            stream: FirebaseStorageApi.streamOfCollection(collection: 'offers'),
             builder: (context, snapshot) {
               if (!snapshot.hasData) return OfferImagePlaceholder();
-              List<Widget> items = snapshotsToWidgets(snapshot);
+              List<Widget> items = snapshot.data.docs
+                  .map((e) => OfferImageContainer(imageUrl: e['image']))
+                  .toList()
+                  .cast<Widget>();
               return Column(children: [
                 CarouselSlider(
                   options: CarouselOptions(
@@ -82,10 +50,10 @@ class _OfferCarouselState extends State<OfferCarousel> {
                     autoPlayInterval: Duration(seconds: 10),
                     autoPlayAnimationDuration: Duration(milliseconds: 800),
                     autoPlayCurve: Curves.easeInOutSine,
-                    enlargeCenterPage: true,
+                    enlargeCenterPage: false,
                     pageSnapping: true,
                     enableInfiniteScroll: true,
-                    viewportFraction: .5,
+                    viewportFraction: .49,
                     onPageChanged: (index, reason) {
                       setState(() {
                         _currentIndex = index;

@@ -8,6 +8,10 @@ import 'package:ShoppingApp/widgets/rounded_icon_container.dart';
 import 'package:ShoppingApp/widgets/buttons.dart';
 import 'package:ShoppingApp/services/localstorage.dart';
 import 'package:ShoppingApp/styles.dart';
+import 'package:ShoppingApp/widgets/buttons.dart';
+import 'package:ShoppingApp/widgets/rounded_icon_container.dart';
+import 'package:ShoppingApp/widgets/underlined_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class CategoriesSection extends StatelessWidget {
@@ -83,49 +87,20 @@ class CategoriesSection extends StatelessWidget {
                     if (querySnapshot.hasData) {
                       String name =
                           querySnapshot.data.docs.toList()[index]['name'];
-                      String imagePath =
+                      String image =
                           querySnapshot.data.docs.toList()[index]['image'];
                       String id = querySnapshot.data.docs.toList()[index].id;
                       return Row(
                         children: [
                           SizedBox(width: ScreenPadding),
-                          FutureBuilder(
-                            future: LocalStorage.loadData(
-                              model: CategoryModel(
-                                name: name,
-                                image: imagePath,
-                                id: id,
-                              ),
-                            ),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return RoundedIconContainer(
-                                  title: name,
-                                  bytes: snapshot.data,
-                                  onTap: () {
-                                    productFlowBloc.productSink.add(
-                                      {
-                                        'category':
-                                            querySnapshot.data.docs[index].id
-                                      },
-                                    );
-                                    Navigator.pushNamed(
-                                      context,
-                                      '/allbrands',
-                                      arguments: productFlowBloc
-                                          .productStreamRouteInfo,
-                                    );
-                                  },
-                                );
-                              }
-                              return CategoriesImagePlaceholder();
-                            },
+                          RoundedIconContainer(
+                            imageUrl: image,
+                            title: name,
                           ),
                           SizedBox(width: ScreenPadding),
                         ],
                       );
                     }
-                    return CategoriesImagePlaceholder();
                   },
                 );
               },

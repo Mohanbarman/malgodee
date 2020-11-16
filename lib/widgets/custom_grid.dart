@@ -1,6 +1,5 @@
 import 'package:ShoppingApp/widgets/shimmer_placeholders.dart';
 import 'package:ShoppingApp/models/brand.dart';
-import 'package:ShoppingApp/services/localstorage.dart';
 import 'package:flutter/material.dart';
 import 'rounded_icon_container.dart';
 
@@ -46,39 +45,27 @@ class CustomGridViewX4 extends StatelessWidget {
               if (index + 1 == itemCount) return SizedBox();
 
               String name = snapshot.data.docs[index]['name'];
-              String imagePath = snapshot.data.docs[index]['image'];
-              String id = snapshot.data.docs[index].id;
+              String image = snapshot.data.docs[index]['image'];
 
-              return FutureBuilder(
-                future: LocalStorage.loadData(
-                  model: BrandModel(
-                    name: name,
-                    image: imagePath,
-                    id: id,
-                  ),
-                ),
-                builder: (context, snapshot1) {
-                  if (!snapshot1.hasData) return CategoriesImagePlaceholder();
-                  return RoundedIconContainer(
-                    title: name,
-                    bytes: snapshot1.data,
-                    onLongPress: () {
-                          onLongPress(
-                            id: snapshot.data.docs[index].id,
-                            name: snapshot.data.docs[index]['name'],
-                            image: snapshot.data.docs[index]['image'],
-                            description: snapshot.data.docs[index]
-                                ['description'],
-                          );
-                        } ??
-                        () {},
-                    onTap: onTap != null
-                        ? () {
-                            onTap();
-                          }
-                        : () {},
-                  );
-                },
+              print(image);
+
+              return RoundedIconContainer(
+                title: name,
+                imageUrl: image,
+                onLongPress: () {
+                      onLongPress(
+                        id: snapshot.data.docs[index].id,
+                        name: snapshot.data.docs[index]['name'],
+                        image: snapshot.data.docs[index]['image'],
+                        description: snapshot.data.docs[index]['description'],
+                      );
+                    } ??
+                    () {},
+                onTap: onTap != null
+                    ? () {
+                        onTap();
+                      }
+                    : () {},
               );
             },
           );

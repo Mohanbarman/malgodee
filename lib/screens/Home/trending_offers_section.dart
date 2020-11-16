@@ -46,31 +46,8 @@ class TrendingOffersSection extends StatelessWidget {
                 children: List.generate(
                   2,
                   (index) {
-                    return FutureBuilder(
-                      future: LocalStorage.loadOfferData(
-                        model: OfferModel(
-                          id: snapshot.data.docs[index].id,
-                          title: snapshot.data.docs[index]['title'],
-                          description: snapshot.data.docs[index]['description'],
-                          remoteImage: snapshot.data.docs[index]['image'],
-                        ),
-                      ),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData)
-                          return GestureDetector(
-                            onTap: () => showDialog(
-                              context: context,
-                              child: OfferDialog(
-                                bytes: snapshot.data,
-                              ),
-                            ),
-                            child: OfferImageContainer(
-                              fromBytes: true,
-                              bytes: snapshot.data,
-                            ),
-                          );
-                        return OfferImagePlaceholder();
-                      },
+                    return OfferImageContainer(
+                      imageUrl: snapshot.data.docs[index]['image'],
                     );
                   },
                 ),

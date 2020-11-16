@@ -121,23 +121,25 @@ class FirebaseStorageApi {
     }
   }
 
-  static Future<void> uploadFile({File file, String filename}) async {
+  static Future<String> uploadFile({File file, String filename}) async {
     try {
       StorageReference ref = FirebaseStorage.instance.ref().child(filename);
       final StorageUploadTask uploadTask = ref.putFile(file);
-      uploadTask.onComplete
-          .then((value) => print('successfully uploaded to $filename'));
+      StorageTaskSnapshot value = await uploadTask.onComplete;
+      String url = await value.ref.getDownloadURL();
+      return url;
     } catch (e) {
       print(e);
+      return 'Invalid url';
     }
   }
 
   static Future<void> addData({Map data, String collection}) async {
     try {
-      print(data);
       CollectionReference ref =
           FirebaseFirestore.instance.collection(collection);
       ref.add(data);
+      return 1;
     } catch (e) {
       print(e);
     }

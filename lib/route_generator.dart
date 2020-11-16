@@ -21,49 +21,35 @@ class RouteGenerator {
 
     switch (settings.name) {
       case '/':
-        return NoAnimationMaterialPageRoute(builder: (_) => Home());
+        return FadeRoute(page: Home());
       case '/offers':
-        return NoAnimationMaterialPageRoute(builder: (_) => Offers());
+        return FadeRoute(page: Offers());
       case '/login':
-        return NoAnimationMaterialPageRoute(builder: (_) => Login());
+        return FadeRoute(page: Login());
       case '/allcategories':
-        return NoAnimationMaterialPageRoute(
-          builder: (_) => AllCategories(args),
-        );
+        return FadeRoute(page: AllCategories(args));
       case '/allbrands':
-        return NoAnimationMaterialPageRoute(builder: (_) => AllBrands(args));
+        return FadeRoute(page: AllBrands(args));
       case '/allproducts':
-        return NoAnimationMaterialPageRoute(
-          builder: (_) => AllProducts(),
-        );
+        return FadeRoute(page: AllProducts());
       case '/productinfo':
-        return NoAnimationMaterialPageRoute(
-          builder: (_) => ProductInfo(),
-        );
+        return FadeRoute(page: ProductInfo());
       case '/addcategory':
-        return NoAnimationMaterialPageRoute(builder: (_) => AddCategory());
+        return FadeRoute(page: AddCategory());
       case '/addbrand':
-        return NoAnimationMaterialPageRoute(builder: (_) => AddBrand());
+        return FadeRoute(page: AddBrand());
       case '/addoffer':
-        return NoAnimationMaterialPageRoute(builder: (_) => AddOffer());
+        return FadeRoute(page: AddOffer());
       case '/addproduct':
-        return NoAnimationMaterialPageRoute(builder: (_) => AddProduct());
+        return FadeRoute(page: AddProduct());
       case '/editproduct':
-        if (args == null) {
+        if (args == null)
           throw 'A product model is required for EditProduct screen';
-        }
-        return NoAnimationMaterialPageRoute(
-          builder: (_) => EditProduct(model: args),
-        );
+        return FadeRoute(page: EditProduct(model: args));
       case '/editoffer':
-        return NoAnimationMaterialPageRoute(
-            builder: (_) => EditOffer(model: args));
+        return FadeRoute(page: EditOffer(model: args));
       case '/editcategory':
-        return NoAnimationMaterialPageRoute(
-          builder: (_) => EditCategory(
-            categoryModel: args,
-          ),
-        );
+        return FadeRoute(page: EditCategory(categoryModel: args));
       default:
         return _errorRoute();
     }
@@ -92,21 +78,25 @@ class RouteGenerator {
   }
 }
 
-class NoAnimationMaterialPageRoute<T> extends MaterialPageRoute<T> {
-  NoAnimationMaterialPageRoute({
-    @required WidgetBuilder builder,
-    RouteSettings settings,
-    bool maintainState = true,
-    bool fullscreenDialog = false,
-  }) : super(
-            builder: builder,
-            maintainState: maintainState,
-            settings: settings,
-            fullscreenDialog: fullscreenDialog);
-
-  @override
-  Widget buildTransitions(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation, Widget child) {
-    return child;
-  }
+class FadeRoute extends PageRouteBuilder {
+  final Widget page;
+  FadeRoute({this.page})
+      : super(
+          pageBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+          ) =>
+              page,
+          transitionsBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) =>
+              FadeTransition(
+            opacity: animation,
+            child: child,
+          ),
+        );
 }

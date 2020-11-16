@@ -118,7 +118,7 @@ class UploadDetailsForm extends StatelessWidget {
       print(id);
       String filename =
           id.toString() + '.' + pickedImageBloc.cachedImagePath.split('.').last;
-      await FirebaseStorageApi.uploadFile(
+      String url = await FirebaseStorageApi.uploadFile(
         file: File(
           await LocalStorage.saveImage(
             bytes: pickedImageBloc.cachedImageBytes,
@@ -130,13 +130,12 @@ class UploadDetailsForm extends StatelessWidget {
       await FirebaseStorageApi.addData(
         data: OfferModel(
           description: descriptionController.value.text,
-          remoteImage: filename,
+          remoteImage: url,
           title: titleController.value.text,
         ).toJsonRemote(),
         collection: 'offers',
       );
       Navigator.pushReplacementNamed(context, '/');
-      print('data added');
     }
   }
 }

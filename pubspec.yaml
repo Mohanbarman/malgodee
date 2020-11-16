@@ -26,10 +26,7 @@ dependencies:
   path_provider:
   uuid:
   flutter_multiselect: ^0.5.1
-  # logs:
-  #   git: 
-  #     url: https://github.com/pq/logs
-  #     ref: master
+  cached_network_image:
 
 
 dev_dependencies:
@@ -49,11 +46,11 @@ flutter:
           weight: 700
         - asset: fonts/Poppins/Poppins-SemiBold.ttf
           weight: 600
-        - asset: assets/fonts/Poppins/Poppins-Medium.ttf
+        - asset: fonts/Poppins/Poppins-Medium.ttf
           weight: 500
-        - asset: assets/fonts/Poppins/Poppins-Regular.ttf
+        - asset: fonts/Poppins/Poppins-Regular.ttf
           weight: 400
-        - asset: assets/fonts/Poppins/Poppins-Light.ttf
+        - asset: fonts/Poppins/Poppins-Light.ttf
           weight: 300
-        - asset: assets/fonts/Poppins/Poppins-Thin.ttf
+        - asset: fonts/Poppins/Poppins-Thin.ttf
           weight: 200

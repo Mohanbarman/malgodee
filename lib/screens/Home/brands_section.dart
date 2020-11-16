@@ -34,14 +34,6 @@ class BrandsSection extends StatelessWidget {
           ),
           SizedBox(height: 20),
           CustomGridViewX4(
-            onTap: (id) {
-              productFlowBloc.productSink.add({'brand': id});
-              Navigator.pushNamed(
-                context,
-                '/allcategories',
-                arguments: productFlowBloc.productStreamRouteInfo,
-              );
-            },
             itemsStream: FirebaseStorageApi.streamOfCollection(
               collection: 'brands',
               limit: 10,
