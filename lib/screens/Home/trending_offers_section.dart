@@ -1,13 +1,13 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
-import 'package:ShoppingApp/components/offer_dialog.dart';
+import 'package:ShoppingApp/widgets/offer_dialog.dart';
 import 'package:ShoppingApp/shared/localstorage.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
-import 'package:ShoppingApp/components/shimmer_placeholders.dart';
+import 'package:ShoppingApp/widgets/shimmer_placeholders.dart';
 import 'package:ShoppingApp/models/offer.dart';
-import '../../components/underlined_text.dart';
-import '../../components/buttons.dart';
-import '../../components/offer_image_container.dart';
+import '../../widgets/underlined_text.dart';
+import '../../widgets/buttons.dart';
+import '../../widgets/offer_image_container.dart';
 
 class TrendingOffersSection extends StatelessWidget {
   @override

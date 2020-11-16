@@ -1,5 +1,5 @@
-import 'package:ShoppingApp/components/input_custom_decoration.dart';
-import 'package:ShoppingApp/components/shimmer_placeholders.dart';
+import 'package:ShoppingApp/widgets/input_custom_decoration.dart';
+import 'package:ShoppingApp/widgets/shimmer_placeholders.dart';
 import 'package:ShoppingApp/models/phone_number.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:ShoppingApp/styles.dart';

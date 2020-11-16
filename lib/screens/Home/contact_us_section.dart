@@ -1,13 +1,13 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:ShoppingApp/bloc/phone_number_field_bloc.dart';
-import 'package:ShoppingApp/components/custom_text_field.dart';
-import 'package:ShoppingApp/components/shimmer_placeholders.dart';
+import 'package:ShoppingApp/widgets/custom_text_field.dart';
+import 'package:ShoppingApp/widgets/shimmer_placeholders.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:flutter/services.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:ShoppingApp/components/underlined_text.dart';
-import 'package:ShoppingApp/components/rounded_icon_container.dart';
+import 'package:ShoppingApp/widgets/underlined_text.dart';
+import 'package:ShoppingApp/widgets/rounded_icon_container.dart';
 
 class ContactUsSection extends StatelessWidget {
   final String _callIcon = 'assets/images/call-icon.png';

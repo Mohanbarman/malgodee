@@ -5,9 +5,9 @@ import 'trending_offers_section.dart';
 import 'brands_section.dart';
 import 'contact_us_section.dart';
 import '../../styles.dart';
-import '../../components/app_bar.dart';
-import '../../components/bottom_navigation_bar.dart';
-import '../../components/buttons.dart';
+import '../../widgets/app_bar.dart';
+import '../../widgets/bottom_navigation_bar.dart';
+import '../../widgets/buttons.dart';
 
 class Home extends StatelessWidget {
   @override

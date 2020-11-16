@@ -4,11 +4,11 @@ import 'package:ShoppingApp/shared/localstorage.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:ShoppingApp/components/app_bar.dart';
-import 'package:ShoppingApp/components/bottom_navigation_bar.dart';
-import 'package:ShoppingApp/components/underlined_text.dart';
-import 'package:ShoppingApp/components/offer_dialog.dart';
-import 'package:ShoppingApp/components/shimmer_placeholders.dart';
+import 'package:ShoppingApp/widgets/app_bar.dart';
+import 'package:ShoppingApp/widgets/bottom_navigation_bar.dart';
+import 'package:ShoppingApp/widgets/underlined_text.dart';
+import 'package:ShoppingApp/widgets/offer_dialog.dart';
+import 'package:ShoppingApp/widgets/shimmer_placeholders.dart';
 
 class Offers extends StatelessWidget {
   @override

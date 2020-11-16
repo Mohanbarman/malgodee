@@ -1,20 +1,17 @@
-import 'package:ShoppingApp/bloc/admin_features.dart';
-import 'package:ShoppingApp/components/bottom_navigation_bar.dart';
-import 'package:ShoppingApp/components/shimmer_placeholders.dart';
+import 'package:ShoppingApp/widgets/bottom_navigation_bar.dart';
+import 'package:ShoppingApp/widgets/shimmer_placeholders.dart';
 import 'package:ShoppingApp/models/offer.dart';
 import 'package:ShoppingApp/models/product.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:ShoppingApp/shared/localstorage.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter_multiselect/flutter_multiselect.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:ShoppingApp/components/underlined_text.dart';
-import 'package:ShoppingApp/components/app_bar.dart';
-import 'package:ShoppingApp/components/buttons.dart';
+import 'package:ShoppingApp/widgets/underlined_text.dart';
+import 'package:ShoppingApp/widgets/app_bar.dart';
+import 'package:ShoppingApp/widgets/buttons.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
-import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'dart:io';
 
@@ -63,10 +60,10 @@ class EditProduct extends StatelessWidget {
 }
 
 class UploadDetailsForm extends StatefulWidget {
-  TextEditingController titleController;
-  TextEditingController descriptionController;
-  ProductModel model;
-  AddProductBloc addProductBloc;
+  final TextEditingController titleController;
+  final TextEditingController descriptionController;
+  final ProductModel model;
+  final AddProductBloc addProductBloc;
 
   UploadDetailsForm({
     this.titleController,
@@ -161,7 +158,6 @@ class _UploadDetailsFormState extends State<UploadDetailsForm> {
                   this.categories = value.cast<String>();
                 },
                 dataSource: snapshot.data.docs
-                    .toList()
                     .map(
                       (e) => {
                         'value': e.id,
@@ -239,6 +235,7 @@ class _UploadDetailsFormState extends State<UploadDetailsForm> {
 
   void _save() {
     List<String> uploadedPaths = [];
+    print(uploadedPaths);
     addProductBloc.path.forEach((element) async {
       var uuid = Uuid();
       String filenameuuid = uuid.v1();
@@ -250,15 +247,15 @@ class _UploadDetailsFormState extends State<UploadDetailsForm> {
       );
     });
 
-    FirebaseStorageApi.addData(
+    FirebaseStorageApi.updateDocument(
       collection: 'products',
-      data: ProductModel(
+      model: ProductModel(
         name: titleController.value.text,
         description: descriptionController.value.text,
         images: uploadedPaths,
         categories: categories,
         brand: dropdownValue,
-      ).toJson(),
+      ),
     ).then((value) => print('product added'));
   }
 }
@@ -277,7 +274,6 @@ class Title extends StatelessWidget {
 
 class ImageRow extends StatelessWidget {
   AddProductBloc addProductBloc;
-
   ImageRow({this.addProductBloc});
 
   @override
@@ -307,7 +303,11 @@ class ImageRow extends StatelessWidget {
                 children: [
                   SizedBox(width: ScreenPadding),
                   FutureBuilder(
-                    future: LocalStorage.loadImage(addProductBloc.path[index]),
+                    future: LocalStorage.loadData(
+                      model: OfferModel(
+                        image: addProductBloc.path[index],
+                      ),
+                    ),
                     builder: (context, snapshot) {
                       print(addProductBloc.path);
                       if (!snapshot.hasData) return OfferImagePlaceholder();
