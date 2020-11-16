@@ -1,6 +1,6 @@
 import 'package:ShoppingApp/widgets/shimmer_placeholders.dart';
 import 'package:ShoppingApp/models/brand.dart';
-import 'package:ShoppingApp/shared/localstorage.dart';
+import 'package:ShoppingApp/services/localstorage.dart';
 import 'package:flutter/material.dart';
 import 'rounded_icon_container.dart';
 

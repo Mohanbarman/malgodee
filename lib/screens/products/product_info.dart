@@ -1,4 +1,4 @@
-import 'package:ShoppingApp/components/app_bar.dart';
+import 'package:ShoppingApp/widgets/app_bar.dart';
 import 'package:ShoppingApp/models/product.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'product_highlights_section.dart';
 import 'rating_widget.dart';
 import '../../styles.dart';
-import '../../components/bottom_navigation_bar.dart';
+import '../../widgets/bottom_navigation_bar.dart';
 
 // ignore: non_constant_identifier_names
 String _carousel_img_1 = 'assets/images/fan-product.png';

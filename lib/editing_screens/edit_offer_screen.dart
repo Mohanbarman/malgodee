@@ -3,7 +3,7 @@ import 'package:uuid/uuid.dart';
 import 'package:ShoppingApp/bloc/image_pick_bloc.dart';
 import 'package:ShoppingApp/widgets/bottom_navigation_bar.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
-import 'package:ShoppingApp/shared/localstorage.dart';
+import 'package:ShoppingApp/services/localstorage.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/widgets/app_bar.dart';
 import 'package:ShoppingApp/styles.dart';

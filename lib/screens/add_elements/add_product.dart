@@ -2,7 +2,7 @@ import 'package:ShoppingApp/widgets/bottom_navigation_bar.dart';
 import 'package:ShoppingApp/widgets/shimmer_placeholders.dart';
 import 'package:ShoppingApp/models/product.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
-import 'package:ShoppingApp/shared/localstorage.dart';
+import 'package:ShoppingApp/services/localstorage.dart';
 import 'package:flutter_multiselect/flutter_multiselect.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:ShoppingApp/widgets/underlined_text.dart';

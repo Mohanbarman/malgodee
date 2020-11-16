@@ -1,9 +1,9 @@
-import 'package:ShoppingApp/components/offer_dialog.dart';
-import 'package:ShoppingApp/components/offer_image_container.dart';
-import 'package:ShoppingApp/components/shimmer_placeholders.dart';
+import 'package:ShoppingApp/widgets/offer_dialog.dart';
+import 'package:ShoppingApp/widgets/offer_image_container.dart';
+import 'package:ShoppingApp/widgets/shimmer_placeholders.dart';
 import 'package:ShoppingApp/models/offer.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
-import 'package:ShoppingApp/shared/localstorage.dart';
+import 'package:ShoppingApp/services/localstorage.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:shared_preferences/shared_preferences.dart';

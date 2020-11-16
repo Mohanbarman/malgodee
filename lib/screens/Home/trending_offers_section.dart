@@ -1,6 +1,6 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:ShoppingApp/widgets/offer_dialog.dart';
-import 'package:ShoppingApp/shared/localstorage.dart';
+import 'package:ShoppingApp/services/localstorage.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:ShoppingApp/widgets/shimmer_placeholders.dart';
