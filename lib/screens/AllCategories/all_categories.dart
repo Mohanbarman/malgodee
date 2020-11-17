@@ -5,7 +5,7 @@ import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/widgets/buttons.dart';
-import '../../widgets/app_bar.dart';
+import '../../widgets/custom_app_bar.dart';
 import '../../widgets/underlined_text.dart';
 import '../../widgets/custom_grid.dart';
 import '../../styles.dart';
@@ -26,7 +26,7 @@ class AllCategories extends StatelessWidget {
           ScreenPadding,
           0,
         ),
-        child: ListView(
+        child: Column(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -48,28 +48,30 @@ class AllCategories extends StatelessWidget {
               ],
             ),
             SizedBox(height: 30),
-            CustomGridView4x4(
-              itemsStream: FirebaseStorageApi.streamOfCollection(
-                collection: 'categories',
+            Expanded(
+              child: CustomGridView4x4(
+                itemsStream: FirebaseStorageApi.streamOfCollection(
+                  collection: 'categories',
+                ),
+                referer: 'category',
+                onLongPress: ({
+                  String id,
+                  String name,
+                  String image,
+                  String description,
+                }) {
+                  Navigator.pushNamed(
+                    context,
+                    '/editcategory',
+                    arguments: CategoryModel(
+                      id: id,
+                      name: name,
+                      image: image,
+                      description: description,
+                    ),
+                  );
+                },
               ),
-              referer: 'category',
-              onLongPress: ({
-                String id,
-                String name,
-                String image,
-                String description,
-              }) {
-                Navigator.pushNamed(
-                  context,
-                  '/editcategory',
-                  arguments: CategoryModel(
-                    id: id,
-                    name: name,
-                    image: image,
-                    description: description,
-                  ),
-                );
-              },
             ),
           ],
         ),

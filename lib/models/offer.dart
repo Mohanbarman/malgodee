@@ -1,6 +1,6 @@
 class OfferModel {
   String id;
-  String title;
+  String name;
   String description;
   String remoteImage;
   String localImage;
@@ -8,7 +8,7 @@ class OfferModel {
 
   OfferModel({
     this.id,
-    this.title,
+    this.name,
     this.description,
     this.remoteImage,
     this.localImage,
@@ -17,7 +17,7 @@ class OfferModel {
 
   toJson() {
     return Map<String, dynamic>.from({
-      'title': this.title,
+      'name': this.name,
       'description': this.description,
       'image': this.image,
     });
@@ -25,7 +25,7 @@ class OfferModel {
 
   toJsonRemote() {
     return Map<String, dynamic>.from({
-      'title': this.title,
+      'name': this.name,
       'description': this.description,
       'image': this.remoteImage,
     });
@@ -33,7 +33,7 @@ class OfferModel {
 
   toJsonLocal() {
     return Map<String, dynamic>.from({
-      'title': this.title,
+      'name': this.name,
       'description': this.description,
       'image': this.localImage,
     });

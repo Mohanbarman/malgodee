@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ShoppingApp/widgets/app_bar.dart';
+import 'package:ShoppingApp/widgets/custom_app_bar.dart';
 import 'package:ShoppingApp/widgets/bottom_navigation_bar.dart';
 
 class AllProudcts extends StatelessWidget {

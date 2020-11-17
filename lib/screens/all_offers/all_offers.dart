@@ -1,14 +1,10 @@
-import 'package:ShoppingApp/models/offer.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:ShoppingApp/widgets/custom_grid.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:ShoppingApp/widgets/app_bar.dart';
+import 'package:ShoppingApp/widgets/custom_app_bar.dart';
 import 'package:ShoppingApp/widgets/bottom_navigation_bar.dart';
 import 'package:ShoppingApp/widgets/underlined_text.dart';
-import 'package:ShoppingApp/widgets/offer_dialog.dart';
-import 'package:ShoppingApp/widgets/shimmer_placeholders.dart';
 
 class Offers extends StatelessWidget {
   @override
@@ -28,9 +24,11 @@ class Offers extends StatelessWidget {
               top: ScreenPadding,
             ),
           ),
-          CustomGridView2x2(
-            itemsStream: FirebaseStorageApi.streamOfCollection(
-              collection: 'offers',
+          Expanded(
+            child: CustomGridView2x2(
+              itemsStream: FirebaseStorageApi.streamOfCollection(
+                collection: 'offers',
+              ),
             ),
           ),
         ],

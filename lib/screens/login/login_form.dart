@@ -171,7 +171,7 @@ onSubmit(context, formKey, emailController, passwordController) async {
     final result = await InternetAddress.lookup('example.com');
     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
       if (formKey.currentState.validate()) {
-        await Firebase.initializeApp();
+        // await Firebase.initializeApp();
         loginButtonState.loginBtnSink.add(ButtonState.isLoading);
         await Authentication(context).signInWithEmail(
           emailController.text,

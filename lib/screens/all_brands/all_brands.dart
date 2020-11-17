@@ -6,7 +6,7 @@ import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/widgets/buttons.dart';
-import '../../widgets/app_bar.dart';
+import '../../widgets/custom_app_bar.dart';
 import '../../widgets/underlined_text.dart';
 import '../../widgets/custom_grid.dart';
 import '../../styles.dart';

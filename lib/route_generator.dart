@@ -1,20 +1,17 @@
 import 'package:ShoppingApp/editing_screens/edit_category.dart';
 import 'package:ShoppingApp/editing_screens/edit_offer_screen.dart';
 import 'package:ShoppingApp/screens/all_brands/all_brands.dart';
-import 'package:ShoppingApp/widgets/edit_screen/edit_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'screens/Home/home.dart';
+import 'screens/add_brand/add_brand.dart';
+import 'screens/add_offer/add_offer.dart';
 import 'screens/all_offers/all_offers.dart';
 import 'screens/login/login.dart';
 import 'screens/AllCategories/all_categories.dart';
 import 'screens/products/products.dart';
 import 'screens/products/product_info.dart';
-import 'screens/add_elements/add_category.dart';
-import 'screens/add_elements/add_brand.dart';
-import 'screens/add_elements/add_offer.dart';
-import 'screens/add_elements/add_product.dart';
-import 'screens/add_elements/edit_product.dart';
+import 'screens/add_category/add_category.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -36,11 +33,11 @@ class RouteGenerator {
       case '/productinfo':
         return FadeRoute(page: ProductInfo());
       case '/addcategory':
-      //   return FadeRoute(page: AddCategory());
-      // case '/addbrand':
-      //   return FadeRoute(page: AddBrand());
-      // case '/addoffer':
-      //   return FadeRoute(page: AddOffer());
+        return FadeRoute(page: AddCategory());
+      case '/addbrand':
+        return FadeRoute(page: AddBrand());
+      case '/addoffer':
+        return FadeRoute(page: AddOffer());
       // case '/addproduct':
       //   return FadeRoute(page: AddProduct());
       // case '/editproduct':
@@ -51,14 +48,6 @@ class RouteGenerator {
       //   return FadeRoute(page: EditOffer(model: args));
       // case '/editcategory':
       //   return FadeRoute(page: EditCategory(categoryModel: args));
-      case '/editscreen':
-        return FadeRoute(
-          page: EditScreen(
-            title: 'Title',
-            titleOfDescriptionField: 'Description',
-            titleOftitleField: 'Title',
-          ),
-        );
       default:
         return _errorRoute();
     }

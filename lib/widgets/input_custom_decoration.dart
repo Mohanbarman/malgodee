@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/styles.dart';
 
-Widget inputCustomDeocration(TextFormField child) {
+Widget inputCustomDeocration(Widget child) {
   return Container(
     padding: EdgeInsets.only(left: ScreenPadding, right: ScreenPadding / 2),
     decoration: BoxDecoration(

@@ -61,10 +61,9 @@ class FirebaseStorageApi {
 
   static Future<String> uploadFile({File file, String filename}) async {
     try {
-      StorageReference ref = FirebaseStorage.instance.ref().child(filename);
-      final StorageUploadTask uploadTask = ref.putFile(file);
-      StorageTaskSnapshot value = await uploadTask.onComplete;
-      String url = await value.ref.getDownloadURL();
+      Reference ref = FirebaseStorage.instance.ref().child(filename);
+      final UploadTask uploadTask = ref.putFile(file);
+      String url = await uploadTask.storage.ref().getDownloadURL();
       return url;
     } catch (e) {
       print(e);
@@ -86,9 +85,8 @@ class FirebaseStorageApi {
 
   static Future deleteDoc({String id, String collection}) async {
     try {
-      CollectionReference ref =
-          FirebaseFirestore.instance.collection(collection);
-      await ref.doc(id).delete();
+      CollectionReference ref = Firestore.instance.collection(collection);
+      await ref.document(id).delete();
     } catch (e) {
       print(e);
       return e;

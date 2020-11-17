@@ -1,4 +1,4 @@
-import 'package:ShoppingApp/widgets/app_bar.dart';
+import 'package:ShoppingApp/widgets/custom_app_bar.dart';
 import 'package:ShoppingApp/models/product.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';

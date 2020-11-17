@@ -24,7 +24,7 @@ class TrendingOffersSection extends StatelessWidget {
                   if (snapshot.data == UserAuth.isAuthorized) {
                     return Button1(
                       title: 'Add offer',
-                      route: '/editscreen',
+                      route: '/addoffer',
                     );
                   } else {
                     return Button1(title: 'View all', route: '/offers');

@@ -92,7 +92,6 @@ class CustomGridView2x2 extends StatelessWidget {
             crossAxisSpacing: ScreenPadding,
             mainAxisSpacing: ScreenPadding,
           ),
-          physics: ClampingScrollPhysics(),
           shrinkWrap: true,
           itemCount: snapshot.data.docs.length,
           padding: EdgeInsets.all(ScreenPadding),
