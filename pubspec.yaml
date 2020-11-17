@@ -19,7 +19,7 @@ dependencies:
   firebase_auth:
   cloud_firestore:
   firebase_core:
-  firebase_storage:
+  firebase_storage: ^5.0.1
   shimmer:
   image_picker:
   shared_preferences:

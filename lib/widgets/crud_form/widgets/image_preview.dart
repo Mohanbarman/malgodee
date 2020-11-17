@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 enum PreviewShape { circle, roundedRectangle }
@@ -27,9 +28,17 @@ class ImagePreview extends StatelessWidget {
         child: StreamBuilder(
           stream: bloc.stream,
           builder: (context, snapshot) {
-            if (!snapshot.hasData)
+            if (bloc.currPath.length < 1)
               return Center(child: Text('No image selected'));
-            return Image.file(File(snapshot.data), fit: BoxFit.cover);
+
+            if (bloc.currPath.contains('https://')) {
+              print('This ran');
+              return CachedNetworkImage(
+                imageUrl: bloc.currPath,
+                fit: BoxFit.cover,
+              );
+            }
+            return Image.file(File(bloc.currPath), fit: BoxFit.cover);
           },
         ),
       ),

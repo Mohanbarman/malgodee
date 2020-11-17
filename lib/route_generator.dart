@@ -1,14 +1,14 @@
-import 'package:ShoppingApp/editing_screens/edit_category.dart';
-import 'package:ShoppingApp/editing_screens/edit_offer_screen.dart';
 import 'package:ShoppingApp/screens/all_brands/all_brands.dart';
+import 'package:ShoppingApp/screens/edit_brand/edit_brand.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'screens/Home/home.dart';
+import 'screens/home/home.dart';
 import 'screens/add_brand/add_brand.dart';
 import 'screens/add_offer/add_offer.dart';
 import 'screens/all_offers/all_offers.dart';
+import 'screens/edit_category/edit_category.dart';
 import 'screens/login/login.dart';
-import 'screens/AllCategories/all_categories.dart';
+import 'screens/all_categories/all_categories.dart';
 import 'screens/products/products.dart';
 import 'screens/products/product_info.dart';
 import 'screens/add_category/add_category.dart';
@@ -44,10 +44,10 @@ class RouteGenerator {
       //   if (args == null)
       //     throw 'A product model is required for EditProduct screen';
       //   return FadeRoute(page: EditProduct(model: args));
-      // case '/editoffer':
-      //   return FadeRoute(page: EditOffer(model: args));
-      // case '/editcategory':
-      //   return FadeRoute(page: EditCategory(categoryModel: args));
+      case '/editbrand':
+        return FadeRoute(page: EditBrand(brandModel: args));
+      case '/editcategory':
+        return FadeRoute(page: EditCategory(categoryModel: args));
       default:
         return _errorRoute();
     }

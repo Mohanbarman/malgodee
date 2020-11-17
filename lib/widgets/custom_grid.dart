@@ -1,7 +1,6 @@
 import 'package:ShoppingApp/styles.dart';
 import 'package:ShoppingApp/widgets/offer_image_container.dart';
 import 'package:ShoppingApp/widgets/shimmer_placeholders.dart';
-import 'package:ShoppingApp/models/brand.dart';
 import 'package:flutter/material.dart';
 import 'rounded_icon_container.dart';
 
@@ -59,11 +58,7 @@ class CustomGridView4x4 extends StatelessWidget {
                       );
                     } ??
                     () {},
-                onTap: onTap != null
-                    ? () {
-                        onTap();
-                      }
-                    : () {},
+                onTap: onTap != null ? onTap : () {},
               );
             },
           );
@@ -97,6 +92,9 @@ class CustomGridView2x2 extends StatelessWidget {
           padding: EdgeInsets.all(ScreenPadding),
           itemBuilder: (context, index) {
             return OfferImageContainer(
+              onLongPress: () {
+                onLongPress();
+              },
               imageUrl: snapshot.data.docs[index]['image'],
             );
           },

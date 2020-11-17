@@ -49,11 +49,13 @@ class FirebaseStorageApi {
     }
   }
 
-  static updateDocument({model, String collection}) {
+  static updateDocument({model, String collection}) async {
     try {
-      CollectionReference ref =
-          FirebaseFirestore.instance.collection(collection);
-      ref.doc(model.id).update(model.toJson());
+      CollectionReference ref = FirebaseFirestore.instance.collection(
+        collection,
+      );
+      await ref.doc(model['id']).update(model);
+      return true;
     } catch (e) {
       print(e);
     }
@@ -62,8 +64,8 @@ class FirebaseStorageApi {
   static Future<String> uploadFile({File file, String filename}) async {
     try {
       Reference ref = FirebaseStorage.instance.ref().child(filename);
-      final UploadTask uploadTask = ref.putFile(file);
-      String url = await uploadTask.storage.ref().getDownloadURL();
+      final TaskSnapshot uploadTask = await ref.putFile(file);
+      String url = await uploadTask.ref.getDownloadURL();
       return url;
     } catch (e) {
       print(e);
@@ -85,8 +87,10 @@ class FirebaseStorageApi {
 
   static Future deleteDoc({String id, String collection}) async {
     try {
-      CollectionReference ref = Firestore.instance.collection(collection);
-      await ref.document(id).delete();
+      CollectionReference ref =
+          FirebaseFirestore.instance.collection(collection);
+      await ref.doc(id).delete();
+      return true;
     } catch (e) {
       print(e);
       return e;

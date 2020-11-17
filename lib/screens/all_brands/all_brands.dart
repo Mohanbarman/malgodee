@@ -1,5 +1,6 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:ShoppingApp/bloc/product_flow_bloc.dart';
+import 'package:ShoppingApp/models/brand.dart';
 import 'package:ShoppingApp/widgets/bottom_navigation_bar.dart';
 import 'package:ShoppingApp/models/category.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
@@ -71,8 +72,8 @@ class AllBrands extends StatelessWidget {
               }) {
                 Navigator.pushNamed(
                   context,
-                  '/editcategory',
-                  arguments: CategoryModel(
+                  '/editbrand',
+                  arguments: BrandModel(
                     id: id,
                     name: name,
                     image: image,

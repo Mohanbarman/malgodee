@@ -1,3 +1,4 @@
+import 'package:ShoppingApp/models/offer.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:ShoppingApp/widgets/custom_grid.dart';
@@ -26,6 +27,23 @@ class Offers extends StatelessWidget {
           ),
           Expanded(
             child: CustomGridView2x2(
+              onLongPress: ({
+                String id,
+                String name,
+                String image,
+                String description,
+              }) {
+                Navigator.pushNamed(
+                  context,
+                  '/editoffer',
+                  arguments: OfferModel(
+                    id: id,
+                    name: name,
+                    image: image,
+                    description: description,
+                  ),
+                );
+              },
               itemsStream: FirebaseStorageApi.streamOfCollection(
                 collection: 'offers',
               ),

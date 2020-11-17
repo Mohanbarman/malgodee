@@ -5,15 +5,22 @@ import 'package:flutter/material.dart';
 import 'dart:typed_data';
 
 class OfferImageContainer extends StatelessWidget {
-  OfferImageContainer({this.fromBytes, this.bytes, this.imageUrl});
+  OfferImageContainer({
+    this.fromBytes,
+    this.bytes,
+    this.imageUrl,
+    this.onLongPress,
+  });
 
   final String imageUrl;
   final fromBytes;
   final Uint8List bytes;
+  final Function onLongPress;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onLongPress: onLongPress ?? () {},
       onTap: () {
         showDialog(context: context, child: OfferDialog(imageUrl: imageUrl));
       },
