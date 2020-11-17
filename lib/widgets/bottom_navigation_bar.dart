@@ -1,5 +1,8 @@
+import 'package:ShoppingApp/services/firebase_api.dart';
+import 'package:ShoppingApp/utils/wp_chat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:ShoppingApp/utils/make_call.dart';
 import '../styles.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
@@ -20,17 +23,65 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       height: 55,
       child: Row(
         children: [
-          createIconButton(Icons.phone, 'Phone', 0, '/allproducts', context),
-          createIconButton(Icons.chat_bubble, 'Chat', 1, '/chat', context),
-          createIconButton(Icons.local_offer, 'Offer', 2, '/offers', context),
-          createIconButton(Icons.home_filled, 'Home', 3, '/', context),
+          StreamBuilder(
+              stream: FirebaseStorageApi.streamOfCollection(
+                collection: 'calling_number',
+              ),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) return SizedBox();
+                return createIconButton(
+                  icon: Icons.phone,
+                  label: 'Phone',
+                  index: 0,
+                  context: context,
+                  onPress: () => makeCall(
+                    number: snapshot.data.docs[0]['phone_number'],
+                  ),
+                );
+              }),
+          StreamBuilder(
+              stream: FirebaseStorageApi.streamOfCollection(
+                collection: 'whatsapp_number',
+              ),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) return SizedBox();
+                return createIconButton(
+                  icon: Icons.chat_bubble,
+                  label: 'Chat',
+                  index: 1,
+                  context: context,
+                  onPress: () => openWhatsapp(
+                    number: snapshot.data.docs[0]['phone_number'],
+                  ),
+                );
+              }),
+          createIconButton(
+            icon: Icons.local_offer,
+            label: 'Offer',
+            index: 2,
+            route: '/offers',
+            context: context,
+          ),
+          createIconButton(
+            icon: Icons.home_filled,
+            label: 'Home',
+            index: 3,
+            route: '/',
+            context: context,
+          ),
         ],
       ),
     );
   }
 
-  Widget createIconButton(
-      IconData icon, String label, int index, route, context) {
+  Widget createIconButton({
+    IconData icon,
+    String label,
+    int index,
+    String route,
+    BuildContext context,
+    Function onPress,
+  }) {
     List<Widget> widgets = <Widget>[
       Positioned(
         top: -3.5,
@@ -47,14 +98,15 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       ),
       IconButton(
         icon: Icon(icon),
-        onPressed: () {
-          setState(
+        onPressed: onPress ??
             () {
-              Navigator.pushNamed(context, route);
-              _selected_index = index;
+              setState(
+                () {
+                  Navigator.pushNamed(context, route);
+                  _selected_index = index;
+                },
+              );
             },
-          );
-        },
         color: index == _selected_index ? Colors.white : Colors.white60,
       ),
     ];

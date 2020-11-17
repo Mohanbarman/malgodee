@@ -33,7 +33,7 @@ class BrandsSection extends StatelessWidget {
             ],
           ),
           SizedBox(height: 20),
-          CustomGridViewX4(
+          CustomGridView4x4(
             itemsStream: FirebaseStorageApi.streamOfCollection(
               collection: 'brands',
               limit: 10,

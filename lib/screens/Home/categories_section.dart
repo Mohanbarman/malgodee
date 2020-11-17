@@ -1,17 +1,10 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:ShoppingApp/bloc/product_flow_bloc.dart';
-import 'package:ShoppingApp/widgets/shimmer_placeholders.dart';
-import 'package:ShoppingApp/models/category.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
 import 'package:ShoppingApp/widgets/underlined_text.dart';
 import 'package:ShoppingApp/widgets/rounded_icon_container.dart';
 import 'package:ShoppingApp/widgets/buttons.dart';
-import 'package:ShoppingApp/services/localstorage.dart';
 import 'package:ShoppingApp/styles.dart';
-import 'package:ShoppingApp/widgets/buttons.dart';
-import 'package:ShoppingApp/widgets/rounded_icon_container.dart';
-import 'package:ShoppingApp/widgets/underlined_text.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class CategoriesSection extends StatelessWidget {

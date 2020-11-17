@@ -10,70 +10,6 @@ int MAX_SIZE = 1024 * 1024 * 5;
 class FirebaseStorageApi {
   Uint8List imageBytes;
 
-  // ignore: non_constant_identifier_names
-  Future trendingOffersFuture(int index) async {
-    try {
-      var x = await FirebaseFirestore.instance
-          .collection('offers')
-          .where('type', isEqualTo: 'trending')
-          .get();
-      List docs = x.docs.toList();
-      return FirebaseStorage.instance
-          .ref()
-          .child(docs[index]['image'])
-          .getData(MAX_SIZE);
-      // return null;
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  static Future futureFromImagePath(String path) {
-    try {
-      return FirebaseStorage.instance.ref().child(path).getData(MAX_SIZE);
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  // Get the list of regular offers future
-  static Future<List> regularOffersFuture(int index) async {
-    try {
-      var value = await FirebaseFirestore.instance.collection('offers').get();
-      List docs = value.docs.toList();
-      return FirebaseStorage.instance
-          .ref()
-          .child(docs[index]['image'])
-          .getData(MAX_SIZE);
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  static Stream allOffersStream({int limit}) {
-    try {
-      return limit == null
-          ? FirebaseFirestore.instance.collection('offers').snapshots()
-          : FirebaseFirestore.instance
-              .collection('offers')
-              .limit(limit)
-              .snapshots();
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  static Stream trendingOffersStream() {
-    try {
-      return FirebaseFirestore.instance
-          .collection('offers')
-          .where('type', isEqualTo: 'trending')
-          .snapshots();
-    } catch (e) {
-      print(e);
-    }
-  }
-
   static Stream streamOfCollection({
     String collection,
     int limit,
@@ -89,6 +25,7 @@ class FirebaseStorageApi {
               .snapshots();
     } catch (e) {
       print(e);
+      return e;
     }
   }
 
@@ -108,6 +45,7 @@ class FirebaseStorageApi {
               .snapshots();
     } catch (e) {
       print(e);
+      return e;
     }
   }
 
@@ -142,6 +80,7 @@ class FirebaseStorageApi {
       return 1;
     } catch (e) {
       print(e);
+      return e;
     }
   }
 
@@ -152,6 +91,7 @@ class FirebaseStorageApi {
       await ref.doc(id).delete();
     } catch (e) {
       print(e);
+      return e;
     }
   }
 }

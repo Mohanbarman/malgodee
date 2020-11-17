@@ -1,8 +1,11 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:ShoppingApp/bloc/phone_number_field_bloc.dart';
+import 'package:ShoppingApp/utils/make_call.dart';
+import 'package:ShoppingApp/utils/wp_chat.dart';
 import 'package:ShoppingApp/widgets/custom_text_field.dart';
 import 'package:ShoppingApp/widgets/shimmer_placeholders.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:flutter/material.dart';
@@ -33,9 +36,42 @@ class ContactUsSection extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    RoundedIconContainer(title: 'Call', imagePath: _callIcon),
+                    StreamBuilder(
+                        stream: FirebaseStorageApi.streamOfCollection(
+                          collection: 'calling_number',
+                        ),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData)
+                            return CircularProgressIndicator();
+                          return RoundedIconContainer(
+                            title: 'Call',
+                            imagePath: _callIcon,
+                            padding: 12,
+                            onTap: () => makeCall(
+                              number: snapshot.data.docs[0]['phone_number'],
+                            ),
+                          );
+                        }),
                     SizedBox(width: 30),
-                    RoundedIconContainer(title: 'Chat', imagePath: _waIcon),
+                    StreamBuilder(
+                      stream: FirebaseStorageApi.streamOfCollection(
+                        collection: 'whatsapp_number',
+                      ),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) return SizedBox();
+                        return RoundedIconContainer(
+                          title: 'Chat',
+                          imagePath: _waIcon,
+                          padding: 12,
+                          onTap: () {
+                            print('called');
+                            openWhatsapp(
+                              number: snapshot.data.docs[0]['phone_number'],
+                            );
+                          },
+                        );
+                      },
+                    ),
                   ],
                 ),
                 SizedBox(height: 30),

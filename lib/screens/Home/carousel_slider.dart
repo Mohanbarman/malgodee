@@ -1,15 +1,10 @@
-import 'package:ShoppingApp/widgets/offer_dialog.dart';
 import 'package:ShoppingApp/widgets/offer_image_container.dart';
 import 'package:ShoppingApp/widgets/shimmer_placeholders.dart';
-import 'package:ShoppingApp/models/offer.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
-import 'package:ShoppingApp/services/localstorage.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import '../../styles.dart';
-import 'dart:typed_data';
 
 class OfferCarousel extends StatefulWidget {
   @override

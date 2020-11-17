@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'dart:typed_data';
 import '../styles.dart';
-import 'dart:io';
 
 class RoundedIconContainer extends StatelessWidget {
   final String title;
   final String imagePath;
   final String imageUrl;
-  String route;
-  Function onTap;
-  bool viewAllIcon = false;
-  Uint8List bytes;
-  Function onLongPress;
+  final String route;
+  final Function onTap;
+  final bool viewAllIcon;
+  final Uint8List bytes;
+  final Function onLongPress;
+  final double padding;
 
   RoundedIconContainer({
     this.title,
@@ -24,6 +24,7 @@ class RoundedIconContainer extends StatelessWidget {
     this.bytes,
     this.onLongPress,
     this.imageUrl,
+    this.padding,
   });
 
   @override
@@ -34,6 +35,7 @@ class RoundedIconContainer extends StatelessWidget {
         Container(
           height: 60,
           width: 60,
+          padding: EdgeInsets.all(padding ?? 0),
           clipBehavior: Clip.antiAliasWithSaveLayer,
           decoration: BoxDecoration(
             color: Colors.white,
@@ -48,11 +50,14 @@ class RoundedIconContainer extends StatelessWidget {
                   },
                 )
               : imageUrl == null
-                  ? Image(
-                      fit: BoxFit.fill,
-                      image: bytes == null
-                          ? FileImage(File(this.imagePath))
-                          : MemoryImage(bytes),
+                  ? GestureDetector(
+                      onTap: onTap ?? () {},
+                      child: Image(
+                        fit: BoxFit.fill,
+                        image: bytes == null
+                            ? AssetImage(imagePath)
+                            : MemoryImage(bytes),
+                      ),
                     )
                   : CachedNetworkImage(
                       imageUrl: imageUrl,

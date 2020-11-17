@@ -48,11 +48,10 @@ class AllCategories extends StatelessWidget {
               ],
             ),
             SizedBox(height: 30),
-            CustomGridViewX4(
+            CustomGridView4x4(
               itemsStream: FirebaseStorageApi.streamOfCollection(
                 collection: 'categories',
               ),
-              context: context,
               referer: 'category',
               onLongPress: ({
                 String id,

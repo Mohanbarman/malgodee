@@ -72,40 +72,48 @@ class Bar extends StatelessWidget {
 }
 
 class SearchBar extends StatelessWidget {
+  TextEditingController _textEditingController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 300,
-      // padding: EdgeInsets.only(left: 20),
-      margin: EdgeInsets.fromLTRB(0, 10, 40, 10),
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 20,
-            color: Colors.black12,
-            offset: Offset.infinite,
-          ),
-        ],
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-      ),
-      child: Material(
-        borderRadius: BorderRadius.all(Radius.circular(50)),
-        child: TextField(
-          cursorColor: AccentColor,
-          decoration: InputDecoration(
-            hintText: 'Search products',
-            suffixIcon: Container(
-              child: IconButton(
-                splashRadius: 22,
-                onPressed: () {},
-                icon: Icon(
-                  Icons.search,
-                  color: DefaultFontColor,
+    return GestureDetector(
+      onTap: () => Navigator.pushNamed(context, '/searchproduct'),
+      child: Container(
+        width: 300,
+        // padding: EdgeInsets.only(left: 20),
+        margin: EdgeInsets.fromLTRB(0, 10, 40, 10),
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 20,
+              color: Colors.black12,
+              offset: Offset(0, 0),
+            ),
+          ],
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+        ),
+        child: Material(
+          borderRadius: BorderRadius.all(Radius.circular(50)),
+          child: TextField(
+            cursorColor: AccentColor,
+            controller: _textEditingController,
+            onChanged: print,
+            decoration: InputDecoration(
+              hintText: 'Search products',
+              suffixIcon: Container(
+                child: IconButton(
+                  splashRadius: 22,
+                  onPressed: () {
+                    print(_textEditingController.value.text);
+                  },
+                  icon: Icon(
+                    Icons.search,
+                    color: DefaultFontColor,
+                  ),
                 ),
               ),
+              contentPadding: EdgeInsets.only(left: 30, top: 14),
+              border: InputBorder.none,
             ),
-            contentPadding: EdgeInsets.only(left: 30, top: 14),
-            border: InputBorder.none,
           ),
         ),
       ),

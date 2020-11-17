@@ -1,6 +1,7 @@
 import 'package:ShoppingApp/editing_screens/edit_category.dart';
 import 'package:ShoppingApp/editing_screens/edit_offer_screen.dart';
 import 'package:ShoppingApp/screens/all_brands/all_brands.dart';
+import 'package:ShoppingApp/widgets/edit_screen/edit_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'screens/Home/home.dart';
@@ -30,26 +31,34 @@ class RouteGenerator {
         return FadeRoute(page: AllCategories(args));
       case '/allbrands':
         return FadeRoute(page: AllBrands(args));
-      case '/allproducts':
-        return FadeRoute(page: AllProducts());
+      // case '/allproducts':
+      //   return FadeRoute(page: AllProducts());
       case '/productinfo':
         return FadeRoute(page: ProductInfo());
       case '/addcategory':
-        return FadeRoute(page: AddCategory());
-      case '/addbrand':
-        return FadeRoute(page: AddBrand());
-      case '/addoffer':
-        return FadeRoute(page: AddOffer());
-      case '/addproduct':
-        return FadeRoute(page: AddProduct());
-      case '/editproduct':
-        if (args == null)
-          throw 'A product model is required for EditProduct screen';
-        return FadeRoute(page: EditProduct(model: args));
-      case '/editoffer':
-        return FadeRoute(page: EditOffer(model: args));
-      case '/editcategory':
-        return FadeRoute(page: EditCategory(categoryModel: args));
+      //   return FadeRoute(page: AddCategory());
+      // case '/addbrand':
+      //   return FadeRoute(page: AddBrand());
+      // case '/addoffer':
+      //   return FadeRoute(page: AddOffer());
+      // case '/addproduct':
+      //   return FadeRoute(page: AddProduct());
+      // case '/editproduct':
+      //   if (args == null)
+      //     throw 'A product model is required for EditProduct screen';
+      //   return FadeRoute(page: EditProduct(model: args));
+      // case '/editoffer':
+      //   return FadeRoute(page: EditOffer(model: args));
+      // case '/editcategory':
+      //   return FadeRoute(page: EditCategory(categoryModel: args));
+      case '/editscreen':
+        return FadeRoute(
+          page: EditScreen(
+            title: 'Title',
+            titleOfDescriptionField: 'Description',
+            titleOftitleField: 'Title',
+          ),
+        );
       default:
         return _errorRoute();
     }

@@ -48,11 +48,10 @@ class AllBrands extends StatelessWidget {
               ],
             ),
             SizedBox(height: 30),
-            CustomGridViewX4(
+            CustomGridView4x4(
               itemsStream: FirebaseStorageApi.streamOfCollection(
                 collection: 'brands',
               ),
-              context: context,
               referer: 'brand',
               onTap: () {
                 if (productFlowBloc.productStreamRouteInfo['category'] !=

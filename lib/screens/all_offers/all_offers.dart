@@ -1,7 +1,7 @@
 import 'package:ShoppingApp/models/offer.dart';
 import 'package:ShoppingApp/services/firebase_api.dart';
-import 'package:ShoppingApp/services/localstorage.dart';
 import 'package:ShoppingApp/styles.dart';
+import 'package:ShoppingApp/widgets/custom_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:ShoppingApp/widgets/app_bar.dart';
@@ -28,12 +28,11 @@ class Offers extends StatelessWidget {
               top: ScreenPadding,
             ),
           ),
-          StreamBuilder(
-            stream: FirebaseStorageApi.streamOfCollection(collection: 'offers'),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) return CircularProgressIndicator();
-            },
-          )
+          CustomGridView2x2(
+            itemsStream: FirebaseStorageApi.streamOfCollection(
+              collection: 'offers',
+            ),
+          ),
         ],
       ),
     );

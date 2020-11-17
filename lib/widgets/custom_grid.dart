@@ -1,22 +1,20 @@
+import 'package:ShoppingApp/styles.dart';
+import 'package:ShoppingApp/widgets/offer_image_container.dart';
 import 'package:ShoppingApp/widgets/shimmer_placeholders.dart';
 import 'package:ShoppingApp/models/brand.dart';
 import 'package:flutter/material.dart';
 import 'rounded_icon_container.dart';
 
-enum Referer { category, brand }
-
-class CustomGridViewX4 extends StatelessWidget {
+class CustomGridView4x4 extends StatelessWidget {
   final Stream itemsStream;
   final Widget lastWidget;
   final String referer;
-  final BuildContext context;
   final Function onTap;
   final Function onLongPress;
-  CustomGridViewX4({
+  CustomGridView4x4({
     @required this.itemsStream,
     this.lastWidget,
     this.referer,
-    this.context,
     this.onTap,
     this.onLongPress,
   });
@@ -71,6 +69,40 @@ class CustomGridViewX4 extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+}
+
+class CustomGridView2x2 extends StatelessWidget {
+  final Stream itemsStream;
+  final Function onTap;
+  final Function onLongPress;
+
+  CustomGridView2x2({this.itemsStream, this.onTap, this.onLongPress});
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: itemsStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData)
+          return Center(child: CircularProgressIndicator());
+        return GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: ScreenPadding,
+            mainAxisSpacing: ScreenPadding,
+          ),
+          physics: ClampingScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: snapshot.data.docs.length,
+          padding: EdgeInsets.all(ScreenPadding),
+          itemBuilder: (context, index) {
+            return OfferImageContainer(
+              imageUrl: snapshot.data.docs[index]['image'],
+            );
+          },
+        );
+      },
     );
   }
 }
