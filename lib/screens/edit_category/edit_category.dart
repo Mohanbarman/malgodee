@@ -1,5 +1,5 @@
 import 'package:ShoppingApp/models/category.dart';
-import 'package:ShoppingApp/services/firebase_api.dart';
+import 'package:ShoppingApp/services/firestore_api.dart';
 import 'package:ShoppingApp/widgets/crud_form/utils/single_image_pick_bloc.dart';
 import 'package:ShoppingApp/widgets/crud_form/widgets/image_preview.dart';
 import 'package:ShoppingApp/widgets/crud_form/widgets/pick_image_button.dart';

@@ -1,6 +1,5 @@
 import 'package:ShoppingApp/widgets/offer_image_container.dart';
-import 'package:ShoppingApp/widgets/shimmer_placeholders.dart';
-import 'package:ShoppingApp/services/firebase_api.dart';
+import 'package:ShoppingApp/services/firestore_api.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +31,7 @@ class _OfferCarouselState extends State<OfferCarousel> {
           StreamBuilder(
             stream: FirebaseStorageApi.streamOfCollection(collection: 'offers'),
             builder: (context, snapshot) {
-              if (!snapshot.hasData) return OfferImagePlaceholder();
+              if (!snapshot.hasData) return SizedBox();
               List<Widget> items = snapshot.data.docs
                   .map((e) => OfferImageContainer(imageUrl: e['image']))
                   .toList()

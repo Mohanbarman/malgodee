@@ -1,4 +1,4 @@
-import 'package:ShoppingApp/services/firebase_api.dart';
+import 'package:ShoppingApp/services/firestore_api.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:io';
@@ -7,6 +7,9 @@ void save({
   Map<String, dynamic> map,
   BuildContext context,
   String collection,
+  String correspondingCollection,
+  List correspondingFieldElements,
+  String correspondingFieldName,
 }) async {
   showDialog(
     barrierDismissible: false,
@@ -32,6 +35,16 @@ void save({
     data: map,
     collection: collection,
   );
+
+  correspondingFieldElements.forEach((e) {
+    print(e);
+    FirebaseStorageApi.appendToList(
+      collection: correspondingCollection,
+      data: correspondingFieldElements,
+      field: correspondingFieldName,
+      id: e,
+    );
+  });
 
   Navigator.pushNamed(context, '/');
 }

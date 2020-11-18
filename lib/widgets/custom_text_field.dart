@@ -1,7 +1,6 @@
 import 'package:ShoppingApp/widgets/input_custom_decoration.dart';
-import 'package:ShoppingApp/widgets/shimmer_placeholders.dart';
 import 'package:ShoppingApp/models/phone_number.dart';
-import 'package:ShoppingApp/services/firebase_api.dart';
+import 'package:ShoppingApp/services/firestore_api.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -40,7 +39,7 @@ class CustomTextField extends StatelessWidget {
               return StreamBuilder(
                 stream: collectionStream,
                 builder: (context, collectionSnapshot) {
-                  if (!collectionSnapshot.hasData) return TextInputShimmer();
+                  if (!collectionSnapshot.hasData) return SizedBox();
 
                   String _collectionSnapshotNumber =
                       collectionSnapshot.data.docs[0]['phone_number'];
@@ -86,7 +85,7 @@ class CustomTextField extends StatelessWidget {
                                         id: _collectionSnapshotId,
                                         phone_number:
                                             _textEditingController.value.text,
-                                      ),
+                                      ).toJson(),
                                       collection: collectionName,
                                     );
                                   },

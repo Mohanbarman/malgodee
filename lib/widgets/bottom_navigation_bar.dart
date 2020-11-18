@@ -1,4 +1,4 @@
-import 'package:ShoppingApp/services/firebase_api.dart';
+import 'package:ShoppingApp/services/firestore_api.dart';
 import 'package:ShoppingApp/utils/wp_chat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';

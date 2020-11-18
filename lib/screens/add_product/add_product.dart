@@ -1,8 +1,8 @@
-import 'package:ShoppingApp/models/offer.dart';
-import 'package:ShoppingApp/widgets/crud_form/utils/single_image_pick_bloc.dart';
+import 'package:ShoppingApp/widgets/crud_form/utils/multiple_image_pick_bloc.dart';
 import 'package:ShoppingApp/widgets/crud_form/widgets/image_preview.dart';
 import 'package:ShoppingApp/widgets/crud_form/widgets/pick_image_button.dart';
 import 'package:ShoppingApp/widgets/crud_form/utils/save_document.dart';
+import 'package:ShoppingApp/models/product.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:ShoppingApp/widgets/title_description_form.dart';
 import 'package:ShoppingApp/widgets/underlined_text.dart';
@@ -10,8 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:ShoppingApp/widgets/custom_app_bar.dart';
 import 'package:ShoppingApp/widgets/bottom_navigation_bar.dart';
 
-class AddOffer extends StatelessWidget {
-  SingleImagePickBloc _singleImagePickBloc = SingleImagePickBloc();
+class AddProduct extends StatelessWidget {
+  MultipleImagePickBloc _multipleImagePickBloc = MultipleImagePickBloc();
   TextEditingController _titleController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
 
@@ -28,22 +28,22 @@ class AddOffer extends StatelessWidget {
           0,
         ),
         children: [
-          Title('Add offer'),
+          Title('Add product'),
           SizedBox(height: 30),
           Container(
             // width: 300,
             child: Center(
               child: ImagePreview(
-                bloc: _singleImagePickBloc,
+                bloc: _multipleImagePickBloc,
                 previewShape: PreviewShape.roundedRectangle,
               ),
             ),
           ),
           SizedBox(height: 30),
-          PickImageButton(bloc: _singleImagePickBloc),
+          PickImageButton(bloc: _multipleImagePickBloc),
           SizedBox(height: 60),
           TitleDescriptionForm(
-            name: 'Offer',
+            name: 'Product',
             titleController: _titleController,
             descriptionController: _descriptionController,
           ),
@@ -96,17 +96,17 @@ class AddOffer extends StatelessWidget {
   }
 
   void _save(BuildContext context) async {
-    String image = _singleImagePickBloc.currPath;
+    List<String> images = _multipleImagePickBloc.currPaths;
     String title = _titleController.value.text;
     String description = _descriptionController.value.text;
 
     save(
-      map: OfferModel(
-        image: image,
+      map: ProductModel(
+        images: images,
         name: title,
         description: description,
       ).toJson(),
-      collection: 'offers',
+      collection: 'products',
       context: context,
     );
   }

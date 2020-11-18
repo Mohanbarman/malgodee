@@ -1,3 +1,5 @@
+import 'package:ShoppingApp/services/firestore_api.dart';
+import 'package:ShoppingApp/widgets/crud_form/utils/multiselect_values.dart';
 import 'package:ShoppingApp/widgets/crud_form/utils/single_image_pick_bloc.dart';
 import 'package:ShoppingApp/widgets/crud_form/widgets/image_preview.dart';
 import 'package:ShoppingApp/widgets/crud_form/widgets/pick_image_button.dart';
@@ -9,11 +11,13 @@ import 'package:ShoppingApp/widgets/underlined_text.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/widgets/custom_app_bar.dart';
 import 'package:ShoppingApp/widgets/bottom_navigation_bar.dart';
+import 'package:ShoppingApp/widgets/crud_form/widgets/multiselect_field.dart';
 
 class AddCategory extends StatelessWidget {
   SingleImagePickBloc _singleImagePickBloc = SingleImagePickBloc();
   TextEditingController _titleController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
+  MultiSelectValuesStream _multiSelectValuesStream = MultiSelectValuesStream();
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +49,29 @@ class AddCategory extends StatelessWidget {
             descriptionController: _descriptionController,
           ),
           SizedBox(height: 30),
+          correspondingBrandsSelector(),
+          SizedBox(height: 30),
           actionButtons(context),
           SizedBox(height: 30),
         ],
       ),
+    );
+  }
+
+  Widget correspondingBrandsSelector() {
+    return StreamBuilder(
+      stream: FirebaseStorageApi.streamOfCollection(collection: 'brands'),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return SizedBox();
+        return CrudMultiselectField(
+          multiSelectValuesStream: _multiSelectValuesStream,
+          data: snapshot.data.docs
+              .map((e) => {'display': e['name'], 'value': e.id})
+              .toList(),
+          title: 'Select corresponding brands',
+          validationMsg: 'Please select a corresponding brand',
+        );
+      },
     );
   }
 
@@ -92,16 +115,22 @@ class AddCategory extends StatelessWidget {
     );
   }
 
-  void _save(BuildContext context) async {
+  Future _save(BuildContext context) async {
+    if (_multiSelectValuesStream.values.length < 1) {
+      return 0;
+    }
+
     String image = _singleImagePickBloc.currPath;
     String title = _titleController.value.text;
     String description = _descriptionController.value.text;
+    List brands = _multiSelectValuesStream.values;
 
     save(
       map: CategoryModel(
         image: image,
         name: title,
         description: description,
+        brands: brands,
       ).toJson(),
       collection: 'categories',
       context: context,

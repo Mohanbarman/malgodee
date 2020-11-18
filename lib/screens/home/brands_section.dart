@@ -1,7 +1,7 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:ShoppingApp/bloc/product_flow_bloc.dart';
 import 'package:ShoppingApp/widgets/custom_grid.dart';
-import 'package:ShoppingApp/services/firebase_api.dart';
+import 'package:ShoppingApp/services/firestore_api.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/widgets/buttons.dart';
 import 'package:ShoppingApp/widgets/underlined_text.dart';

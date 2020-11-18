@@ -1,7 +1,6 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:flutter/material.dart';
-import 'package:ShoppingApp/services/firebase_api.dart';
-import 'package:ShoppingApp/widgets/shimmer_placeholders.dart';
+import 'package:ShoppingApp/services/firestore_api.dart';
 import '../../widgets/underlined_text.dart';
 import '../../widgets/buttons.dart';
 import '../../widgets/offer_image_container.dart';
@@ -37,7 +36,7 @@ class TrendingOffersSection extends StatelessWidget {
           StreamBuilder(
             stream: FirebaseStorageApi.streamOfCollection(collection: 'offers'),
             builder: (context, snapshot) {
-              if (!snapshot.hasData) return OfferImagePlaceholder();
+              if (!snapshot.hasData) return SizedBox();
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: List.generate(

@@ -1,6 +1,6 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:ShoppingApp/bloc/product_flow_bloc.dart';
-import 'package:ShoppingApp/services/firebase_api.dart';
+import 'package:ShoppingApp/services/firestore_api.dart';
 import 'package:ShoppingApp/widgets/underlined_text.dart';
 import 'package:ShoppingApp/widgets/rounded_icon_container.dart';
 import 'package:ShoppingApp/widgets/buttons.dart';
@@ -30,8 +30,6 @@ class CategoriesSection extends StatelessWidget {
                         title: 'Add category',
                         route: '/addcategory',
                       );
-                    } else if (snapshot.data == UserAuth.unauthorized) {
-                      return SizedBox();
                     }
                     return SizedBox();
                   },
@@ -89,6 +87,13 @@ class CategoriesSection extends StatelessWidget {
                           RoundedIconContainer(
                             imageUrl: image,
                             title: name,
+                            onTap: () {
+                              print('ran');
+                              productFlowBloc.productSink.add({
+                                'category': querySnapshot.data.docs[index].id,
+                              });
+                              Navigator.pushNamed(context, '/allbrands');
+                            },
                           ),
                           SizedBox(width: ScreenPadding),
                         ],

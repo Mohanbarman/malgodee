@@ -3,8 +3,15 @@ class CategoryModel {
   final String description;
   final String image;
   final String id;
+  final List brands;
 
-  CategoryModel({this.name, this.description, this.image, this.id});
+  CategoryModel({
+    this.name,
+    this.description,
+    this.image,
+    this.id,
+    this.brands,
+  });
 
   toJson() {
     return Map<String, dynamic>.from({
@@ -12,6 +19,7 @@ class CategoryModel {
       'description': this.description,
       'image': this.image,
       'id': this.id,
+      'brands': this.brands,
     });
   }
 }

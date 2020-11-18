@@ -1,6 +1,8 @@
+import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:ShoppingApp/models/offer.dart';
-import 'package:ShoppingApp/services/firebase_api.dart';
+import 'package:ShoppingApp/services/firestore_api.dart';
 import 'package:ShoppingApp/styles.dart';
+import 'package:ShoppingApp/widgets/buttons.dart';
 import 'package:ShoppingApp/widgets/custom_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/widgets/custom_app_bar.dart';
@@ -18,12 +20,27 @@ class Offers extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            child: UnderlinedText('All offers'),
-            padding: EdgeInsets.only(
-              left: ScreenPadding,
-              bottom: ScreenPadding,
-              top: ScreenPadding,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                UnderlinedText('All offers'),
+                StreamBuilder(
+                  stream: adminStreamController.authStatusStream,
+                  initialData: adminStreamController.initialData,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData &&
+                        snapshot.data == UserAuth.isAuthorized) {
+                      return Button1(
+                        title: 'Add offer',
+                        route: '/addoffer',
+                      );
+                    }
+                    return SizedBox();
+                  },
+                ),
+              ],
             ),
+            padding: EdgeInsets.all(ScreenPadding),
           ),
           Expanded(
             child: CustomGridView2x2(

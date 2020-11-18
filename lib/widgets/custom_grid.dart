@@ -1,6 +1,5 @@
-import 'package:ShoppingApp/styles.dart';
 import 'package:ShoppingApp/widgets/offer_image_container.dart';
-import 'package:ShoppingApp/widgets/shimmer_placeholders.dart';
+import 'package:ShoppingApp/styles.dart';
 import 'package:flutter/material.dart';
 import 'rounded_icon_container.dart';
 
@@ -34,7 +33,7 @@ class CustomGridView4x4 extends StatelessWidget {
               crossAxisCount: 4,
             ),
             itemBuilder: (context, index) {
-              if (!snapshot.hasData) return CategoriesImagePlaceholder();
+              if (!snapshot.hasData) return SizedBox();
 
               if (lastWidget is Widget && index + 1 == itemCount)
                 return lastWidget;
@@ -43,8 +42,6 @@ class CustomGridView4x4 extends StatelessWidget {
 
               String name = snapshot.data.docs[index]['name'];
               String image = snapshot.data.docs[index]['image'];
-
-              print(image);
 
               return RoundedIconContainer(
                 title: name,
@@ -58,7 +55,6 @@ class CustomGridView4x4 extends StatelessWidget {
                       );
                     } ??
                     () {},
-                onTap: onTap != null ? onTap : () {},
               );
             },
           );
@@ -93,7 +89,12 @@ class CustomGridView2x2 extends StatelessWidget {
           itemBuilder: (context, index) {
             return OfferImageContainer(
               onLongPress: () {
-                onLongPress();
+                onLongPress(
+                  id: snapshot.data.docs[index].id,
+                  name: snapshot.data.docs[index]['name'],
+                  image: snapshot.data.docs[index]['image'],
+                  description: snapshot.data.docs[index]['description'],
+                );
               },
               imageUrl: snapshot.data.docs[index]['image'],
             );

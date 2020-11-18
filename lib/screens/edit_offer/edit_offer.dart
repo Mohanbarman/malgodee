@@ -1,8 +1,9 @@
 import 'package:ShoppingApp/models/offer.dart';
+import 'package:ShoppingApp/services/firestore_api.dart';
 import 'package:ShoppingApp/widgets/crud_form/utils/single_image_pick_bloc.dart';
 import 'package:ShoppingApp/widgets/crud_form/widgets/image_preview.dart';
 import 'package:ShoppingApp/widgets/crud_form/widgets/pick_image_button.dart';
-import 'package:ShoppingApp/widgets/crud_form/utils/save_document.dart';
+import 'package:ShoppingApp/widgets/crud_form/utils/update_document.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:ShoppingApp/widgets/title_description_form.dart';
 import 'package:ShoppingApp/widgets/underlined_text.dart';
@@ -10,10 +11,21 @@ import 'package:flutter/material.dart';
 import 'package:ShoppingApp/widgets/custom_app_bar.dart';
 import 'package:ShoppingApp/widgets/bottom_navigation_bar.dart';
 
-class AddOffer extends StatelessWidget {
+class EditOffer extends StatelessWidget {
   SingleImagePickBloc _singleImagePickBloc = SingleImagePickBloc();
-  TextEditingController _titleController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
+  TextEditingController _titleController;
+  TextEditingController _descriptionController;
+  OfferModel model;
+
+  EditOffer({offerModel}) {
+    this.model = offerModel;
+    this._titleController = TextEditingController(text: model.name);
+    this._descriptionController = TextEditingController(
+      text: model.description,
+    );
+
+    _singleImagePickBloc.add(model.image);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +40,9 @@ class AddOffer extends StatelessWidget {
           0,
         ),
         children: [
-          Title('Add offer'),
+          Title('Edit offer'),
           SizedBox(height: 30),
           Container(
-            // width: 300,
             child: Center(
               child: ImagePreview(
                 bloc: _singleImagePickBloc,
@@ -75,9 +86,9 @@ class AddOffer extends StatelessWidget {
             borderRadius: BorderRadius.circular(30),
           ),
           onPressed: () {
-            _save(context);
+            _update(context);
           },
-          child: Text('Save'),
+          child: Text('Update'),
         ),
         RaisedButton(
           color: DefaultRedColor,
@@ -85,9 +96,9 @@ class AddOffer extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => _delete(context),
           child: Text(
-            'Cancel',
+            'Delete',
             style: TextStyle(color: Colors.white),
           ),
         ),
@@ -95,16 +106,25 @@ class AddOffer extends StatelessWidget {
     );
   }
 
-  void _save(BuildContext context) async {
-    String image = _singleImagePickBloc.currPath;
-    String title = _titleController.value.text;
-    String description = _descriptionController.value.text;
+  void _delete(BuildContext context) async {
+    String id = model.id;
+    FirebaseStorageApi.deleteDoc(id: id, collection: 'categories');
 
-    save(
+    Navigator.pop(context);
+  }
+
+  void _update(BuildContext context) async {
+    String image = _singleImagePickBloc.currPath;
+    String name = _titleController.value.text;
+    String description = _descriptionController.value.text;
+    String id = model.id;
+
+    updateDoc(
       map: OfferModel(
-        image: image,
-        name: title,
+        id: id,
         description: description,
+        name: name,
+        image: image,
       ).toJson(),
       collection: 'offers',
       context: context,
