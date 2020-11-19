@@ -37,10 +37,9 @@ void save({
   );
 
   correspondingFieldElements.forEach((e) {
-    print(e);
     FirebaseStorageApi.appendToList(
       collection: correspondingCollection,
-      data: correspondingFieldElements,
+      data: map['id'],
       field: correspondingFieldName,
       id: e,
     );
