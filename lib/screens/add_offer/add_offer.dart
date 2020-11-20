@@ -2,7 +2,7 @@ import 'package:ShoppingApp/models/offer.dart';
 import 'package:ShoppingApp/widgets/crud_form/utils/single_image_pick_bloc.dart';
 import 'package:ShoppingApp/widgets/crud_form/widgets/image_preview.dart';
 import 'package:ShoppingApp/widgets/crud_form/widgets/pick_image_button.dart';
-import 'package:ShoppingApp/widgets/crud_form/utils/save_document.dart';
+import 'package:ShoppingApp/widgets/crud_form/utils/save_category_brand.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:ShoppingApp/widgets/title_description_form.dart';
 import 'package:ShoppingApp/widgets/underlined_text.dart';
@@ -75,7 +75,7 @@ class AddOffer extends StatelessWidget {
             borderRadius: BorderRadius.circular(30),
           ),
           onPressed: () {
-            _save(context);
+            // _save(context);
           },
           child: Text('Save'),
         ),
@@ -92,22 +92,6 @@ class AddOffer extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-
-  void _save(BuildContext context) async {
-    String image = _singleImagePickBloc.currPath;
-    String title = _titleController.value.text;
-    String description = _descriptionController.value.text;
-
-    save(
-      map: OfferModel(
-        image: image,
-        name: title,
-        description: description,
-      ).toJson(),
-      collection: 'offers',
-      context: context,
     );
   }
 }

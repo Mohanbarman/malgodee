@@ -109,7 +109,6 @@ class EditBrand extends StatelessWidget {
   void _delete(BuildContext context) async {
     String id = model.id;
     FirebaseStorageApi.deleteDoc(id: id, collection: 'brands');
-
     Navigator.pop(context);
   }
 

@@ -1,7 +1,6 @@
 import 'package:ShoppingApp/widgets/crud_form/utils/multiple_image_pick_bloc.dart';
 import 'package:ShoppingApp/widgets/crud_form/widgets/image_preview.dart';
 import 'package:ShoppingApp/widgets/crud_form/widgets/pick_image_button.dart';
-import 'package:ShoppingApp/widgets/crud_form/utils/save_document.dart';
 import 'package:ShoppingApp/models/product.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:ShoppingApp/widgets/title_description_form.dart';
@@ -75,7 +74,7 @@ class AddProduct extends StatelessWidget {
             borderRadius: BorderRadius.circular(30),
           ),
           onPressed: () {
-            _save(context);
+            // _save(context);
           },
           child: Text('Save'),
         ),
@@ -92,22 +91,6 @@ class AddProduct extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-
-  void _save(BuildContext context) async {
-    List<String> images = _multipleImagePickBloc.currPaths;
-    String title = _titleController.value.text;
-    String description = _descriptionController.value.text;
-
-    save(
-      map: ProductModel(
-        images: images,
-        name: title,
-        description: description,
-      ).toJson(),
-      collection: 'products',
-      context: context,
     );
   }
 }

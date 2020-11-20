@@ -19,7 +19,7 @@ class BrandModel {
       'name': this.name,
       'description': this.description,
       'image': this.image,
-      'caegories': this.categories,
+      'categories': this.categories,
     });
   }
 }

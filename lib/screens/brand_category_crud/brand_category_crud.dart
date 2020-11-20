@@ -1,9 +1,8 @@
-import 'package:ShoppingApp/models/category.dart';
 import 'package:ShoppingApp/services/firestore_api.dart';
 import 'package:ShoppingApp/widgets/crud_form/utils/single_image_pick_bloc.dart';
 import 'package:ShoppingApp/widgets/crud_form/widgets/image_preview.dart';
 import 'package:ShoppingApp/widgets/crud_form/widgets/pick_image_button.dart';
-import 'package:ShoppingApp/widgets/crud_form/utils/save_document.dart';
+import 'package:ShoppingApp/widgets/crud_form/utils/save_category_brand.dart';
 import 'package:ShoppingApp/models/brand.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:ShoppingApp/widgets/title_description_form.dart';
@@ -14,11 +13,30 @@ import 'package:ShoppingApp/widgets/bottom_navigation_bar.dart';
 import 'package:ShoppingApp/widgets/crud_form/widgets/multiselect_field.dart';
 import 'package:ShoppingApp/widgets/crud_form/utils/multiselect_values.dart';
 
-class AddBrand extends StatelessWidget {
+enum TypeOf { brand, category }
+
+class BrandCategoryCrud extends StatelessWidget {
   SingleImagePickBloc _singleImagePickBloc = SingleImagePickBloc();
   TextEditingController _titleController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
   MultiSelectValuesStream _multiSelectValuesStream = MultiSelectValuesStream();
+  TypeOf typeOf;
+
+  BrandModel model;
+
+  BrandCategoryCrud({model, TypeOf typeOf}) {
+    if (model != null) {
+      this.model = model;
+      this._titleController = TextEditingController(text: model.name);
+      this._descriptionController = TextEditingController(
+        text: model.description,
+      );
+
+      _singleImagePickBloc.add(model.image);
+    }
+
+    this.typeOf = typeOf;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +51,7 @@ class AddBrand extends StatelessWidget {
           0,
         ),
         children: [
-          Title('Add brand'),
+          Title(typeOf == TypeOf.brand ? 'Add brand' : 'Add category'),
           SizedBox(height: 30),
           Container(
             child: Center(
@@ -47,12 +65,12 @@ class AddBrand extends StatelessWidget {
           PickImageButton(bloc: _singleImagePickBloc),
           SizedBox(height: 60),
           TitleDescriptionForm(
-            name: 'Brand',
+            name: typeOf == TypeOf.brand ? 'Brand' : 'Category',
             titleController: _titleController,
             descriptionController: _descriptionController,
           ),
           SizedBox(height: 30),
-          correspondingCategorySelector(),
+          model == null ? correspondingCategorySelector() : SizedBox(),
           SizedBox(height: 30),
           actionButtons(context),
           SizedBox(height: 30),
@@ -72,7 +90,9 @@ class AddBrand extends StatelessWidget {
 
   Widget correspondingCategorySelector() {
     return StreamBuilder(
-      stream: FirebaseStorageApi.streamOfCollection(collection: 'categories'),
+      stream: FirebaseStorageApi.streamOfCollection(
+        collection: typeOf == TypeOf.brand ? 'categories' : 'brands',
+      ),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return SizedBox();
         return CrudMultiselectField(
@@ -80,7 +100,8 @@ class AddBrand extends StatelessWidget {
           data: snapshot.data.docs
               .map((e) => {'display': e['name'], 'value': e.id})
               .toList(),
-          title: 'Please select a corresponding category',
+          title:
+              'Please select a corresponding ${typeOf == TypeOf.brand ? 'categories' : 'brands'}',
         );
       },
     );
@@ -96,10 +117,26 @@ class AddBrand extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
-          onPressed: () {
-            _save(context);
-          },
-          child: Text('Save'),
+          onPressed: model == null
+              ? () {
+                  saveCategoryOrBrand(
+                    collection:
+                        typeOf == TypeOf.category ? 'categories' : 'brands',
+                    context: context,
+                    correspondingCollection: 'brands',
+                    correspondingFieldElements: _multiSelectValuesStream.values,
+                    map: BrandModel(
+                      categories: _multiSelectValuesStream.values,
+                      description: _descriptionController.value.text,
+                      name: _titleController.value.text,
+                      image: _singleImagePickBloc.currPath,
+                    ).toJson(),
+                  );
+                }
+              : () {
+                  print('it called');
+                },
+          child: model == null ? Text('Save') : Text('Update'),
         ),
         RaisedButton(
           color: DefaultRedColor,
@@ -108,35 +145,11 @@ class AddBrand extends StatelessWidget {
             borderRadius: BorderRadius.circular(30),
           ),
           onPressed: () => Navigator.pop(context),
-          child: Text(
-            'Cancel',
-            style: TextStyle(color: Colors.white),
-          ),
+          child: model == null
+              ? Text('Cancel', style: TextStyle(color: Colors.white))
+              : Text('Delete', style: TextStyle(color: Colors.white)),
         ),
       ],
-    );
-  }
-
-  Future _save(BuildContext context) async {
-    if (_multiSelectValuesStream.values.length < 1) return 0;
-
-    String image = _singleImagePickBloc.currPath;
-    String name = _titleController.value.text;
-    String description = _descriptionController.value.text;
-    List categories = _multiSelectValuesStream.values;
-
-    save(
-      correspondingCollection: 'categories',
-      correspondingFieldElements: categories,
-      correspondingFieldName: 'brands',
-      map: BrandModel(
-        image: image,
-        name: name,
-        description: description,
-        categories: categories,
-      ).toJson(),
-      collection: 'brands',
-      context: context,
     );
   }
 }

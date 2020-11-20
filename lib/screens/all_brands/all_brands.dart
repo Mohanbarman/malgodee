@@ -12,6 +12,8 @@ import '../../widgets/custom_grid.dart';
 import '../../styles.dart';
 
 class AllBrands extends StatelessWidget {
+  Map<String, dynamic> ref = productFlowBloc.productStreamRouteInfo;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

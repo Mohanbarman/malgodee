@@ -3,22 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:io';
 
-void save({
+enum BrandOrCategory { BRAND, CATEGORY }
+
+Future saveCategoryOrBrand({
   Map<String, dynamic> map,
   BuildContext context,
   String collection,
   String correspondingCollection,
   List correspondingFieldElements,
-  String correspondingFieldName,
 }) async {
+  if (correspondingFieldElements.length < 1) return 0;
+
   showDialog(
     barrierDismissible: false,
     context: context,
-    child: Center(
-      child: CircularProgressIndicator(
-        semanticsLabel: 'Adding category',
-      ),
-    ),
+    child: Center(child: CircularProgressIndicator()),
   );
 
   Uuid uuid = Uuid();
@@ -31,7 +30,7 @@ void save({
 
   map['image'] = url;
 
-  await FirebaseStorageApi.addData(
+  String id = await FirebaseStorageApi.addData(
     data: map,
     collection: collection,
   );
@@ -39,11 +38,11 @@ void save({
   correspondingFieldElements.forEach((e) {
     FirebaseStorageApi.appendToList(
       collection: correspondingCollection,
-      data: map['id'],
-      field: correspondingFieldName,
+      data: [id],
+      field: collection,
       id: e,
     );
   });
 
-  Navigator.pushNamed(context, '/');
+  Navigator.pushReplacementNamed(context, '/');
 }

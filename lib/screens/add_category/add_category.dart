@@ -3,7 +3,7 @@ import 'package:ShoppingApp/widgets/crud_form/utils/multiselect_values.dart';
 import 'package:ShoppingApp/widgets/crud_form/utils/single_image_pick_bloc.dart';
 import 'package:ShoppingApp/widgets/crud_form/widgets/image_preview.dart';
 import 'package:ShoppingApp/widgets/crud_form/widgets/pick_image_button.dart';
-import 'package:ShoppingApp/widgets/crud_form/utils/save_document.dart';
+import 'package:ShoppingApp/widgets/crud_form/utils/save_category_brand.dart';
 import 'package:ShoppingApp/models/category.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:ShoppingApp/widgets/title_description_form.dart';
@@ -95,7 +95,7 @@ class AddCategory extends StatelessWidget {
             borderRadius: BorderRadius.circular(30),
           ),
           onPressed: () {
-            _save(context);
+            // _save(context);
           },
           child: Text('Save'),
         ),
@@ -112,28 +112,6 @@ class AddCategory extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-
-  Future _save(BuildContext context) async {
-    if (_multiSelectValuesStream.values.length < 1) {
-      return 0;
-    }
-
-    String image = _singleImagePickBloc.currPath;
-    String title = _titleController.value.text;
-    String description = _descriptionController.value.text;
-    List brands = _multiSelectValuesStream.values;
-
-    save(
-      map: CategoryModel(
-        image: image,
-        name: title,
-        description: description,
-        brands: brands,
-      ).toJson(),
-      collection: 'categories',
-      context: context,
     );
   }
 }

@@ -40,7 +40,7 @@ class FirebaseStorageApi {
           ? FirebaseFirestore.instance.collection(collection).snapshots()
           : FirebaseFirestore.instance
               .collection(collection)
-              .where('type', isEqualTo: 'whatsapp')
+              .where(where, isEqualTo: isEqualsTo)
               .limit(limit + 1)
               .snapshots();
     } catch (e) {
@@ -74,12 +74,13 @@ class FirebaseStorageApi {
     }
   }
 
-  static Future<void> addData({Map data, String collection}) async {
+  static Future<String> addData({Map data, String collection}) async {
     try {
-      CollectionReference ref =
-          FirebaseFirestore.instance.collection(collection);
-      ref.add(data);
-      return 1;
+      CollectionReference ref = FirebaseFirestore.instance.collection(
+        collection,
+      );
+      DocumentReference dref = await ref.add(data);
+      return dref.path.split('/').last;
     } catch (e) {
       print(e);
       return e;
