@@ -10,12 +10,8 @@ int MAX_SIZE = 1024 * 1024 * 5;
 class FirebaseStorageApi {
   Uint8List imageBytes;
 
-  static Stream streamOfCollection({
-    String collection,
-    int limit,
-    String where,
-    String isEqualsTo,
-  }) {
+  static Stream streamOfCollection(
+      {String collection, int limit, String where, String isEqualsTo}) {
     try {
       return limit == null
           ? FirebaseFirestore.instance.collection(collection).snapshots()
@@ -29,12 +25,8 @@ class FirebaseStorageApi {
     }
   }
 
-  static Stream streamOfCollectionFiltered({
-    String collection,
-    int limit,
-    String where,
-    String isEqualsTo,
-  }) {
+  static Stream streamOfCollectionFiltered(
+      {String collection, int limit, String where, String isEqualsTo}) {
     try {
       return limit == null
           ? FirebaseFirestore.instance.collection(collection).snapshots()
@@ -99,18 +91,27 @@ class FirebaseStorageApi {
     }
   }
 
-  static Future appendToList({
-    String id,
-    String collection,
-    List data,
-    String field,
-  }) async {
+  static Future appendToList(
+      {String id, String collection, List data, String field}) async {
     try {
       await FirebaseFirestore.instance
           .collection(collection)
           .doc(id)
           .update({field: FieldValue.arrayUnion(data)});
       return 1;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  static Stream streamOfDocument({String collection, String id}) {
+    try {
+      return FirebaseFirestore.instance
+          .collection(collection)
+          .doc(id)
+          .get()
+          .asStream();
     } catch (e) {
       print(e);
       return null;

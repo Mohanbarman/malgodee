@@ -1,4 +1,5 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
+import 'package:ShoppingApp/bloc/product_flow_bloc.dart';
 import 'package:ShoppingApp/widgets/bottom_navigation_bar.dart';
 import 'package:ShoppingApp/models/category.dart';
 import 'package:ShoppingApp/services/firestore_api.dart';
@@ -15,65 +16,74 @@ class AllCategories extends StatelessWidget {
   AllCategories(this.args);
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(),
-      bottomNavigationBar: CustomBottomNavigationBar(null),
-      backgroundColor: BackgroundColor,
-      body: Container(
-        padding: EdgeInsets.fromLTRB(
-          ScreenPadding,
-          ScreenPadding,
-          ScreenPadding,
-          0,
-        ),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                UnderlinedText('All categories'),
-                StreamBuilder(
-                  initialData: adminStreamController.initialData,
-                  stream: adminStreamController.authStatusStream,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData &&
-                        snapshot.data == UserAuth.isAuthorized) {
-                      return Button1(
-                          title: 'Add category', route: '/addcategory');
-                    } else {
-                      return SizedBox();
-                    }
+    return WillPopScope(
+      onWillPop: () async {
+        productFlowBloc.clear();
+        return true;
+      },
+      child: Scaffold(
+        appBar: CustomAppBar(),
+        bottomNavigationBar: CustomBottomNavigationBar(null),
+        backgroundColor: BackgroundColor,
+        body: Container(
+          padding: EdgeInsets.fromLTRB(
+            ScreenPadding,
+            ScreenPadding,
+            ScreenPadding,
+            0,
+          ),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  UnderlinedText('All categories'),
+                  StreamBuilder(
+                    initialData: adminStreamController.initialData,
+                    stream: adminStreamController.authStatusStream,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData &&
+                          snapshot.data == UserAuth.isAuthorized) {
+                        return Button1(
+                            title: 'Add category', route: '/addcategory');
+                      } else {
+                        return SizedBox();
+                      }
+                    },
+                  ),
+                ],
+              ),
+              SizedBox(height: 30),
+              Expanded(
+                child: CustomGridView4x4(
+                  itemsStream: FirebaseStorageApi.streamOfCollection(
+                    collection: 'categories',
+                  ),
+                  referer: Referer.category,
+                  onTap: (id) {
+                    productFlowBloc.add(context, {'category': id});
+                  },
+                  onLongPress: ({
+                    String id,
+                    String name,
+                    String image,
+                    String description,
+                  }) {
+                    Navigator.pushNamed(
+                      context,
+                      '/editcategory',
+                      arguments: CategoryModel(
+                        id: id,
+                        name: name,
+                        image: image,
+                        description: description,
+                      ),
+                    );
                   },
                 ),
-              ],
-            ),
-            SizedBox(height: 30),
-            Expanded(
-              child: CustomGridView4x4(
-                itemsStream: FirebaseStorageApi.streamOfCollection(
-                  collection: 'categories',
-                ),
-                referer: 'category',
-                onLongPress: ({
-                  String id,
-                  String name,
-                  String image,
-                  String description,
-                }) {
-                  Navigator.pushNamed(
-                    context,
-                    '/editcategory',
-                    arguments: CategoryModel(
-                      id: id,
-                      name: name,
-                      image: image,
-                      description: description,
-                    ),
-                  );
-                },
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

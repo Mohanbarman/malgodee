@@ -1,3 +1,4 @@
+import 'package:ShoppingApp/bloc/product_flow_bloc.dart';
 import 'package:ShoppingApp/screens/all_brands/all_brands.dart';
 import 'package:ShoppingApp/screens/brand_category_crud/brand_category_crud.dart';
 import 'package:ShoppingApp/screens/edit_brand/edit_brand.dart';
@@ -19,6 +20,7 @@ class RouteGenerator {
 
     switch (settings.name) {
       case '/':
+        productFlowBloc.clear();
         return FadeRoute(page: Home());
       case '/offers':
         return FadeRoute(page: Offers());

@@ -1,39 +1,45 @@
 import 'dart:async';
-
 import 'package:flutter/widgets.dart';
-
-enum ProductRoute { clearData }
 
 class ProductBloc {
   final StreamController _productController = StreamController.broadcast();
-  final StreamController _productRouteState = StreamController.broadcast();
   final StreamController _buildContextController =
       StreamController<BuildContext>.broadcast();
 
   Map productStreamRouteInfo = {'category': null, 'brand': null};
   BuildContext currentContext;
 
-  void _handleProductRouteData(Map data) {
-    if (data.containsKey('brand') && data.containsKey('category'))
-      Navigator.pushNamed(currentContext, '/allproducts');
+  _handleProductRouteData(data) {
+    Map _data = Map.from(data);
 
-    if (data.containsKey('brand')) {
-      this.productStreamRouteInfo['brand'] = data['brand'];
-      Navigator.pushNamed(currentContext, '/allcategories');
+    if (_data.containsKey('brand')) {
+      this.productStreamRouteInfo['brand'] = _data['brand'];
+      return 0;
     }
-    if (data.containsKey('category')) {
-      this.productStreamRouteInfo['category'] = data['category'];
-      Navigator.pushNamed(currentContext, '/allbrands');
+    if (_data.containsKey('category')) {
+      this.productStreamRouteInfo['category'] = _data['category'];
+      return 0;
     }
-    print(this.productStreamRouteInfo);
   }
 
-  void _handleProductRouteState(data) {
-    if (data == ProductRoute.clearData) {
-      this.productStreamRouteInfo['brand'] = null;
-      this.productStreamRouteInfo['category'] = null;
-      print(this.productStreamRouteInfo);
+  int _handleProductRoute() {
+    if (this.productStreamRouteInfo['category'] != null &&
+        this.productStreamRouteInfo['brand'] != null) {
+      Navigator.pushNamed(currentContext, '/allproducts');
+      return 0;
     }
+
+    if (this.productStreamRouteInfo['category'] != null) {
+      Navigator.pushNamed(currentContext, '/allbrands');
+      return 0;
+    }
+
+    if (this.productStreamRouteInfo['brand'] != null) {
+      Navigator.pushNamed(currentContext, '/allcategories');
+      return 0;
+    }
+
+    return 0;
   }
 
   void _handleBuildContext(data) {
@@ -41,23 +47,30 @@ class ProductBloc {
   }
 
   ProductBloc() {
-    productStream.listen(_handleProductRouteData);
-    routeStateStream.listen(_handleProductRouteState);
+    productStream.listen((e) {
+      _handleProductRouteData(e);
+      _handleProductRoute();
+    });
+
     addContextStream.listen(_handleBuildContext);
   }
 
   get productStream => _productController.stream;
-  get routeStateStream => _productRouteState.stream;
 
-  get productSink => _productController.sink;
-  get routeStateSink => _productRouteState.sink;
+  void add(BuildContext context, Map<String, dynamic> data) {
+    _buildContextController.sink.add(context);
+    _productController.sink.add(data);
+  }
+
+  void clear() {
+    productStreamRouteInfo = {'brand': null, 'category': null};
+  }
 
   Function(BuildContext) get addContext => _buildContextController.sink.add;
   Stream get addContextStream => _buildContextController.stream;
 
   void dispose() {
     _productController.close();
-    _productRouteState.close();
     _buildContextController.close();
   }
 }

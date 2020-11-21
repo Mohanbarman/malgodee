@@ -38,6 +38,9 @@ class BrandsSection extends StatelessWidget {
               collection: 'brands',
               limit: 10,
             ),
+            onTap: (id) {
+              productFlowBloc.add(context, {'brand': id});
+            },
             lastWidget: RoundedIconContainer(
               title: 'All Brands',
               viewAllIcon: true,

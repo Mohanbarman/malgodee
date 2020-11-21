@@ -88,11 +88,7 @@ class CategoriesSection extends StatelessWidget {
                             imageUrl: image,
                             title: name,
                             onTap: () {
-                              print('ran');
-                              productFlowBloc.productSink.add({
-                                'category': querySnapshot.data.docs[index].id,
-                              });
-                              Navigator.pushNamed(context, '/allbrands');
+                              productFlowBloc.add(context, {'category': id});
                             },
                           ),
                           SizedBox(width: ScreenPadding),

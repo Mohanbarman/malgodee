@@ -102,7 +102,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
             () {
               setState(
                 () {
-                  Navigator.pushNamed(context, route);
+                  Navigator.pushReplacementNamed(context, route);
                   _selected_index = index;
                 },
               );

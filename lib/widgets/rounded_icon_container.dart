@@ -61,7 +61,7 @@ class RoundedIconContainer extends StatelessWidget {
                     )
                   : GestureDetector(
                       onLongPress: onLongPress ?? () {},
-                      onTap: onTap ?? () {},
+                      onTap: () => onTap() ?? () {},
                       child: CachedNetworkImage(
                         imageUrl: imageUrl,
                         fit: BoxFit.cover,
