@@ -1,4 +1,5 @@
 import 'package:ShoppingApp/models/offer.dart';
+import 'package:ShoppingApp/widgets/crud_form/utils/save_offer.dart';
 import 'package:ShoppingApp/widgets/crud_form/utils/single_image_pick_bloc.dart';
 import 'package:ShoppingApp/widgets/crud_form/widgets/image_preview.dart';
 import 'package:ShoppingApp/widgets/crud_form/widgets/pick_image_button.dart';
@@ -75,7 +76,14 @@ class AddOffer extends StatelessWidget {
             borderRadius: BorderRadius.circular(30),
           ),
           onPressed: () {
-            // _save(context);
+            saveOffer(
+              context: context,
+              map: OfferModel(
+                name: _titleController.value.text,
+                description: _descriptionController.value.text,
+                image: _singleImagePickBloc.currPath,
+              ).toJson(),
+            );
           },
           child: Text('Save'),
         ),

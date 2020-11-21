@@ -8,5 +8,8 @@ class PhoneNumberModel {
 
   PhoneNumberModel({this.phone_number, this.id});
 
-  toJson() => Map<String, dynamic>.from({'phone_number': phone_number});
+  toJson() => Map<String, dynamic>.from({
+        'phone_number': phone_number,
+        'id': id,
+      });
 }

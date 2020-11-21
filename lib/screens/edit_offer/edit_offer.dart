@@ -96,7 +96,9 @@ class EditOffer extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
-          onPressed: () => _delete(context),
+          onPressed: () {
+            _delete(context);
+          },
           child: Text(
             'Delete',
             style: TextStyle(color: Colors.white),
@@ -108,7 +110,7 @@ class EditOffer extends StatelessWidget {
 
   void _delete(BuildContext context) async {
     String id = model.id;
-    FirebaseStorageApi.deleteDoc(id: id, collection: 'categories');
+    FirebaseStorageApi.deleteDoc(id: id, collection: 'offers');
 
     Navigator.pop(context);
   }

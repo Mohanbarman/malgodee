@@ -26,6 +26,8 @@ class CustomTextField extends StatelessWidget {
     this.collectionName,
   });
 
+  int i = 0;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -46,12 +48,15 @@ class CustomTextField extends StatelessWidget {
                   String _collectionSnapshotId =
                       collectionSnapshot.data.docs[0].id;
 
-                  if (_textEditingController.value.text.length < 1) {
+                  if (i == 0) {
                     _textEditingController.value = TextEditingValue(
                       text: _collectionSnapshotNumber,
                     );
-                    textBloc.updateText(_collectionSnapshotNumber);
+
+                    i++;
                   }
+
+                  // textBloc.updateText(_collectionSnapshotNumber);
 
                   return Column(
                     children: [
@@ -74,12 +79,18 @@ class CustomTextField extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 RaisedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    _textEditingController.value =
+                                        TextEditingValue(
+                                      text: _collectionSnapshotNumber,
+                                    );
+                                  },
                                   child: Text('Cancel'),
                                 ),
                                 SizedBox(width: ScreenPadding),
                                 RaisedButton(
                                   onPressed: () {
+                                    // print(_collectionSnapshotId);
                                     FirebaseStorageApi.updateDocument(
                                       model: PhoneNumberModel(
                                         id: _collectionSnapshotId,

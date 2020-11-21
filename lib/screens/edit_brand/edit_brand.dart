@@ -96,7 +96,9 @@ class EditBrand extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
-          onPressed: () => _delete(context),
+          onPressed: () {
+            _delete(context);
+          },
           child: Text(
             'Delete',
             style: TextStyle(color: Colors.white),
@@ -107,18 +109,30 @@ class EditBrand extends StatelessWidget {
   }
 
   void _delete(BuildContext context) async {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      child: Center(child: CircularProgressIndicator()),
+    );
+
     String id = model.id;
     FirebaseStorageApi.deleteDoc(id: id, collection: 'brands');
     Navigator.pop(context);
   }
 
   void _update(BuildContext context) async {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      child: Center(child: CircularProgressIndicator()),
+    );
+
     String image = _singleImagePickBloc.currPath;
     String name = _titleController.value.text;
     String description = _descriptionController.value.text;
     String id = model.id;
 
-    updateDoc(
+    await updateDoc(
       map: BrandModel(
         id: id,
         description: description,
@@ -128,5 +142,7 @@ class EditBrand extends StatelessWidget {
       collection: 'brands',
       context: context,
     );
+
+    Navigator.pushReplacementNamed(context, '/');
   }
 }

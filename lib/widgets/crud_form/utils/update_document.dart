@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:io';
 
-void updateDoc({
+Future updateDoc({
   Map<String, dynamic> map,
   BuildContext context,
   String collection,

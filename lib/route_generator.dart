@@ -47,7 +47,7 @@ class RouteGenerator {
       //     throw 'A product model is required for EditProduct screen';
       //   return FadeRoute(page: EditProduct(model: args));
       case '/editbrand':
-        return FadeRoute(page: BrandCategoryCrud(model: args));
+        return FadeRoute(page: EditBrand(brandModel: args));
       case '/editcategory':
         return FadeRoute(page: EditCategory(categoryModel: args));
       case '/editoffer':

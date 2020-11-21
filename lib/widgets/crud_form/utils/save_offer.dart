@@ -3,15 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:io';
 
-Future saveCategoryOrBrand({
+Future saveOffer({
   Map<String, dynamic> map,
   BuildContext context,
-  String collection,
-  String correspondingCollection,
-  List correspondingFieldElements,
 }) async {
-  if (correspondingFieldElements.length < 1) return 0;
-
   showDialog(
     barrierDismissible: false,
     context: context,
@@ -30,17 +25,8 @@ Future saveCategoryOrBrand({
 
   String id = await FirebaseStorageApi.addData(
     data: map,
-    collection: collection,
+    collection: 'offers',
   );
-
-  correspondingFieldElements.forEach((e) {
-    FirebaseStorageApi.appendToList(
-      collection: correspondingCollection,
-      data: [id],
-      field: collection,
-      id: e,
-    );
-  });
 
   Navigator.pushReplacementNamed(context, '/');
 }

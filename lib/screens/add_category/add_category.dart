@@ -95,7 +95,18 @@ class AddCategory extends StatelessWidget {
             borderRadius: BorderRadius.circular(30),
           ),
           onPressed: () {
-            // _save(context);
+            saveCategoryOrBrand(
+              collection: 'categories',
+              context: context,
+              correspondingCollection: 'brands',
+              correspondingFieldElements: _multiSelectValuesStream.values,
+              map: CategoryModel(
+                name: _titleController.value.text,
+                description: _descriptionController.value.text,
+                brands: _multiSelectValuesStream.values,
+                image: _singleImagePickBloc.currPath,
+              ).toJson(),
+            );
           },
           child: Text('Save'),
         ),

@@ -46,7 +46,6 @@ class FirebaseStorageApi {
       CollectionReference ref = FirebaseFirestore.instance.collection(
         collection,
       );
-      print(model);
       await ref.doc(model['id']).update(model);
       return true;
     } catch (e) {
