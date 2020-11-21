@@ -55,32 +55,52 @@ class AllCategories extends StatelessWidget {
               ),
               SizedBox(height: 30),
               Expanded(
-                child: CustomGridView4x4(
-                  itemsStream: FirebaseStorageApi.streamOfCollection(
-                    collection: 'categories',
-                  ),
-                  referer: Referer.category,
-                  onTap: (id) {
-                    productFlowBloc.add(context, {'category': id});
-                  },
-                  onLongPress: ({
-                    String id,
-                    String name,
-                    String image,
-                    String description,
-                  }) {
-                    Navigator.pushNamed(
-                      context,
-                      '/editcategory',
-                      arguments: CategoryModel(
-                        id: id,
-                        name: name,
-                        image: image,
-                        description: description,
-                      ),
-                    );
-                  },
-                ),
+                child: StreamBuilder(
+                    stream: productFlowBloc.productStreamRouteInfo['brand'] !=
+                            null
+                        ? FirebaseStorageApi.streamOfDocument(
+                            collection: 'brands',
+                            id: productFlowBloc.productStreamRouteInfo['brand'])
+                        : null,
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData)
+                        return Container(
+                          height: MediaQuery.of(context).size.height * 0.7,
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+
+                      return CustomGridView4x4(
+                        itemsStream: FirebaseStorageApi.streamOfCollection(
+                          collection: 'categories',
+                        ),
+                        referer: Referer.category,
+                        onTap: (id) {
+                          productFlowBloc.add(context, {'category': id});
+                        },
+                        filterByIds: snapshot.hasData
+                            ? snapshot.data['categories']
+                            : null,
+                        onLongPress: ({
+                          String id,
+                          String name,
+                          String image,
+                          String description,
+                        }) {
+                          Navigator.pushNamed(
+                            context,
+                            '/editcategory',
+                            arguments: CategoryModel(
+                              id: id,
+                              name: name,
+                              image: image,
+                              description: description,
+                            ),
+                          );
+                        },
+                      );
+                    }),
               ),
             ],
           ),

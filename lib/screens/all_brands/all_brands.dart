@@ -54,53 +54,51 @@ class AllBrands extends StatelessWidget {
               ),
               SizedBox(height: 30),
               StreamBuilder(
-                  stream:
-                      productFlowBloc.productStreamRouteInfo['category'] != null
-                          ? FirebaseStorageApi.streamOfDocument(
-                              collection: 'categories',
-                              id: productFlowBloc
-                                  .productStreamRouteInfo['category'])
-                          : null,
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData)
-                      return Container(
-                        height: MediaQuery.of(context).size.height * 0.7,
-                        child: Center(
-                          child: CircularProgressIndicator(),
+                stream: productFlowBloc.productStreamRouteInfo['category'] !=
+                        null
+                    ? FirebaseStorageApi.streamOfDocument(
+                        collection: 'categories',
+                        id: productFlowBloc.productStreamRouteInfo['category'])
+                    : null,
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData)
+                    return Container(
+                      height: MediaQuery.of(context).size.height * 0.7,
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+
+                  return CustomGridView4x4(
+                    itemsStream: FirebaseStorageApi.streamOfCollection(
+                      collection: 'brands',
+                    ),
+                    referer: Referer.brand,
+                    onTap: (String id) {
+                      productFlowBloc.add(context, {'brand': id});
+                    },
+                    filterByIds:
+                        snapshot.hasData ? snapshot.data['brands'] : null,
+                    onLongPress: ({
+                      String id,
+                      String name,
+                      String image,
+                      String description,
+                    }) {
+                      Navigator.pushNamed(
+                        context,
+                        '/editbrand',
+                        arguments: BrandModel(
+                          id: id,
+                          name: name,
+                          image: image,
+                          description: description,
                         ),
                       );
-
-                    print(snapshot.data['brands']);
-
-                    return CustomGridView4x4(
-                      itemsStream: FirebaseStorageApi.streamOfCollection(
-                        collection: 'brands',
-                      ),
-                      referer: Referer.brand,
-                      onTap: (String id) {
-                        productFlowBloc.add(context, {'brand': id});
-                      },
-                      filterByIds:
-                          snapshot.hasData ? snapshot.data['brands'] : null,
-                      onLongPress: ({
-                        String id,
-                        String name,
-                        String image,
-                        String description,
-                      }) {
-                        Navigator.pushNamed(
-                          context,
-                          '/editbrand',
-                          arguments: BrandModel(
-                            id: id,
-                            name: name,
-                            image: image,
-                            description: description,
-                          ),
-                        );
-                      },
-                    );
-                  }),
+                    },
+                  );
+                },
+              ),
             ],
           ),
         ),

@@ -38,6 +38,10 @@ class CustomGridView4x4 extends StatelessWidget {
           int itemCount = itemSnapshot.hasData == true
               ? itemSnapshot.data.docs.length + 1
               : 11;
+
+          if (!(filterByIds == null)) {
+            itemCount = filterByIds.length + 1;
+          }
           /* Stream of referer document (single) */
           return GridView.builder(
             physics: ClampingScrollPhysics(),
@@ -59,11 +63,9 @@ class CustomGridView4x4 extends StatelessWidget {
                     List.from(_docs.where((e) => filterByIds.contains(e.id)));
               }
 
-              print(_docs);
-
-              String name = itemSnapshot.data.docs[index]['name'];
-              String image = itemSnapshot.data.docs[index]['image'];
-              String id = itemSnapshot.data.docs[index].id;
+              String name = _docs[index]['name'];
+              String image = _docs[index]['image'];
+              String id = _docs[index].id;
 
               return RoundedIconContainer(
                 title: name,
@@ -73,9 +75,9 @@ class CustomGridView4x4 extends StatelessWidget {
                 },
                 onLongPress: () {
                       onLongPress(
-                        id: itemSnapshot.data.docs[index].id,
-                        name: itemSnapshot.data.docs[index]['name'],
-                        image: itemSnapshot.data.docs[index]['image'],
+                        id: id,
+                        name: name,
+                        image: image,
                         description: itemSnapshot.data.docs[index]
                             ['description'],
                       );

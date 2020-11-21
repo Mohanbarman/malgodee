@@ -1,4 +1,5 @@
 import 'package:ShoppingApp/bloc/product_flow_bloc.dart';
+import 'package:ShoppingApp/screens/add_brand/add_brand.dart';
 import 'package:ShoppingApp/screens/all_brands/all_brands.dart';
 import 'package:ShoppingApp/screens/brand_category_crud/brand_category_crud.dart';
 import 'package:ShoppingApp/screens/edit_brand/edit_brand.dart';
@@ -30,28 +31,28 @@ class RouteGenerator {
         return FadeRoute(page: AllCategories(args));
       case '/allbrands':
         return FadeRoute(page: AllBrands());
-      // case '/allproducts':
-      //   return FadeRoute(page: AllProducts());
       case '/productinfo':
         return FadeRoute(page: ProductInfo());
       case '/addcategory':
         return FadeRoute(page: AddCategory());
       case '/addbrand':
-        return FadeRoute(page: BrandCategoryCrud(typeOf: TypeOf.brand));
+        return FadeRoute(page: AddBrand());
       case '/addoffer':
         return FadeRoute(page: AddOffer());
-      // case '/addproduct':
-      //   return FadeRoute(page: AddProduct());
-      // case '/editproduct':
-      //   if (args == null)
-      //     throw 'A product model is required for EditProduct screen';
-      //   return FadeRoute(page: EditProduct(model: args));
       case '/editbrand':
         return FadeRoute(page: EditBrand(brandModel: args));
       case '/editcategory':
         return FadeRoute(page: EditCategory(categoryModel: args));
       case '/editoffer':
         return FadeRoute(page: EditOffer(offerModel: args));
+      // case '/allproducts':
+      //   return FadeRoute(page: AllProducts());
+      // case '/addproduct':
+      //   return FadeRoute(page: AddProduct());
+      // case '/editproduct':
+      //   if (args == null)
+      //     throw 'A product model is required for EditProduct screen';
+      //   return FadeRoute(page: EditProduct(model: args));
       default:
         return _errorRoute();
     }

@@ -46,36 +46,39 @@ class CategoriesSection extends StatelessWidget {
                 limit: 5,
               ),
               builder: (context, querySnapshot) {
-                int itemCount =
-                    querySnapshot.hasData ? querySnapshot.data.docs.length : 6;
+                int itemCount = querySnapshot.hasData
+                    ? querySnapshot.data.docs.length + 1
+                    : 6;
                 return ListView.builder(
-                  itemCount: itemCount,
-                  scrollDirection: Axis.horizontal,
-                  shrinkWrap: true,
-                  physics: ClampingScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    if (itemCount == ++index) {
-                      return Row(
-                        children: [
-                          SizedBox(width: ScreenPadding),
-                          RoundedIconContainer(
-                            title: 'All categories',
-                            viewAllIcon: true,
-                            route: '/allcategories',
-                            onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                '/allcategories',
-                                arguments:
-                                    productFlowBloc.productStreamRouteInfo,
-                              );
-                            },
-                          ),
-                          SizedBox(width: ScreenPadding),
-                        ],
-                      );
-                    }
-                    if (querySnapshot.hasData) {
+                    itemCount: itemCount,
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    physics: ClampingScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      if (itemCount - 1 == index) {
+                        return Row(
+                          children: [
+                            SizedBox(width: ScreenPadding),
+                            RoundedIconContainer(
+                              title: 'All categories',
+                              viewAllIcon: true,
+                              route: '/allcategories',
+                              onTap: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  '/allcategories',
+                                  arguments:
+                                      productFlowBloc.productStreamRouteInfo,
+                                );
+                              },
+                            ),
+                            SizedBox(width: ScreenPadding),
+                          ],
+                        );
+                      }
+
+                      if (!querySnapshot.hasData) return SizedBox();
+
                       String name =
                           querySnapshot.data.docs.toList()[index]['name'];
                       String image =
@@ -94,9 +97,7 @@ class CategoriesSection extends StatelessWidget {
                           SizedBox(width: ScreenPadding),
                         ],
                       );
-                    }
-                  },
-                );
+                    });
               },
             ),
           ),

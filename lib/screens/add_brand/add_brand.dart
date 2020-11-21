@@ -1,10 +1,10 @@
+import 'package:ShoppingApp/models/brand.dart';
 import 'package:ShoppingApp/services/firestore_api.dart';
 import 'package:ShoppingApp/widgets/crud_form/utils/multiselect_values.dart';
 import 'package:ShoppingApp/widgets/crud_form/utils/single_image_pick_bloc.dart';
 import 'package:ShoppingApp/widgets/crud_form/widgets/image_preview.dart';
 import 'package:ShoppingApp/widgets/crud_form/widgets/pick_image_button.dart';
 import 'package:ShoppingApp/widgets/crud_form/utils/save_category_brand.dart';
-import 'package:ShoppingApp/models/category.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:ShoppingApp/widgets/title_description_form.dart';
 import 'package:ShoppingApp/widgets/underlined_text.dart';
@@ -13,7 +13,7 @@ import 'package:ShoppingApp/widgets/custom_app_bar.dart';
 import 'package:ShoppingApp/widgets/bottom_navigation_bar.dart';
 import 'package:ShoppingApp/widgets/crud_form/widgets/multiselect_field.dart';
 
-class AddCategory extends StatelessWidget {
+class AddBrand extends StatelessWidget {
   SingleImagePickBloc _singleImagePickBloc = SingleImagePickBloc();
   TextEditingController _titleController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
@@ -32,7 +32,7 @@ class AddCategory extends StatelessWidget {
           0,
         ),
         children: [
-          Title('Add category'),
+          Title('Add brand'),
           SizedBox(height: 30),
           Container(
             child: ImagePreview(
@@ -44,7 +44,7 @@ class AddCategory extends StatelessWidget {
           PickImageButton(bloc: _singleImagePickBloc),
           SizedBox(height: 60),
           TitleDescriptionForm(
-            name: 'Category',
+            name: 'Brand',
             titleController: _titleController,
             descriptionController: _descriptionController,
           ),
@@ -60,7 +60,7 @@ class AddCategory extends StatelessWidget {
 
   Widget correspondingBrandsSelector() {
     return StreamBuilder(
-      stream: FirebaseStorageApi.streamOfCollection(collection: 'brands'),
+      stream: FirebaseStorageApi.streamOfCollection(collection: 'categories'),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return SizedBox();
         return CrudMultiselectField(
@@ -68,8 +68,8 @@ class AddCategory extends StatelessWidget {
           data: snapshot.data.docs
               .map((e) => {'display': e['name'], 'value': e.id})
               .toList(),
-          title: 'Select corresponding brands',
-          validate: false,
+          title: 'Select corresponding categories',
+          validationMsg: 'Please select corresponding categories',
         );
       },
     );
@@ -96,14 +96,14 @@ class AddCategory extends StatelessWidget {
           ),
           onPressed: () {
             saveCategoryOrBrand(
-              collection: 'categories',
+              collection: 'brands',
               context: context,
-              correspondingCollection: 'brands',
+              correspondingCollection: 'categories',
               correspondingFieldElements: _multiSelectValuesStream.values,
-              map: CategoryModel(
+              map: BrandModel(
                 name: _titleController.value.text,
                 description: _descriptionController.value.text,
-                brands: _multiSelectValuesStream.values,
+                categories: _multiSelectValuesStream.values,
                 image: _singleImagePickBloc.currPath,
               ).toJson(),
             );

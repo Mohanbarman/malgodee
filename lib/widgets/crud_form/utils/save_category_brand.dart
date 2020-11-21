@@ -10,8 +10,6 @@ Future saveCategoryOrBrand({
   String correspondingCollection,
   List correspondingFieldElements,
 }) async {
-  if (correspondingFieldElements.length < 1) return 0;
-
   showDialog(
     barrierDismissible: false,
     context: context,
@@ -33,14 +31,16 @@ Future saveCategoryOrBrand({
     collection: collection,
   );
 
-  correspondingFieldElements.forEach((e) {
-    FirebaseStorageApi.appendToList(
-      collection: correspondingCollection,
-      data: [id],
-      field: collection,
-      id: e,
-    );
-  });
+  if (correspondingFieldElements.length > 0) {
+    correspondingFieldElements.forEach((e) {
+      FirebaseStorageApi.appendToList(
+        collection: correspondingCollection,
+        data: [id],
+        field: collection,
+        id: e,
+      );
+    });
+  }
 
   Navigator.pushReplacementNamed(context, '/');
 }
