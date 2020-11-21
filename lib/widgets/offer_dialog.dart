@@ -21,7 +21,7 @@ class OfferDialog extends StatelessWidget {
             child: Container(
               width: MediaQuery.of(context).size.width - 40,
               height: MediaQuery.of(context).size.width - 40,
-              clipBehavior: Clip.hardEdge,
+              clipBehavior: Clip.antiAliasWithSaveLayer,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(15)),
                 color: Colors.blue,

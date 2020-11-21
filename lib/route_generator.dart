@@ -1,10 +1,10 @@
 import 'package:ShoppingApp/bloc/product_flow_bloc.dart';
 import 'package:ShoppingApp/screens/add_brand/add_brand.dart';
 import 'package:ShoppingApp/screens/all_brands/all_brands.dart';
-import 'package:ShoppingApp/screens/brand_category_crud/brand_category_crud.dart';
 import 'package:ShoppingApp/screens/edit_brand/edit_brand.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'screens/all_products/all_products.dart';
 import 'screens/edit_offer/edit_offer.dart';
 import 'screens/home/home.dart';
 import 'screens/add_offer/add_offer.dart';
@@ -45,8 +45,8 @@ class RouteGenerator {
         return FadeRoute(page: EditCategory(categoryModel: args));
       case '/editoffer':
         return FadeRoute(page: EditOffer(offerModel: args));
-      // case '/allproducts':
-      //   return FadeRoute(page: AllProducts());
+      case '/allproducts':
+        return FadeRoute(page: AllProducts());
       // case '/addproduct':
       //   return FadeRoute(page: AddProduct());
       // case '/editproduct':

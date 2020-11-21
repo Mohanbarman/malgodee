@@ -27,7 +27,7 @@ class OfferImageContainer extends StatelessWidget {
       child: Container(
         width: MediaQuery.of(context).size.width / 2 - 30,
         height: MediaQuery.of(context).size.width / 2 - 30,
-        clipBehavior: Clip.hardEdge,
+        clipBehavior: Clip.antiAliasWithSaveLayer,
         decoration: BoxDecoration(
           color: BackgroundColor,
           borderRadius: BorderRadius.all(

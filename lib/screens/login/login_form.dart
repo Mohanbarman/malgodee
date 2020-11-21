@@ -1,11 +1,10 @@
-import 'dart:io';
 import 'package:ShoppingApp/auth.dart';
 import 'package:ShoppingApp/bloc/login_button_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'dart:io';
 
 class LoginForm extends StatefulWidget {
   @override
@@ -114,12 +113,9 @@ class _LoginFormState extends State<LoginForm> {
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData &&
                         snapshot.data == ButtonState.isActive) {
-                      return Material(
-                        borderRadius: BorderRadius.circular(10),
-                        clipBehavior: Clip.hardEdge,
-                        elevation: 20,
-                        shadowColor: SecondaryColorDropShadow,
+                      return _buttonContainer(
                         child: FlatButton(
+                          minWidth: 100,
                           padding: EdgeInsets.symmetric(
                               horizontal: 30, vertical: 13),
                           onPressed: () async {
@@ -161,6 +157,16 @@ class _LoginFormState extends State<LoginForm> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buttonContainer({child}) {
+    return Material(
+      borderRadius: BorderRadius.circular(10),
+      clipBehavior: Clip.hardEdge,
+      elevation: 20,
+      shadowColor: SecondaryColorDropShadow,
+      child: child,
     );
   }
 }

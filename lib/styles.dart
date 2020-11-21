@@ -73,7 +73,7 @@ const TextStyle BodyTextStyle1 = TextStyle(
 const TextStyle ProductGridItemTitle = TextStyle(
   fontWeight: FontWeight.w600,
   fontSize: BodyTextSize,
-  color: DefaultFontColor,
+  color: Colors.white,
   fontFamily: DefaultFontFamily,
 );
 

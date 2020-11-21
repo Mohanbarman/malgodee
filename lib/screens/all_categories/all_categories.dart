@@ -14,6 +14,14 @@ import '../../styles.dart';
 class AllCategories extends StatelessWidget {
   final Map args;
   AllCategories(this.args);
+
+  Stream _streamProductFlow =
+      productFlowBloc.productStreamRouteInfo['brand'] != null
+          ? FirebaseStorageApi.streamOfDocument(
+              collection: 'brands',
+              id: productFlowBloc.productStreamRouteInfo['brand'])
+          : null;
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -56,20 +64,16 @@ class AllCategories extends StatelessWidget {
               SizedBox(height: 30),
               Expanded(
                 child: StreamBuilder(
-                    stream: productFlowBloc.productStreamRouteInfo['brand'] !=
-                            null
-                        ? FirebaseStorageApi.streamOfDocument(
-                            collection: 'brands',
-                            id: productFlowBloc.productStreamRouteInfo['brand'])
-                        : null,
+                    stream: _streamProductFlow,
                     builder: (context, snapshot) {
-                      if (!snapshot.hasData)
+                      if (_streamProductFlow != null && !snapshot.hasData) {
                         return Container(
                           height: MediaQuery.of(context).size.height * 0.7,
                           child: Center(
                             child: CircularProgressIndicator(),
                           ),
                         );
+                      }
 
                       return CustomGridView4x4(
                         itemsStream: FirebaseStorageApi.streamOfCollection(
