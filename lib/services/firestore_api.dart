@@ -10,29 +10,17 @@ int MAX_SIZE = 1024 * 1024 * 5;
 class FirebaseStorageApi {
   Uint8List imageBytes;
 
-  static Stream streamOfCollection(
-      {String collection, int limit, String where, String isEqualsTo}) {
+  static Stream streamOfCollection({
+    String collection,
+    int limit,
+    String where,
+    String isEqualsTo,
+  }) {
     try {
       return limit == null
           ? FirebaseFirestore.instance.collection(collection).snapshots()
           : FirebaseFirestore.instance
               .collection(collection)
-              .limit(limit + 1)
-              .snapshots();
-    } catch (e) {
-      print(e);
-      return e;
-    }
-  }
-
-  static Stream streamOfCollectionFiltered(
-      {String collection, int limit, String where, String isEqualsTo}) {
-    try {
-      return limit == null
-          ? FirebaseFirestore.instance.collection(collection).snapshots()
-          : FirebaseFirestore.instance
-              .collection(collection)
-              .where(where, isEqualTo: isEqualsTo)
               .limit(limit + 1)
               .snapshots();
     } catch (e) {
@@ -79,7 +67,6 @@ class FirebaseStorageApi {
   }
 
   static Future deleteDoc({String id, String collection}) async {
-    print('$id, $collection');
     try {
       CollectionReference ref =
           FirebaseFirestore.instance.collection(collection);
@@ -91,8 +78,12 @@ class FirebaseStorageApi {
     }
   }
 
-  static Future appendToList(
-      {String id, String collection, List data, String field}) async {
+  static Future appendToList({
+    String id,
+    String collection,
+    List data,
+    String field,
+  }) async {
     try {
       await FirebaseFirestore.instance
           .collection(collection)
@@ -102,6 +93,38 @@ class FirebaseStorageApi {
     } catch (e) {
       print(e);
       return null;
+    }
+  }
+
+  static Future removeFromList({
+    String id,
+    String collection,
+    String field,
+    List<String> value,
+  }) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection(collection)
+          .doc(id)
+          .update({field: FieldValue.arrayRemove(value)});
+      return true;
+    } catch (e) {
+      print(e);
+      return e;
+    }
+  }
+
+  static Stream productsFiltered({Map<String, dynamic> idMap}) {
+    try {
+      return FirebaseFirestore.instance
+          .collection('products')
+          .where('categories', arrayContains: idMap['categories'])
+          .where('brand', isEqualTo: idMap['brand'])
+          .get()
+          .asStream();
+    } catch (e) {
+      print(e);
+      return e;
     }
   }
 

@@ -7,14 +7,16 @@ import 'package:ShoppingApp/widgets/bottom_navigation_bar.dart';
 import 'package:ShoppingApp/widgets/buttons.dart';
 import 'package:ShoppingApp/widgets/custom_app_bar.dart';
 import 'package:ShoppingApp/widgets/underlined_text.dart';
+import 'package:ShoppingApp/bloc/product_flow_bloc.dart';
 import 'package:flutter/material.dart';
 
 class AllProducts extends StatelessWidget {
-  final ProductModel model;
-  AllProducts({this.model});
+  Map<String, dynamic> ids = Map.from(productFlowBloc.productStreamRouteInfo);
 
   @override
   Widget build(BuildContext context) {
+    bool _hasPrevId = ids['brand'] != null && ids['category'] != null;
+
     return Scaffold(
       appBar: CustomAppBar(),
       bottomNavigationBar: CustomBottomNavigationBar(null),
@@ -26,12 +28,15 @@ class AllProducts extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  UnderlinedText(model == null ? 'All products' : 'Products'),
+                  UnderlinedText('All products'),
                   StreamBuilder(
                     initialData: adminStreamController.initialData,
                     builder: (context, snapshot) {
                       if (snapshot.data == UserAuth.isAuthorized) {
-                        return Button1(title: 'Add product', onPress: () {});
+                        return Button1(
+                          title: 'Add product',
+                          route: '/addproduct',
+                        );
                       } else {
                         return Container();
                       }
@@ -42,9 +47,13 @@ class AllProducts extends StatelessWidget {
             ),
             Expanded(
               child: ProductsGrid(
-                productsStream: FirebaseStorageApi.streamOfCollection(
-                  collection: 'products',
-                ),
+                categoryId: _hasPrevId ? ids['category'] : null,
+                brandId: _hasPrevId ? ids['brand'] : null,
+                productsStream: _hasPrevId
+                    ? FirebaseStorageApi.productsFiltered(idMap: ids)
+                    : FirebaseStorageApi.streamOfCollection(
+                        collection: 'products',
+                      ),
               ),
             ),
           ],

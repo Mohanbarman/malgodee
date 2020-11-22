@@ -4,6 +4,7 @@ import 'package:ShoppingApp/screens/all_brands/all_brands.dart';
 import 'package:ShoppingApp/screens/edit_brand/edit_brand.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'screens/add_product/add_product.dart';
 import 'screens/all_products/all_products.dart';
 import 'screens/edit_offer/edit_offer.dart';
 import 'screens/home/home.dart';
@@ -28,7 +29,7 @@ class RouteGenerator {
       case '/login':
         return FadeRoute(page: Login());
       case '/allcategories':
-        return FadeRoute(page: AllCategories(args));
+        return FadeRoute(page: AllCategories());
       case '/allbrands':
         return FadeRoute(page: AllBrands());
       case '/productinfo':
@@ -47,8 +48,8 @@ class RouteGenerator {
         return FadeRoute(page: EditOffer(offerModel: args));
       case '/allproducts':
         return FadeRoute(page: AllProducts());
-      // case '/addproduct':
-      //   return FadeRoute(page: AddProduct());
+      case '/addproduct':
+        return FadeRoute(page: AddProduct());
       // case '/editproduct':
       //   if (args == null)
       //     throw 'A product model is required for EditProduct screen';

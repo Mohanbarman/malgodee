@@ -41,6 +41,7 @@ class BrandsSection extends StatelessWidget {
             onTap: (id) {
               productFlowBloc.add(context, {'brand': id});
             },
+            referer: Referer.brand,
             lastWidget: RoundedIconContainer(
               title: 'All Brands',
               viewAllIcon: true,

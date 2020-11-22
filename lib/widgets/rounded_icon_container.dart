@@ -63,6 +63,21 @@ class RoundedIconContainer extends StatelessWidget {
                       onLongPress: onLongPress ?? () {},
                       onTap: () => onTap() ?? () {},
                       child: CachedNetworkImage(
+                        placeholder: (context, str) => Container(
+                          color: Colors.white,
+                          height: 60,
+                          width: 60,
+                          child: Center(
+                            child: Text(
+                              'No image',
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.grey[850],
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
                         imageUrl: imageUrl,
                         fit: BoxFit.cover,
                       ),

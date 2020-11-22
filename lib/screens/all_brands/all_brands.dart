@@ -86,6 +86,7 @@ class AllBrands extends StatelessWidget {
                       String name,
                       String image,
                       String description,
+                      List correspondingElements,
                     }) {
                       Navigator.pushNamed(
                         context,
@@ -95,6 +96,7 @@ class AllBrands extends StatelessWidget {
                           name: name,
                           image: image,
                           description: description,
+                          categories: correspondingElements,
                         ),
                       );
                     },

@@ -76,7 +76,7 @@ class CategoriesSection extends StatelessWidget {
                         );
                       }
 
-                      if (!querySnapshot.hasData) return SizedBox();
+                      if (!querySnapshot.hasData) return Container();
 
                       String name =
                           querySnapshot.data.docs.toList()[index]['name'];

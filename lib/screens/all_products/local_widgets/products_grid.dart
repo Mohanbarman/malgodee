@@ -1,12 +1,15 @@
 import 'package:ShoppingApp/screens/all_products/local_widgets/product_item.dart';
 import 'package:ShoppingApp/styles.dart';
+import 'package:ShoppingApp/widgets/not_found_placeholder.dart';
 import 'package:flutter/material.dart';
+import 'package:icon_shadow/icon_shadow.dart';
 
 class ProductsGrid extends StatelessWidget {
   final Stream productsStream;
-  final List filterByIds;
+  final String categoryId;
+  final String brandId;
 
-  ProductsGrid({this.productsStream, this.filterByIds});
+  ProductsGrid({this.productsStream, this.categoryId, this.brandId});
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -14,6 +17,9 @@ class ProductsGrid extends StatelessWidget {
       builder: (context, snapshot) {
         if (!snapshot.hasData)
           return Center(child: CircularProgressIndicator());
+
+        if (snapshot.data.docs.length < 1)
+          return NotFoundPlaceholder(label: 'No product found');
 
         return GridView.builder(
           itemCount: snapshot.data.docs.length,

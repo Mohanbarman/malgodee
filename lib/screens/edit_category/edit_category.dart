@@ -1,5 +1,6 @@
 import 'package:ShoppingApp/models/category.dart';
 import 'package:ShoppingApp/services/firestore_api.dart';
+import 'package:ShoppingApp/widgets/crud_form/utils/delete_category_brand.dart';
 import 'package:ShoppingApp/widgets/crud_form/utils/single_image_pick_bloc.dart';
 import 'package:ShoppingApp/widgets/crud_form/widgets/image_preview.dart';
 import 'package:ShoppingApp/widgets/crud_form/widgets/pick_image_button.dart';
@@ -106,11 +107,14 @@ class EditCategory extends StatelessWidget {
     );
   }
 
-  void _delete(BuildContext context) async {
-    String id = model.id;
-    FirebaseStorageApi.deleteDoc(id: id, collection: 'categories');
-
-    Navigator.pop(context);
+  void _delete(BuildContext context) {
+    deleteCategoryOrBrand(
+      context: context,
+      collection: 'categories',
+      id: model.id,
+      correspondingCollection: 'brands',
+      correspondingFieldElements: model.brands,
+    );
   }
 
   void _update(BuildContext context) async {

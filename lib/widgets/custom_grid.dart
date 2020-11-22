@@ -67,6 +67,11 @@ class CustomGridView4x4 extends StatelessWidget {
               String image = _docs[index]['image'];
               String id = _docs[index].id;
 
+              List<String> ids = _docs[index]
+                      [Referer.brand == referer ? 'categories' : 'brands']
+                  .toList()
+                  .cast<String>();
+
               return RoundedIconContainer(
                 title: name,
                 imageUrl: image,
@@ -80,6 +85,7 @@ class CustomGridView4x4 extends StatelessWidget {
                         image: image,
                         description: itemSnapshot.data.docs[index]
                             ['description'],
+                        correspondingElements: ids,
                       );
                     } ??
                     () {},

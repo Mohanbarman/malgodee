@@ -12,9 +12,6 @@ import '../../widgets/custom_grid.dart';
 import '../../styles.dart';
 
 class AllCategories extends StatelessWidget {
-  final Map args;
-  AllCategories(this.args);
-
   Stream _streamProductFlow =
       productFlowBloc.productStreamRouteInfo['brand'] != null
           ? FirebaseStorageApi.streamOfDocument(
@@ -91,6 +88,7 @@ class AllCategories extends StatelessWidget {
                           String name,
                           String image,
                           String description,
+                          List correspondingElements,
                         }) {
                           Navigator.pushNamed(
                             context,
@@ -99,6 +97,7 @@ class AllCategories extends StatelessWidget {
                               id: id,
                               name: name,
                               image: image,
+                              brands: correspondingElements,
                               description: description,
                             ),
                           );
