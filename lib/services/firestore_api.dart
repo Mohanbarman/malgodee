@@ -79,6 +79,7 @@ class FirebaseStorageApi {
   }
 
   static Future deleteDoc({String id, String collection}) async {
+    print('$id, $collection');
     try {
       CollectionReference ref =
           FirebaseFirestore.instance.collection(collection);

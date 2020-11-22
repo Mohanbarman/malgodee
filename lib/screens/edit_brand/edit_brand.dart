@@ -109,6 +109,7 @@ class EditBrand extends StatelessWidget {
   }
 
   void _delete(BuildContext context) async {
+    print('jjkjl');
     showDialog(
       barrierDismissible: false,
       context: context,

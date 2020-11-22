@@ -31,10 +31,13 @@ class ProductsGrid extends StatelessWidget {
             List<String> images =
                 snapshot.data.docs[index]['images'].toList().cast<String>();
 
-            return ProductItem(
-              name: name,
-              imageUrl:
-                  'https://firebasestorage.googleapis.com/v0/b/shoppingapp-cf7a8.appspot.com/o/026988a0-25ae-11eb-a052-3377cddf074d.jpg?alt=media&token=55b412c8-a58c-43ce-adea-025729e0805d',
+            return GestureDetector(
+              onTap: () => print('name: $name'),
+              onLongPress: () => print('name (longPress): $name'),
+              child: ProductItem(
+                name: name,
+                imageUrl: images.first,
+              ),
             );
           },
         );

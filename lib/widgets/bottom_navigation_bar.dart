@@ -6,16 +6,18 @@ import 'package:ShoppingApp/utils/make_call.dart';
 import '../styles.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
-  final int _selected_index;
-  CustomBottomNavigationBar(this._selected_index);
+  final int selectedIndex;
+  CustomBottomNavigationBar(this.selectedIndex);
   @override
   _CustomBottomNavigationBarState createState() =>
-      _CustomBottomNavigationBarState(_selected_index);
+      _CustomBottomNavigationBarState(selectedIndex);
 }
 
 class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
-  int _selected_index;
-  _CustomBottomNavigationBarState(this._selected_index);
+  int selectedIndex;
+  _CustomBottomNavigationBarState(this.selectedIndex);
+
+  int _prevIndex;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -92,7 +94,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
             borderRadius: BorderRadius.all(
               Radius.circular(5),
             ),
-            color: index == _selected_index ? Colors.white : AccentColor,
+            color: index == selectedIndex ? Colors.white : AccentColor,
           ),
         ),
       ),
@@ -103,11 +105,12 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
               setState(
                 () {
                   Navigator.pushReplacementNamed(context, route);
-                  _selected_index = index;
+                  selectedIndex = index;
+                  _prevIndex = index;
                 },
               );
             },
-        color: index == _selected_index ? Colors.white : Colors.white60,
+        color: index == selectedIndex ? Colors.white : Colors.white60,
       ),
     ];
 

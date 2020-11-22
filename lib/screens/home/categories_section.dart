@@ -62,7 +62,6 @@ class CategoriesSection extends StatelessWidget {
                             RoundedIconContainer(
                               title: 'All categories',
                               viewAllIcon: true,
-                              route: '/allcategories',
                               onTap: () {
                                 Navigator.pushNamed(
                                   context,
