@@ -1,4 +1,5 @@
 import 'package:ShoppingApp/screens/all_products/local_widgets/product_item.dart';
+import 'package:ShoppingApp/services/firestore_api.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:ShoppingApp/widgets/not_found_placeholder.dart';
 import 'package:flutter/material.dart';
@@ -8,12 +9,24 @@ class ProductsGrid extends StatelessWidget {
   final Stream productsStream;
   final String categoryId;
   final String brandId;
+  final String searchBy;
 
-  ProductsGrid({this.productsStream, this.categoryId, this.brandId});
+  ProductsGrid({
+    this.productsStream,
+    this.categoryId,
+    this.brandId,
+    this.searchBy,
+  });
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: productsStream,
+      stream: searchBy != null
+          ? FirebaseStorageApi.streamOfCollectionSearch(
+              searchQuery: searchBy,
+              collection: 'products',
+            )
+          : productsStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData)
           return Center(child: CircularProgressIndicator());

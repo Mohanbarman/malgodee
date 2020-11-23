@@ -1,6 +1,7 @@
+import 'package:ShoppingApp/screens/add_product/local_utils/category_picker_bloc.dart';
+import 'package:ShoppingApp/screens/add_product/local_utils/dropdown_brand_bloc.dart';
 import 'package:ShoppingApp/widgets/crud_form/utils/multiple_image_pick_bloc.dart';
-import 'package:ShoppingApp/widgets/crud_form/widgets/image_preview.dart';
-import 'package:ShoppingApp/widgets/crud_form/widgets/pick_image_button.dart';
+import 'package:ShoppingApp/widgets/crud_form/widgets/multi_image_picker.dart';
 import 'package:ShoppingApp/models/product.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:ShoppingApp/widgets/title_description_form.dart';
@@ -13,6 +14,8 @@ class AddProduct extends StatelessWidget {
   MultipleImagePickBloc _multipleImagePickBloc = MultipleImagePickBloc();
   TextEditingController _titleController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
+  DropdownBrandBloc _dropdownBrandBloc = DropdownBrandBloc();
+  CategoryPickerBloc _categoryPickerBloc = CategoryPickerBloc();
 
   @override
   Widget build(BuildContext context) {
@@ -29,18 +32,12 @@ class AddProduct extends StatelessWidget {
         children: [
           Title('Add product'),
           SizedBox(height: 30),
-          Container(
-            // width: 300,
-            child: Center(
-              child: ImagePreview(
-                bloc: _multipleImagePickBloc,
-                previewShape: PreviewShape.roundedRectangle,
-              ),
-            ),
-          ),
+          Text('Product images', style: AddFieldLabelStyle),
           SizedBox(height: 30),
-          PickImageButton(bloc: _multipleImagePickBloc),
+          ImageRow(bloc: _multipleImagePickBloc),
           SizedBox(height: 60),
+          _categoryBrandSelect(context),
+          SizedBox(height: 30),
           TitleDescriptionForm(
             name: 'Product',
             titleController: _titleController,
@@ -54,12 +51,42 @@ class AddProduct extends StatelessWidget {
     );
   }
 
+  Widget _categoryBrandSelect(BuildContext context) {
+    return Container(
+      height: 60,
+      child: Center(
+        child: Container(
+          height: 60,
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(50),
+          ),
+          child: FlatButton(
+            onPressed: () {
+              Navigator.pushNamed(
+                context,
+                '/selectCategoryAndBrand',
+                arguments: {
+                  'dropdownBrandBloc': _dropdownBrandBloc,
+                  'categoryPickerBloc': _categoryPickerBloc
+                },
+              );
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+              child: Text('Select brand or category'),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget Title(String title) {
     return SizedBox(
       height: 50,
-      child: Center(
-        child: UnderlinedText(title).noUnderline(),
-      ),
+      child: UnderlinedText(title).noUnderline(),
     );
   }
 

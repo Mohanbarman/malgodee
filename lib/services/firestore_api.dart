@@ -13,8 +13,6 @@ class FirebaseStorageApi {
   static Stream streamOfCollection({
     String collection,
     int limit,
-    String where,
-    String isEqualsTo,
   }) {
     try {
       return limit == null
@@ -23,6 +21,53 @@ class FirebaseStorageApi {
               .collection(collection)
               .limit(limit + 1)
               .snapshots();
+    } catch (e) {
+      print(e);
+      return e;
+    }
+  }
+
+  static Stream streamOfCollectionFiltered({
+    String collection,
+    String field,
+    String containsValue,
+    String isEqualsTo,
+  }) {
+    try {
+      if (isEqualsTo != null)
+        return FirebaseFirestore.instance
+            .collection(collection)
+            .where(field, isEqualTo: isEqualsTo)
+            .get()
+            .asStream();
+
+      return FirebaseFirestore.instance
+          .collection(collection)
+          .where(field, arrayContains: containsValue)
+          .get()
+          .asStream();
+    } catch (e) {
+      print(e);
+      return e;
+    }
+  }
+
+  static Stream streamOfCollectionSearch({
+    String collection,
+    String field,
+    String searchQuery,
+  }) {
+    try {
+      return FirebaseFirestore.instance
+          .collection(collection)
+          .where('name',
+              isGreaterThanOrEqualTo: searchQuery,
+              isLessThan: searchQuery.substring(0, searchQuery.length - 1) +
+                  String.fromCharCode(
+                    searchQuery.codeUnitAt(searchQuery.length - 1) + 1,
+                  ))
+          .get()
+          .asStream();
     } catch (e) {
       print(e);
       return e;

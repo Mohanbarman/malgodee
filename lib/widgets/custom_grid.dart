@@ -1,4 +1,5 @@
 import 'package:ShoppingApp/bloc/product_flow_bloc.dart';
+import 'package:ShoppingApp/widgets/not_found_placeholder.dart';
 import 'package:ShoppingApp/widgets/offer_image_container.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,8 @@ class CustomGridView4x4 extends StatelessWidget {
     this.filterByIds,
   });
 
+  List _docs;
+
   @override
   Widget build(BuildContext context) {
     if (referer == Referer.brand) refererStr = 'brand';
@@ -42,6 +45,13 @@ class CustomGridView4x4 extends StatelessWidget {
           if (!(filterByIds == null)) {
             itemCount = filterByIds.length + 1;
           }
+
+          if (itemCount == 1)
+            return Container(
+              height: MediaQuery.of(context).size.height * .6,
+              child: NotFoundPlaceholder(label: 'No $refererStr\s found'),
+            );
+
           /* Stream of referer document (single) */
           return GridView.builder(
             physics: ClampingScrollPhysics(),
@@ -56,7 +66,7 @@ class CustomGridView4x4 extends StatelessWidget {
                 return lastWidget;
               if (index + 1 == itemCount) return SizedBox();
 
-              List _docs = itemSnapshot.data.docs.toList();
+              _docs = itemSnapshot.data.docs.toList();
 
               if (filterByIds != null) {
                 _docs =

@@ -2,6 +2,7 @@ import 'package:ShoppingApp/bloc/product_flow_bloc.dart';
 import 'package:ShoppingApp/screens/add_brand/add_brand.dart';
 import 'package:ShoppingApp/screens/all_brands/all_brands.dart';
 import 'package:ShoppingApp/screens/edit_brand/edit_brand.dart';
+import 'package:ShoppingApp/widgets/crud_form/local_screens/category_and_brand_selector.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'screens/add_product/add_product.dart';
@@ -47,13 +48,22 @@ class RouteGenerator {
       case '/editoffer':
         return FadeRoute(page: EditOffer(offerModel: args));
       case '/allproducts':
-        return FadeRoute(page: AllProducts());
+        return FadeRoute(
+          page:
+              AllProducts(searchBy: args != null ? args['searchQuery'] : null),
+        );
       case '/addproduct':
         return FadeRoute(page: AddProduct());
       // case '/editproduct':
       //   if (args == null)
       //     throw 'A product model is required for EditProduct screen';
       //   return FadeRoute(page: EditProduct(model: args));
+      case '/selectCategoryAndBrand':
+        return FadeRoute(
+            page: CategoryAndBrandSelector(
+          dropdownBrandBloc: args['dropdownBrandBloc'],
+          categoryPickerBloc: args['categoryPickerBloc'],
+        ));
       default:
         return _errorRoute();
     }

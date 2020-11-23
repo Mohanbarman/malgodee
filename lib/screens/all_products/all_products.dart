@@ -13,6 +13,9 @@ import 'package:flutter/material.dart';
 class AllProducts extends StatelessWidget {
   Map<String, dynamic> ids = Map.from(productFlowBloc.productStreamRouteInfo);
 
+  final String searchBy;
+  AllProducts({this.searchBy});
+
   @override
   Widget build(BuildContext context) {
     bool _hasPrevId = ids['brand'] != null && ids['category'] != null;
@@ -49,11 +52,11 @@ class AllProducts extends StatelessWidget {
               child: ProductsGrid(
                 categoryId: _hasPrevId ? ids['category'] : null,
                 brandId: _hasPrevId ? ids['brand'] : null,
+                searchBy: searchBy,
                 productsStream: _hasPrevId
                     ? FirebaseStorageApi.productsFiltered(idMap: ids)
                     : FirebaseStorageApi.streamOfCollection(
-                        collection: 'products',
-                      ),
+                        collection: 'products'),
               ),
             ),
           ],

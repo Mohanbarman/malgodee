@@ -2,15 +2,22 @@ import 'dart:async';
 
 class MultipleImagePickBloc {
   StreamController _controller = StreamController.broadcast();
-  List<String> currPaths = [];
+  List<String> paths = [];
 
-  Function(String) get add => _controller.sink.add;
+  Function get add => _controller.sink.add;
   Stream get stream => _controller.stream;
 
   MultipleImagePickBloc() {
     stream.listen((e) {
-      currPaths.add(e);
+      if (e is bool) {
+        return 0;
+      }
+      paths.add(e);
     });
+  }
+
+  void remove(String path) {
+    paths.remove(path);
   }
 
   void dispose() {

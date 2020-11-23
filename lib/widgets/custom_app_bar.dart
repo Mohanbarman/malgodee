@@ -11,6 +11,8 @@ PreferredSize CustomAppBar() {
   );
 }
 
+String searchValue;
+
 class Bar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -75,45 +77,54 @@ class SearchBar extends StatelessWidget {
   TextEditingController _textEditingController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => Navigator.pushNamed(context, '/searchproduct'),
-      child: Container(
-        width: 300,
-        // padding: EdgeInsets.only(left: 20),
-        margin: EdgeInsets.fromLTRB(0, 10, 40, 10),
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 20,
-              color: Colors.black12,
-              offset: Offset(0, 0),
-            ),
-          ],
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-        ),
-        child: Material(
-          borderRadius: BorderRadius.all(Radius.circular(50)),
-          child: TextField(
-            cursorColor: AccentColor,
-            controller: _textEditingController,
-            onChanged: print,
-            decoration: InputDecoration(
-              hintText: 'Search products',
-              suffixIcon: Container(
-                child: IconButton(
-                  splashRadius: 22,
-                  onPressed: () {
-                    print(_textEditingController.value.text);
-                  },
-                  icon: Icon(
-                    Icons.search,
-                    color: DefaultFontColor,
-                  ),
+    if (searchValue != null && searchValue.length > 0)
+      _textEditingController = TextEditingController(text: searchValue);
+    return Container(
+      width: 300,
+      margin: EdgeInsets.fromLTRB(0, 10, 40, 10),
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 20,
+            color: Colors.black12,
+            offset: Offset(0, 0),
+          ),
+        ],
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+      ),
+      child: Material(
+        borderRadius: BorderRadius.all(Radius.circular(50)),
+        child: TextField(
+          cursorColor: AccentColor,
+          controller: _textEditingController,
+          onSubmitted: (value) {
+            if (_textEditingController.value.text.length < 1) return 0;
+            searchValue = _textEditingController.value.text;
+            Navigator.pushNamed(context, '/allproducts', arguments: {
+              'searchQuery': _textEditingController.value.text,
+            });
+          },
+          decoration: InputDecoration(
+            hintText: 'Search products',
+            suffixIcon: Container(
+              child: IconButton(
+                splashRadius: 22,
+                onPressed: () {
+                  print(_textEditingController.value.text);
+                  if (_textEditingController.value.text.length < 1) return 0;
+                  searchValue = _textEditingController.value.text;
+                  Navigator.pushNamed(context, '/allproducts', arguments: {
+                    'searchQuery': _textEditingController.value.text,
+                  });
+                },
+                icon: Icon(
+                  Icons.search,
+                  color: DefaultFontColor,
                 ),
               ),
-              contentPadding: EdgeInsets.only(left: 30, top: 14),
-              border: InputBorder.none,
             ),
+            contentPadding: EdgeInsets.only(left: 30, top: 14),
+            border: InputBorder.none,
           ),
         ),
       ),
