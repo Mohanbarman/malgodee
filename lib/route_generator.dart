@@ -34,7 +34,7 @@ class RouteGenerator {
       case '/allbrands':
         return FadeRoute(page: AllBrands());
       case '/productinfo':
-        return FadeRoute(page: ProductInfo());
+        return FadeRoute(page: ProductInfo(productModel: args));
       case '/addcategory':
         return FadeRoute(page: AddCategory());
       case '/addbrand':

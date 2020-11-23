@@ -1,36 +1,17 @@
 import 'package:ShoppingApp/widgets/custom_app_bar.dart';
 import 'package:ShoppingApp/models/product.dart';
+import 'package:ShoppingApp/widgets/offer_dialog.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'product_highlights_section.dart';
-import 'rating_widget.dart';
 import '../../styles.dart';
 import '../../widgets/bottom_navigation_bar.dart';
 
-// ignore: non_constant_identifier_names
-String _carousel_img_1 = 'assets/images/fan-product.png';
-
-List product = [
-  {
-    'id': 1,
-    'title':
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam',
-    'rating': '4.9',
-    'highlights': [
-      'Lorem ipsum dolor sit amet',
-      'Lorem ipsum dolor sit amet',
-      'Lorem ipsum dolor sit amet',
-      'Lorem ipsum dolor sit amet',
-    ],
-    'description':
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit.Porttitor egestas rhoncus neque fermentum nibh bibendum et gravida mollis. Amet, dolor pulvinar cras mauris, justo aliquam sit laoreet. Habitant elit praesent ut libero Porttitor egestas rhoncus neque fermentum nibh bibendum et gravida mollis. Amet, dolor pulvinar cras mauris, justo aliquam sit laoreet. Habitant elit praesent ut libero, ',
-  },
-];
-
-// Map routeInfo = {'id': 2};
-
 class ProductInfo extends StatelessWidget {
+  ProductModel productModel;
+  ProductInfo({this.productModel});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,14 +21,11 @@ class ProductInfo extends StatelessWidget {
       body: Container(
         child: ListView(
           children: [
-            ProductInfoCarousel(),
+            ProductInfoCarousel(imageUrls: productModel.images),
             SizedBox(height: CarouselGapBottom),
-            ProductTitle(),
-            RatingWidget(product[0]['rating']),
-            SizedBox(height: SectionsGap),
-            ProductHighlightsSection(product[0]['highlights']),
-            SizedBox(height: SectionsGap),
-            ProductDescriptionSection(product[0]['description']),
+            ProductTitle(title: productModel.name),
+            SizedBox(height: ScreenPadding),
+            ProductDescriptionSection(productModel.description),
             SizedBox(height: ScreenPadding),
           ],
         ),
@@ -65,9 +43,15 @@ class ProductDescriptionSection extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: ScreenPadding),
       child: Column(
         children: [
-          Row(children: [Text('Description', style: HightlightsTitleStyle)]),
+          Row(children: [Text('Description : ', style: HightlightsTitleStyle)]),
           SizedBox(height: ScreenPadding),
-          Text(_description, style: HighlightBodyTextStyle),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            child: Text(
+              _description,
+              style: HighlightBodyTextStyle,
+            ),
+          ),
         ],
       ),
     );
@@ -75,30 +59,31 @@ class ProductDescriptionSection extends StatelessWidget {
 }
 
 class ProductTitle extends StatelessWidget {
+  final String title;
+  ProductTitle({this.title});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(ScreenPadding),
       child: Container(
-        child: Text(product[0]['title'], style: ProductInfoTitle),
+        child: Text(title, style: ProductInfoTitle),
       ),
     );
   }
 }
 
 class ProductInfoCarousel extends StatefulWidget {
+  List<String> imageUrls;
+  ProductInfoCarousel({this.imageUrls});
   @override
-  _ProductInfoCarouselState createState() => _ProductInfoCarouselState();
+  _ProductInfoCarouselState createState() => _ProductInfoCarouselState(
+        imageUrls: this.imageUrls,
+      );
 }
 
 class _ProductInfoCarouselState extends State<ProductInfoCarousel> {
   int _currentIndex = 0;
-
-  List<Widget> cardList = <Widget>[
-    CustomCarouselItem(_carousel_img_1, '/productinfo'),
-    CustomCarouselItem(_carousel_img_1, '/productinfo'),
-    CustomCarouselItem(_carousel_img_1, '/productinfo'),
-  ];
 
   List<T> map<T>(List list, Function handler) {
     List<T> result = [];
@@ -107,6 +92,9 @@ class _ProductInfoCarouselState extends State<ProductInfoCarousel> {
     }
     return result;
   }
+
+  List<String> imageUrls;
+  _ProductInfoCarouselState({this.imageUrls});
 
   @override
   Widget build(BuildContext context) {
@@ -128,12 +116,12 @@ class _ProductInfoCarouselState extends State<ProductInfoCarousel> {
                 });
               },
             ),
-            items: cardList.map((card) {
+            items: imageUrls.map((e) {
               return Builder(builder: (BuildContext context) {
                 return Container(
                   height: MediaQuery.of(context).size.height * 0.35,
                   width: MediaQuery.of(context).size.width * 0.45,
-                  child: card,
+                  child: CustomCarouselItem(e),
                 );
               });
             }).toList(),
@@ -142,7 +130,7 @@ class _ProductInfoCarouselState extends State<ProductInfoCarousel> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: map<Widget>(
-              cardList,
+              imageUrls,
               (index, url) {
                 return Container(
                   width: _currentIndex == index ? 30.0 : 13,
@@ -168,20 +156,28 @@ class _ProductInfoCarouselState extends State<ProductInfoCarousel> {
 
 class CustomCarouselItem extends StatelessWidget {
   final String _image;
-  final String _route;
-  CustomCarouselItem(this._image, this._route);
+  CustomCarouselItem(this._image);
   @override
   Widget build(BuildContext context) {
-    return Container(
-      clipBehavior: Clip.hardEdge,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(
-          Radius.circular(20),
+    return GestureDetector(
+      onTap: () {
+        showDialog(context: context, child: OfferDialog(imageUrl: _image));
+      },
+      child: Container(
+        clipBehavior: Clip.hardEdge,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(
+            Radius.circular(20),
+          ),
         ),
-      ),
-      child: Image.asset(
-        _image,
-        fit: BoxFit.fill,
+        child: CachedNetworkImage(
+          imageUrl: _image,
+          fit: BoxFit.cover,
+          placeholder: (context, url) => Center(
+            child: CircularProgressIndicator(),
+          ),
+          errorWidget: (context, url, error) => Center(child: Text(error)),
+        ),
       ),
     );
   }

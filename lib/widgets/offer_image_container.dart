@@ -6,15 +6,11 @@ import 'dart:typed_data';
 
 class OfferImageContainer extends StatelessWidget {
   OfferImageContainer({
-    this.fromBytes,
-    this.bytes,
     this.imageUrl,
     this.onLongPress,
   });
 
   final String imageUrl;
-  final fromBytes;
-  final Uint8List bytes;
   final Function onLongPress;
 
   @override
@@ -34,15 +30,16 @@ class OfferImageContainer extends StatelessWidget {
             Radius.circular(OfferBorderRadius),
           ),
         ),
-        child: imageUrl == null
-            ? Image.memory(
-                this.bytes,
-                fit: BoxFit.cover,
-              )
-            : CachedNetworkImage(
-                imageUrl: imageUrl,
-                fit: BoxFit.cover,
-              ),
+        child: CachedNetworkImage(
+          imageUrl: imageUrl,
+          fit: BoxFit.cover,
+          placeholder: (context, url) => Center(
+            child: CircularProgressIndicator(),
+          ),
+          errorWidget: (context, url, error) => Center(
+            child: Text(error),
+          ),
+        ),
       ),
     );
   }

@@ -54,7 +54,18 @@ class ProductsGrid extends StatelessWidget {
             String brand = snapshot.data.docs[index]['brand'];
 
             return GestureDetector(
-              // onTap: () => print('name: $name'),
+              onTap: () => Navigator.pushNamed(
+                context,
+                '/productinfo',
+                arguments: ProductModel(
+                  images: images,
+                  name: name,
+                  description: description,
+                  id: id,
+                  brand: brand,
+                  categories: categories,
+                ),
+              ),
               onLongPress: () => Navigator.pushNamed(
                 context,
                 '/editproduct',

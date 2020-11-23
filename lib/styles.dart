@@ -78,7 +78,7 @@ const TextStyle ProductGridItemTitle = TextStyle(
 );
 
 const TextStyle ProductInfoTitle = TextStyle(
-  fontWeight: FontWeight.w700,
+  fontWeight: FontWeight.w600,
   fontSize: LargeTextSize,
   color: DefaultFontColor,
 );
@@ -90,7 +90,7 @@ const TextStyle RatingWidgetTextStyle = TextStyle(
 );
 
 const TextStyle HightlightsTitleStyle = TextStyle(
-  fontSize: LargeTextSize + 2,
+  fontSize: MediumTextSize,
   fontWeight: FontWeight.w600,
   color: DefaultFontColor,
 );
