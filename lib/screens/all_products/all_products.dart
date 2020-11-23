@@ -56,7 +56,8 @@ class AllProducts extends StatelessWidget {
                 productsStream: _hasPrevId
                     ? FirebaseStorageApi.productsFiltered(idMap: ids)
                     : FirebaseStorageApi.streamOfCollection(
-                        collection: 'products'),
+                        collection: 'products',
+                      ),
               ),
             ),
           ],

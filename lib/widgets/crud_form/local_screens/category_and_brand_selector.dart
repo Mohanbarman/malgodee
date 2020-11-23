@@ -1,5 +1,5 @@
-import 'package:ShoppingApp/screens/add_product/local_utils/category_picker_bloc.dart';
-import 'package:ShoppingApp/screens/add_product/local_utils/dropdown_brand_bloc.dart';
+import 'package:ShoppingApp/screens/product_crud/local_utils/category_picker_bloc.dart';
+import 'package:ShoppingApp/screens/product_crud/local_utils/dropdown_brand_bloc.dart';
 import 'package:ShoppingApp/services/firestore_api.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:ShoppingApp/widgets/not_found_placeholder.dart';
@@ -14,6 +14,9 @@ class CategoryAndBrandSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('*' * 20);
+    print(categoryPickerBloc.categoriesPicked);
+    print('*' * 20);
     return Scaffold(
       appBar: CustomAppBar(),
       floatingActionButton: saveButton(context),

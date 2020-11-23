@@ -5,7 +5,6 @@ import 'package:ShoppingApp/screens/edit_brand/edit_brand.dart';
 import 'package:ShoppingApp/widgets/crud_form/local_screens/category_and_brand_selector.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'screens/add_product/add_product.dart';
 import 'screens/all_products/all_products.dart';
 import 'screens/edit_offer/edit_offer.dart';
 import 'screens/home/home.dart';
@@ -14,6 +13,7 @@ import 'screens/all_offers/all_offers.dart';
 import 'screens/edit_category/edit_category.dart';
 import 'screens/login/login.dart';
 import 'screens/all_categories/all_categories.dart';
+import 'screens/product_crud/proudct_crud.dart';
 import 'screens/products/product_info.dart';
 import 'screens/add_category/add_category.dart';
 
@@ -53,11 +53,11 @@ class RouteGenerator {
               AllProducts(searchBy: args != null ? args['searchQuery'] : null),
         );
       case '/addproduct':
-        return FadeRoute(page: AddProduct());
-      // case '/editproduct':
-      //   if (args == null)
-      //     throw 'A product model is required for EditProduct screen';
-      //   return FadeRoute(page: EditProduct(model: args));
+        return FadeRoute(page: ProductCrud());
+      case '/editproduct':
+        if (args == null)
+          throw 'A product model is required for EditProduct screen';
+        return FadeRoute(page: ProductCrud(model: args));
       case '/selectCategoryAndBrand':
         return FadeRoute(
             page: CategoryAndBrandSelector(

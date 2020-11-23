@@ -17,7 +17,11 @@ class ProductItem extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          CachedNetworkImage(imageUrl: imageUrl, fit: BoxFit.cover),
+          Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: CachedNetworkImage(imageUrl: imageUrl, fit: BoxFit.cover),
+          ),
           Positioned(
             bottom: 0,
             child: Container(

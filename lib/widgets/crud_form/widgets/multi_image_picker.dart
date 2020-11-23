@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:ShoppingApp/utils/pick_image.dart';
 import 'package:ShoppingApp/widgets/crud_form/utils/multiple_image_pick_bloc.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/styles.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -51,28 +52,47 @@ class ImageRow extends StatelessWidget {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        child: Image(
-                          image: FileImage(File(bloc.paths[index])),
-                          fit: BoxFit.cover,
-                        ),
+                        child: bloc.paths[index].contains('https://')
+                            ? CachedNetworkImage(
+                                imageUrl: bloc.paths[index],
+                                fit: BoxFit.cover,
+                                errorWidget: (context, a, b) => Center(
+                                  child: Text('Broken image'),
+                                ),
+                                placeholder: (context, val) => Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              )
+                            : Image.file(
+                                File(bloc.paths[index]),
+                                fit: BoxFit.cover,
+                              ),
                       ),
                       Container(height: 10),
-                      FlatButton(
-                        onPressed: () {
-                          bloc.remove(bloc.paths[index]);
-                          bloc.add(true);
-                        },
-                        color: DefaultRedColor,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Text(
-                              'Remove',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            Container(width: 10),
-                            Icon(Icons.delete_forever, color: Colors.white),
-                          ],
+                      Container(
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: FlatButton(
+                          onPressed: () {
+                            bloc.remove(bloc.paths[index]);
+                            bloc.add(true);
+                          },
+                          color: DefaultRedColor,
+                          height: 40,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(
+                                'Remove',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              Container(width: 10),
+                              Icon(Icons.delete_forever, color: Colors.white),
+                            ],
+                          ),
                         ),
                       ),
                     ],
