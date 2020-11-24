@@ -1,3 +1,4 @@
+import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:ShoppingApp/models/product.dart';
 import 'package:ShoppingApp/screens/all_products/local_widgets/product_item.dart';
 import 'package:ShoppingApp/services/firestore_api.dart';
@@ -53,36 +54,46 @@ class ProductsGrid extends StatelessWidget {
                 snapshot.data.docs[index]['categories'].toList().cast<String>();
             String brand = snapshot.data.docs[index]['brand'];
 
-            return GestureDetector(
-              onTap: () => Navigator.pushNamed(
-                context,
-                '/productinfo',
-                arguments: ProductModel(
-                  images: images,
-                  name: name,
-                  description: description,
-                  id: id,
-                  brand: brand,
-                  categories: categories,
-                ),
-              ),
-              onLongPress: () => Navigator.pushNamed(
-                context,
-                '/editproduct',
-                arguments: ProductModel(
-                  name: name,
-                  description: description,
-                  brand: brand,
-                  categories: categories,
-                  id: id,
-                  images: images,
-                ),
-              ),
-              child: ProductItem(
-                name: name,
-                imageUrl: images.first,
-              ),
-            );
+            return StreamBuilder(
+                stream: adminStreamController.authStatusStream,
+                builder: (context, authStatusSnapshot) {
+                  return GestureDetector(
+                    onTap: () => Navigator.pushNamed(
+                      context,
+                      '/productinfo',
+                      arguments: ProductModel(
+                        images: images,
+                        name: name,
+                        description: description,
+                        id: id,
+                        brand: brand,
+                        categories: categories,
+                      ),
+                    ),
+                    onLongPress: () {
+                      if (adminStreamController.initialData ==
+                          UserAuth.isAuthorized) {
+                        print(adminStreamController.initialData);
+                        Navigator.pushNamed(
+                          context,
+                          '/productinfo',
+                          arguments: ProductModel(
+                            images: images,
+                            name: name,
+                            description: description,
+                            id: id,
+                            brand: brand,
+                            categories: categories,
+                          ),
+                        );
+                      }
+                    },
+                    child: ProductItem(
+                      name: name,
+                      imageUrl: images.first,
+                    ),
+                  );
+                });
           },
         );
       },

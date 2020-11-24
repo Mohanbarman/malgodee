@@ -1,3 +1,4 @@
+import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:ShoppingApp/bloc/product_flow_bloc.dart';
 import 'package:ShoppingApp/widgets/not_found_placeholder.dart';
 import 'package:ShoppingApp/widgets/offer_image_container.dart';
@@ -82,24 +83,30 @@ class CustomGridView4x4 extends StatelessWidget {
                   .toList()
                   .cast<String>();
 
-              return RoundedIconContainer(
-                title: name,
-                imageUrl: image,
-                onTap: () {
-                  onTap(id);
-                },
-                onLongPress: () {
-                      onLongPress(
-                        id: id,
-                        name: name,
-                        image: image,
-                        description: itemSnapshot.data.docs[index]
-                            ['description'],
-                        correspondingElements: ids,
-                      );
-                    } ??
-                    () {},
-              );
+              return StreamBuilder(
+                  stream: adminStreamController.authStatusStream,
+                  builder: (context, adminStatusSnapshot) {
+                    return RoundedIconContainer(
+                      title: name,
+                      imageUrl: image,
+                      onTap: () {
+                        onTap(id);
+                      },
+                      onLongPress: () {
+                            if (adminStreamController.initialData ==
+                                UserAuth.isAuthorized)
+                              onLongPress(
+                                id: id,
+                                name: name,
+                                image: image,
+                                description: itemSnapshot.data.docs[index]
+                                    ['description'],
+                                correspondingElements: ids,
+                              );
+                          } ??
+                          () {},
+                    );
+                  });
             },
           );
         },

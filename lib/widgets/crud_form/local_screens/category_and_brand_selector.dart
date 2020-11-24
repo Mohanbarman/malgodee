@@ -156,16 +156,14 @@ class CategoryAndBrandSelector extends StatelessWidget {
                     child: StreamBuilder(
                       stream: dropdownBrandBloc.stream,
                       builder: (context, dropdownSnapshot) {
-                        print(dropdownBrandBloc.currValue);
-
                         return Container(
                           width: 200,
                           child: DropdownButton(
                             dropdownColor: Colors.white,
                             value: dropdownBrandBloc.currValue,
                             onChanged: (value) {
-                              print(value);
                               dropdownBrandBloc.add(value);
+                              categoryPickerBloc.clear();
                             },
                             items: snapshot.data.docs
                                 .map(

@@ -60,12 +60,18 @@ class FirebaseStorageApi {
     try {
       return FirebaseFirestore.instance
           .collection(collection)
-          .where('name',
-              isGreaterThanOrEqualTo: searchQuery,
-              isLessThan: searchQuery.substring(0, searchQuery.length - 1) +
-                  String.fromCharCode(
-                    searchQuery.codeUnitAt(searchQuery.length - 1) + 1,
-                  ))
+          .where(
+            'name',
+            isGreaterThanOrEqualTo: searchQuery,
+            isLessThanOrEqualTo:
+                searchQuery.substring(0, searchQuery.length - 1) +
+                    String.fromCharCode(
+                      searchQuery.codeUnitAt(
+                            searchQuery.length - 1,
+                          ) +
+                          1,
+                    ),
+          )
           .get()
           .asStream();
     } catch (e) {

@@ -16,6 +16,11 @@ class CategoryPickerBloc {
     _controller.sink.add(categoriesPicked);
   }
 
+  void clear() {
+    categoriesPicked.clear();
+    _controller.sink.add(categoriesPicked);
+  }
+
   CategoryPickerBloc() {
     stream.listen((e) => categoriesPicked = e);
   }
