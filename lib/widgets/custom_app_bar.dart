@@ -74,18 +74,20 @@ class Bar extends StatelessWidget {
 }
 
 class SearchBar extends StatelessWidget {
-  TextEditingController _textEditingController = TextEditingController();
+  TextEditingController _textEditingController = searchValue != null
+      ? TextEditingController(text: searchValue)
+      : TextEditingController();
   @override
   Widget build(BuildContext context) {
-    if (searchValue != null && searchValue.length > 0)
-      _textEditingController = TextEditingController(text: searchValue);
+    // if (searchValue != null && searchValue.length > 0)
+    //   _textEditingController.value = TextEditingValue(text: searchValue);
     return Container(
-      width: 300,
+      width: MediaQuery.of(context).size.width * .7,
       margin: EdgeInsets.fromLTRB(0, 10, 40, 10),
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            blurRadius: 20,
+            blurRadius: 10,
             color: Colors.black12,
             offset: Offset(0, 0),
           ),
@@ -104,13 +106,15 @@ class SearchBar extends StatelessWidget {
               'searchQuery': _textEditingController.value.text,
             });
           },
+          onChanged: (value) {
+            searchValue = value;
+          },
           decoration: InputDecoration(
             hintText: 'Search products',
             suffixIcon: Container(
               child: IconButton(
                 splashRadius: 22,
                 onPressed: () {
-                  print(_textEditingController.value.text);
                   if (_textEditingController.value.text.length < 1) return 0;
                   searchValue = _textEditingController.value.text;
                   Navigator.pushNamed(context, '/allproducts', arguments: {

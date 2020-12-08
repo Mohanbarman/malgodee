@@ -49,7 +49,6 @@ class CustomGridView4x4 extends StatelessWidget {
 
           if (itemCount == 1)
             return Container(
-              height: MediaQuery.of(context).size.height * .6,
               child: NotFoundPlaceholder(label: 'No $refererStr\s found'),
             );
 

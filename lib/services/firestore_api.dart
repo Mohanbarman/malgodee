@@ -16,10 +16,14 @@ class FirebaseStorageApi {
   }) {
     try {
       return limit == null
-          ? FirebaseFirestore.instance.collection(collection).snapshots()
+          ? FirebaseFirestore.instance
+              .collection(collection)
+              .orderBy('createdAt', descending: false)
+              .snapshots()
           : FirebaseFirestore.instance
               .collection(collection)
               .limit(limit + 1)
+              .orderBy('createdAt', descending: false)
               .snapshots();
     } catch (e) {
       print(e);
@@ -80,18 +84,6 @@ class FirebaseStorageApi {
     }
   }
 
-  static updateDocument({Map<String, dynamic> model, String collection}) async {
-    try {
-      CollectionReference ref = FirebaseFirestore.instance.collection(
-        collection,
-      );
-      await ref.doc(model['id']).update(model);
-      return true;
-    } catch (e) {
-      print(e);
-    }
-  }
-
   static Future<String> uploadFile({File file, String filename}) async {
     try {
       Reference ref = FirebaseStorage.instance.ref().child(filename);
@@ -104,11 +96,30 @@ class FirebaseStorageApi {
     }
   }
 
+  static updateDocument({Map<String, dynamic> model, String collection}) async {
+    try {
+      CollectionReference ref = FirebaseFirestore.instance.collection(
+        collection,
+      );
+
+      model['modifiedAt'] = FieldValue.serverTimestamp();
+
+      await ref.doc(model['id']).update(model);
+      return true;
+    } catch (e) {
+      print(e);
+    }
+  }
+
   static Future<String> addData({Map data, String collection}) async {
     try {
       CollectionReference ref = FirebaseFirestore.instance.collection(
         collection,
       );
+
+      data['createdAt'] = FieldValue.serverTimestamp();
+      data['modifiedAt'] = FieldValue.serverTimestamp();
+
       DocumentReference dref = await ref.add(data);
       return dref.path.split('/').last;
     } catch (e) {
@@ -167,9 +178,10 @@ class FirebaseStorageApi {
 
   static Stream productsFiltered({Map<String, dynamic> idMap}) {
     try {
+      print('idMap : $idMap');
       return FirebaseFirestore.instance
           .collection('products')
-          .where('categories', arrayContains: idMap['categories'])
+          .where('categories', arrayContains: idMap['category'])
           .where('brand', isEqualTo: idMap['brand'])
           .get()
           .asStream();

@@ -1,6 +1,7 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
 import 'package:ShoppingApp/bloc/product_flow_bloc.dart';
 import 'package:ShoppingApp/services/firestore_api.dart';
+import 'package:ShoppingApp/widgets/not_found_placeholder.dart';
 import 'package:ShoppingApp/widgets/underlined_text.dart';
 import 'package:ShoppingApp/widgets/rounded_icon_container.dart';
 import 'package:ShoppingApp/widgets/buttons.dart';
@@ -39,13 +40,15 @@ class CategoriesSection extends StatelessWidget {
           ),
           SizedBox(height: 20),
           SizedBox(
-            height: 90.0,
+            height: 100.0,
             child: StreamBuilder(
               stream: FirebaseStorageApi.streamOfCollection(
                 collection: 'categories',
                 limit: 5,
               ),
               builder: (context, querySnapshot) {
+                if (querySnapshot.data.docs.length < 1)
+                  return NotFoundPlaceholder(label: 'No categories found');
                 int itemCount = querySnapshot.hasData
                     ? querySnapshot.data.docs.length + 1
                     : 6;

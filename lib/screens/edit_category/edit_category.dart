@@ -1,5 +1,4 @@
 import 'package:ShoppingApp/models/category.dart';
-import 'package:ShoppingApp/services/firestore_api.dart';
 import 'package:ShoppingApp/widgets/crud_form/utils/delete_category_brand.dart';
 import 'package:ShoppingApp/widgets/crud_form/utils/single_image_pick_bloc.dart';
 import 'package:ShoppingApp/widgets/crud_form/widgets/image_preview.dart';
@@ -122,6 +121,7 @@ class EditCategory extends StatelessWidget {
     String name = _titleController.value.text;
     String description = _descriptionController.value.text;
     String id = model.id;
+    List<String> brandIds = model.brands;
 
     updateDoc(
       map: CategoryModel(
@@ -129,6 +129,7 @@ class EditCategory extends StatelessWidget {
         description: description,
         name: name,
         image: image,
+        brands: brandIds,
       ).toJson(),
       collection: 'categories',
       context: context,

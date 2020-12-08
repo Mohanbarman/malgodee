@@ -1,3 +1,4 @@
+import 'package:ShoppingApp/widgets/not_found_placeholder.dart';
 import 'package:ShoppingApp/widgets/offer_image_container.dart';
 import 'package:ShoppingApp/services/firestore_api.dart';
 import 'package:carousel_slider/carousel_options.dart';
@@ -32,6 +33,11 @@ class _OfferCarouselState extends State<OfferCarousel> {
             stream: FirebaseStorageApi.streamOfCollection(collection: 'offers'),
             builder: (context, snapshot) {
               if (!snapshot.hasData) return SizedBox();
+              if (snapshot.data.docs.length < 1)
+                return Container(
+                  height: 300,
+                  child: NotFoundPlaceholder(label: 'No offers found'),
+                );
               List<Widget> items = snapshot.data.docs
                   .map((e) => OfferImageContainer(imageUrl: e['image']))
                   .toList()

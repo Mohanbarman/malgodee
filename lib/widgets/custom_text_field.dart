@@ -44,9 +44,9 @@ class CustomTextField extends StatelessWidget {
                   if (!collectionSnapshot.hasData) return SizedBox();
 
                   String _collectionSnapshotNumber =
-                      collectionSnapshot.data.docs[0]['phone_number'];
+                      collectionSnapshot.data.docs.first['phone_number'];
                   String _collectionSnapshotId =
-                      collectionSnapshot.data.docs[0].id;
+                      collectionSnapshot.data.docs.first.id;
 
                   if (i == 0) {
                     _textEditingController.value = TextEditingValue(

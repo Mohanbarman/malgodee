@@ -84,7 +84,13 @@ class RoundedIconContainer extends StatelessWidget {
                     ),
         ),
         SizedBox(height: 10),
-        Text(this.title, style: BodyTextStyle1)
+        Text(
+          this.title.length > 18
+              ? '${this.title.substring(0, 17)}...'
+              : this.title,
+          style: BodyTextStyle1,
+          textAlign: TextAlign.center,
+        ),
       ],
     );
   }

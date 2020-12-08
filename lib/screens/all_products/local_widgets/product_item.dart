@@ -26,7 +26,7 @@ class ProductItem extends StatelessWidget {
             bottom: 0,
             child: Container(
               height: MediaQuery.of(context).size.height * .2,
-              width: MediaQuery.of(context).size.width - ScreenPadding * 13,
+              width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.bottomCenter,
@@ -41,8 +41,13 @@ class ProductItem extends StatelessWidget {
             child: Container(
               // color: Colors.blue,
               height: MediaQuery.of(context).size.height * .05,
-              width: MediaQuery.of(context).size.width - ScreenPadding * 13,
-              child: Center(child: Text(name, style: ProductGridItemTitle)),
+              width: MediaQuery.of(context).size.width * .44,
+              child: Center(
+                child: Text(
+                  name.length > 21 ? name.substring(0, 20) + '...' : name,
+                  style: ProductGridItemTitle,
+                ),
+              ),
             ),
           ),
         ],

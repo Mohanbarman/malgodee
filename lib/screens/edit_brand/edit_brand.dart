@@ -132,6 +132,7 @@ class EditBrand extends StatelessWidget {
     String name = _titleController.value.text;
     String description = _descriptionController.value.text;
     String id = model.id;
+    List<String> categoryIds = model.categories;
 
     await updateDoc(
       map: BrandModel(
@@ -139,6 +140,7 @@ class EditBrand extends StatelessWidget {
         description: description,
         name: name,
         image: image,
+        categories: categoryIds,
       ).toJson(),
       collection: 'brands',
       context: context,

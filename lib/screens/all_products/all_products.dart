@@ -19,7 +19,7 @@ class AllProducts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool _hasPrevId = ids['brand'] != null && ids['category'] != null;
-
+    print(ids);
     return Scaffold(
       appBar: CustomAppBar(),
       bottomNavigationBar: CustomBottomNavigationBar(null),

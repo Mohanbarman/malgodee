@@ -8,9 +8,9 @@ import 'package:flutter/material.dart';
 
 class ProductsGrid extends StatelessWidget {
   final Stream productsStream;
+  final String searchBy;
   final String categoryId;
   final String brandId;
-  final String searchBy;
 
   ProductsGrid({
     this.productsStream,
@@ -23,20 +23,35 @@ class ProductsGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: searchBy != null
-          ? FirebaseStorageApi.streamOfCollectionSearch(
-              searchQuery: searchBy,
-              collection: 'products',
-            )
+          ? FirebaseStorageApi.streamOfCollection(collection: 'products')
           : productsStream,
       builder: (context, snapshot) {
         if (!snapshot.hasData)
           return Center(child: CircularProgressIndicator());
 
+        List filteredSnapshot = searchBy != null
+            ? snapshot.data.docs
+                .toList()
+                .where(
+                  (e) =>
+                      e['name']
+                          .toLowerCase()
+                          .startsWith(searchBy.toLowerCase()) ==
+                      true,
+                )
+                .toList()
+            : null;
+
         if (snapshot.data.docs.length < 1)
           return NotFoundPlaceholder(label: 'No product found');
 
+        if (filteredSnapshot != null && filteredSnapshot.length < 1)
+          return NotFoundPlaceholder(label: 'No product found');
+
         return GridView.builder(
-          itemCount: snapshot.data.docs.length,
+          itemCount: searchBy != null
+              ? filteredSnapshot.length
+              : snapshot.data.docs.length,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: ScreenPadding,
@@ -45,55 +60,73 @@ class ProductsGrid extends StatelessWidget {
           padding: EdgeInsets.all(ScreenPadding),
           itemBuilder: (context, index) {
             // Product details
-            String id = snapshot.data.docs[index].id;
-            String name = snapshot.data.docs[index]['name'];
-            String description = snapshot.data.docs[index]['description'];
-            List<String> images =
-                snapshot.data.docs[index]['images'].toList().cast<String>();
-            List<String> categories =
-                snapshot.data.docs[index]['categories'].toList().cast<String>();
-            String brand = snapshot.data.docs[index]['brand'];
+
+            String id = searchBy == null
+                ? snapshot.data.docs[index].id
+                : filteredSnapshot[index].id;
+
+            String name = searchBy == null
+                ? snapshot.data.docs[index]['name']
+                : filteredSnapshot[index]['name'];
+
+            String description = searchBy == null
+                ? snapshot.data.docs[index]['description']
+                : filteredSnapshot[index]['description'];
+
+            List<String> images = searchBy == null
+                ? snapshot.data.docs[index]['images'].toList().cast<String>()
+                : filteredSnapshot[index]['images'].toList().cast<String>();
+
+            List<String> categories = searchBy == null
+                ? snapshot.data.docs[index]['categories']
+                    .toList()
+                    .cast<String>()
+                : filteredSnapshot[index]['categories'].toList().cast<String>();
+
+            String brand = searchBy == null
+                ? snapshot.data.docs[index]['brand']
+                : filteredSnapshot[index]['brand'];
 
             return StreamBuilder(
-                stream: adminStreamController.authStatusStream,
-                builder: (context, authStatusSnapshot) {
-                  return GestureDetector(
-                    onTap: () => Navigator.pushNamed(
-                      context,
-                      '/productinfo',
-                      arguments: ProductModel(
-                        images: images,
-                        name: name,
-                        description: description,
-                        id: id,
-                        brand: brand,
-                        categories: categories,
-                      ),
-                    ),
-                    onLongPress: () {
-                      if (adminStreamController.initialData ==
-                          UserAuth.isAuthorized) {
-                        print(adminStreamController.initialData);
-                        Navigator.pushNamed(
-                          context,
-                          '/productinfo',
-                          arguments: ProductModel(
-                            images: images,
-                            name: name,
-                            description: description,
-                            id: id,
-                            brand: brand,
-                            categories: categories,
-                          ),
-                        );
-                      }
-                    },
-                    child: ProductItem(
+              stream: adminStreamController.authStatusStream,
+              builder: (context, authStatusSnapshot) {
+                return GestureDetector(
+                  onTap: () => Navigator.pushNamed(
+                    context,
+                    '/productinfo',
+                    arguments: ProductModel(
+                      images: images,
                       name: name,
-                      imageUrl: images.first,
+                      description: description,
+                      id: id,
+                      brand: brand,
+                      categories: categories,
                     ),
-                  );
-                });
+                  ),
+                  onLongPress: () {
+                    if (adminStreamController.initialData ==
+                        UserAuth.isAuthorized) {
+                      Navigator.pushNamed(
+                        context,
+                        '/editproduct',
+                        arguments: ProductModel(
+                          images: images,
+                          name: name,
+                          description: description,
+                          id: id,
+                          brand: brand,
+                          categories: categories,
+                        ),
+                      );
+                    }
+                  },
+                  child: ProductItem(
+                    name: name,
+                    imageUrl: images.first,
+                  ),
+                );
+              },
+            );
           },
         );
       },

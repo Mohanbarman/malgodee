@@ -1,4 +1,5 @@
 import 'package:ShoppingApp/bloc/admin_features.dart';
+import 'package:ShoppingApp/widgets/not_found_placeholder.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/services/firestore_api.dart';
 import '../../widgets/underlined_text.dart';
@@ -37,6 +38,10 @@ class TrendingOffersSection extends StatelessWidget {
             stream: FirebaseStorageApi.streamOfCollection(collection: 'offers'),
             builder: (context, snapshot) {
               if (!snapshot.hasData) return SizedBox();
+              if (snapshot.data.docs.length < 1)
+                return NotFoundPlaceholder(label: 'No Offers found');
+              if (snapshot.data.docs.length < 2)
+                return NotFoundPlaceholder(label: 'Minimum 2 offers required');
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: List.generate(

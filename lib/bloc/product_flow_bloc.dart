@@ -25,6 +25,7 @@ class ProductBloc {
   int _handleProductRoute() {
     if (this.productStreamRouteInfo['category'] != null &&
         this.productStreamRouteInfo['brand'] != null) {
+      print(this.productStreamRouteInfo);
       Navigator.pushNamed(currentContext, '/allproducts');
       return 0;
     }
