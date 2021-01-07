@@ -17,20 +17,39 @@ class Bar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      actions: [SearchBar()],
+      actions: [LogoButton(), SearchBar()],
       toolbarHeight: 200.0,
-      leading: IconButton(
-        splashRadius: 25,
-        icon: Icon(
-          Icons.menu,
-          color: DefaultFontColor,
-        ),
-        onPressed: () {
-          if (Authentication.isAuthenticated()) {
-            return showAlertDialog(context);
-          }
-          Navigator.pushNamed(context, '/login');
-        },
+      // leading: IconButton(
+      //   splashRadius: 25,
+      //   icon: Icon(
+      //     Icons.menu,
+      //     color: DefaultFontColor,
+      //   ),
+      //   onPressed: () {
+      //     if (Authentication.isAuthenticated()) {
+      //       return showAlertDialog(context);
+      //     }
+      //     Navigator.pushNamed(context, '/login');
+      //   },
+      // ),
+    );
+  }
+}
+
+class LogoButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        if (Authentication.isAuthenticated()) {
+          showAlertDialog(context);
+        }
+        Navigator.pushNamed(context, '/login');
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width * .3,
+        margin: EdgeInsets.only(right: MediaQuery.of(context).size.width * .05),
+        child: Image.asset('assets/images/logo.png', fit: BoxFit.cover),
       ),
     );
   }
@@ -82,7 +101,7 @@ class SearchBar extends StatelessWidget {
     // if (searchValue != null && searchValue.length > 0)
     //   _textEditingController.value = TextEditingValue(text: searchValue);
     return Container(
-      width: MediaQuery.of(context).size.width * .7,
+      width: MediaQuery.of(context).size.width * .55,
       margin: EdgeInsets.fromLTRB(0, 10, 40, 10),
       decoration: BoxDecoration(
         boxShadow: [
