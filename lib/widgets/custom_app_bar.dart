@@ -19,19 +19,6 @@ class Bar extends StatelessWidget {
     return AppBar(
       actions: [LogoButton(), SearchBar()],
       toolbarHeight: 200.0,
-      // leading: IconButton(
-      //   splashRadius: 25,
-      //   icon: Icon(
-      //     Icons.menu,
-      //     color: DefaultFontColor,
-      //   ),
-      //   onPressed: () {
-      //     if (Authentication.isAuthenticated()) {
-      //       return showAlertDialog(context);
-      //     }
-      //     Navigator.pushNamed(context, '/login');
-      //   },
-      // ),
     );
   }
 }
@@ -49,7 +36,7 @@ class LogoButton extends StatelessWidget {
       child: Container(
         width: MediaQuery.of(context).size.width * .3,
         margin: EdgeInsets.only(right: MediaQuery.of(context).size.width * .05),
-        child: Image.asset('assets/images/logo.png', fit: BoxFit.cover),
+        child: Image.asset('assets/images/logo.png', fit: BoxFit.fitWidth),
       ),
     );
   }
