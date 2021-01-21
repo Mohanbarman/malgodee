@@ -32,13 +32,11 @@ class ProductsGrid extends StatelessWidget {
         List filteredSnapshot = searchBy != null
             ? snapshot.data.docs
                 .toList()
-                .where(
-                  (e) =>
-                      e['name']
-                          .toLowerCase()
-                          .startsWith(searchBy.toLowerCase()) ==
-                      true,
-                )
+                .where((e) =>
+                    e['name']
+                        .toLowerCase()
+                        .contains(searchBy.toLowerCase()) ==
+                    true)
                 .toList()
             : null;
 
@@ -60,7 +58,6 @@ class ProductsGrid extends StatelessWidget {
           padding: EdgeInsets.all(ScreenPadding),
           itemBuilder: (context, index) {
             // Product details
-
             String id = searchBy == null
                 ? snapshot.data.docs[index].id
                 : filteredSnapshot[index].id;

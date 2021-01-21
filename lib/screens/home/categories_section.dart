@@ -40,7 +40,7 @@ class CategoriesSection extends StatelessWidget {
           ),
           SizedBox(height: 20),
           SizedBox(
-            height: 100.0,
+            height: 120,
             child: StreamBuilder(
               stream: FirebaseStorageApi.streamOfCollection(
                 collection: 'categories',

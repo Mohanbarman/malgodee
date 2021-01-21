@@ -34,7 +34,7 @@ class LogoButton extends StatelessWidget {
         Navigator.pushNamed(context, '/login');
       },
       child: Container(
-        width: MediaQuery.of(context).size.width * .3,
+        width: MediaQuery.of(context).size.width * .27,
         margin: EdgeInsets.only(right: MediaQuery.of(context).size.width * .05),
         child: Image.asset('assets/images/logo.png', fit: BoxFit.fitWidth),
       ),

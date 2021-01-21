@@ -59,11 +59,14 @@ class CustomGridView4x4 extends StatelessWidget {
             itemCount: itemCount,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 4,
+              // mainAxisSpacing: 10,
+              childAspectRatio: 60 / 90,
             ),
             itemBuilder: (context, index) {
               if (!itemSnapshot.hasData) return SizedBox();
-              if (lastWidget is Widget && index + 1 == itemCount)
+              if (lastWidget is Widget && index + 1 == itemCount) {
                 return lastWidget;
+              }
               if (index + 1 == itemCount) return SizedBox();
 
               _docs = itemSnapshot.data.docs.toList();
