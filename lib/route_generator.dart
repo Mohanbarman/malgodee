@@ -60,10 +60,11 @@ class RouteGenerator {
         return FadeRoute(page: ProductCrud(model: args));
       case '/selectCategoryAndBrand':
         return FadeRoute(
-            page: CategoryAndBrandSelector(
-          dropdownBrandBloc: args['dropdownBrandBloc'],
-          categoryPickerBloc: args['categoryPickerBloc'],
-        ));
+          page: CategoryAndBrandSelector(
+            dropdownBrandBloc: args['dropdownBrandBloc'],
+            categoryPickerBloc: args['categoryPickerBloc'],
+          ),
+        );
       default:
         return _errorRoute();
     }

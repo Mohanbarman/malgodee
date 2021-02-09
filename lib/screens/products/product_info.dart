@@ -43,7 +43,7 @@ class ProductPrice extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: ScreenPadding),
-      child: Text('MOP : ${price == null ? '--' : price} ₹',
+      child: Text('MOP : ₹ ${price == null ? '--' : price}',
           style: ProductInfoTitle),
     );
   }

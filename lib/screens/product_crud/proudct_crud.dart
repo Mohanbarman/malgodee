@@ -36,6 +36,8 @@ class ProductCrud extends StatelessWidget {
       _descriptionController.value = TextEditingValue(
         text: this.productModel.description,
       );
+      _priceController.value =
+          TextEditingValue(text: this.productModel.price.toString());
     }
   }
 
@@ -180,6 +182,7 @@ class ProductCrud extends StatelessWidget {
     productModel.brand = _dropdownBrandBloc.currValue;
     productModel.categories = _categoryPickerBloc.categoriesPicked;
     productModel.id = this.productModel.id;
+    productModel.price = double.parse(_priceController.value.text);
 
     List<String> localPaths = _multipleImagePickBloc.paths
         .where((e) => !e.contains('https://'))

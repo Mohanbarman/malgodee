@@ -43,6 +43,8 @@ class CustomTextField extends StatelessWidget {
                 builder: (context, collectionSnapshot) {
                   if (!collectionSnapshot.hasData) return SizedBox();
 
+                  print('${collectionSnapshot.data.docs} ************');
+
                   String _collectionSnapshotNumber =
                       collectionSnapshot.data.docs.first['phone_number'];
                   String _collectionSnapshotId =
