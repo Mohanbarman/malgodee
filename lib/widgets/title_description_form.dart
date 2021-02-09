@@ -7,8 +7,11 @@ class TitleDescriptionForm extends StatelessWidget {
   final TextEditingController descriptionController;
   final String name;
 
-  TitleDescriptionForm(
-      {this.name, this.titleController, this.descriptionController});
+  TitleDescriptionForm({
+    this.name,
+    this.titleController,
+    this.descriptionController,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +31,11 @@ class TitleDescriptionForm extends StatelessWidget {
     );
   }
 
-  Widget customTextField(
-      {String title, int lineHeight, TextEditingController controller}) {
+  Widget customTextField({
+    String title,
+    int lineHeight,
+    TextEditingController controller,
+  }) {
     return Column(
       children: [
         Row(children: [Text(title, style: ProductInfoTitle)]),

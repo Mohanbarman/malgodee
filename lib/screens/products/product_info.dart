@@ -24,12 +24,27 @@ class ProductInfo extends StatelessWidget {
             ProductInfoCarousel(imageUrls: productModel.images),
             SizedBox(height: CarouselGapBottom),
             ProductTitle(title: productModel.name),
+            ProductPrice(price: productModel.price),
             SizedBox(height: ScreenPadding),
             ProductDescriptionSection(productModel.description),
             SizedBox(height: ScreenPadding),
           ],
         ),
       ),
+    );
+  }
+}
+
+class ProductPrice extends StatelessWidget {
+  final double price;
+  ProductPrice({this.price});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: ScreenPadding),
+      child: Text('MOP : ${price == null ? '--' : price} ₹',
+          style: ProductInfoTitle),
     );
   }
 }

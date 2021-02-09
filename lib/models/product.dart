@@ -5,6 +5,7 @@ class ProductModel {
   List<String> categories;
   String brand;
   String description;
+  double price;
 
   ProductModel({
     this.id,
@@ -13,13 +14,15 @@ class ProductModel {
     this.description,
     this.categories,
     this.brand,
+    this.price,
   });
 
   ProductModel.fromMap(Map snapshot, String id)
       : id = id ?? '',
         name = snapshot['name'] ?? '',
         images = snapshot['images'] ?? '',
-        description = snapshot['description'] ?? '';
+        description = snapshot['description'] ?? '',
+        price = snapshot['price'];
 
   toJson() {
     return Map<String, dynamic>.from({
@@ -29,6 +32,7 @@ class ProductModel {
       'description': this.description,
       'categories': this.categories,
       'brand': this.brand,
+      'price': this.price,
     });
   }
 }

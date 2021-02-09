@@ -1,34 +1,33 @@
 {
   "project_info": {
-    "project_number": "440862833454",
-    "firebase_url": "https://shoppingapp-cf7a8.firebaseio.com",
-    "project_id": "shoppingapp-cf7a8",
-    "storage_bucket": "shoppingapp-cf7a8.appspot.com"
+    "project_number": "498869090840",
+    "project_id": "malgodee",
+    "storage_bucket": "malgodee.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:440862833454:android:8e890ae1d551ba50c8d8bf",
+        "mobilesdk_app_id": "1:498869090840:android:98fefe54e79f52b65d216d",
         "android_client_info": {
           "package_name": "com.codesblack.malgodee"
         }
       },
       "oauth_client": [
         {
-          "client_id": "440862833454-cjqr4snv8ikjf7tktfhlhq1shhu67u65.apps.googleusercontent.com",
+          "client_id": "498869090840-hrhu9db01p4h9lal48ql9eiam5og7k9g.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB51auI4J0odoeTdn28ct4r55YnMky6WDg"
+          "current_key": "AIzaSyBBX26Ts__i62fEQ2ej3FjvQm83cuCWE_k"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "440862833454-cjqr4snv8ikjf7tktfhlhq1shhu67u65.apps.googleusercontent.com",
+              "client_id": "498869090840-hrhu9db01p4h9lal48ql9eiam5og7k9g.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

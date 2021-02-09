@@ -33,9 +33,7 @@ class ProductsGrid extends StatelessWidget {
             ? snapshot.data.docs
                 .toList()
                 .where((e) =>
-                    e['name']
-                        .toLowerCase()
-                        .contains(searchBy.toLowerCase()) ==
+                    e['name'].toLowerCase().contains(searchBy.toLowerCase()) ==
                     true)
                 .toList()
             : null;
@@ -70,6 +68,10 @@ class ProductsGrid extends StatelessWidget {
                 ? snapshot.data.docs[index]['description']
                 : filteredSnapshot[index]['description'];
 
+            double price = searchBy == null
+                ? snapshot.data.docs[index]['price']
+                : filteredSnapshot[index]['price'];
+
             List<String> images = searchBy == null
                 ? snapshot.data.docs[index]['images'].toList().cast<String>()
                 : filteredSnapshot[index]['images'].toList().cast<String>();
@@ -98,6 +100,7 @@ class ProductsGrid extends StatelessWidget {
                       id: id,
                       brand: brand,
                       categories: categories,
+                      price: price,
                     ),
                   ),
                   onLongPress: () {
@@ -113,6 +116,7 @@ class ProductsGrid extends StatelessWidget {
                           id: id,
                           brand: brand,
                           categories: categories,
+                          price: price,
                         ),
                       );
                     }

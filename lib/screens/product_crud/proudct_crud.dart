@@ -11,12 +11,14 @@ import 'package:ShoppingApp/widgets/underlined_text.dart';
 import 'package:flutter/material.dart';
 import 'package:ShoppingApp/widgets/custom_app_bar.dart';
 import 'package:ShoppingApp/widgets/bottom_navigation_bar.dart';
+import 'package:ShoppingApp/widgets/input_custom_decoration.dart';
 import 'dart:io';
 
 class ProductCrud extends StatelessWidget {
   MultipleImagePickBloc _multipleImagePickBloc = MultipleImagePickBloc();
   TextEditingController _titleController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
+  TextEditingController _priceController = TextEditingController();
   DropdownBrandBloc _dropdownBrandBloc = DropdownBrandBloc();
   CategoryPickerBloc _categoryPickerBloc = CategoryPickerBloc();
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey<ScaffoldState>();
@@ -62,8 +64,32 @@ class ProductCrud extends StatelessWidget {
             descriptionController: _descriptionController,
           ),
           SizedBox(height: 30),
+          priceField(),
+          SizedBox(height: 30),
           actionButtons(context),
           SizedBox(height: 30),
+        ],
+      ),
+    );
+  }
+
+  Widget priceField() {
+    return Container(
+      child: Column(
+        children: [
+          Row(children: [Text('Price', style: ProductInfoTitle)]),
+          SizedBox(height: ScreenPadding),
+          inputCustomDeocration(
+            TextField(
+              keyboardType: TextInputType.number,
+              smartDashesType: SmartDashesType.enabled,
+              maxLines: 1,
+              controller: _priceController,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -215,6 +241,7 @@ class ProductCrud extends StatelessWidget {
     productModel.description = _descriptionController.value.text;
     productModel.brand = _dropdownBrandBloc.currValue;
     productModel.categories = _categoryPickerBloc.categoriesPicked;
+    productModel.price = double.parse(_priceController.value.text);
 
     // Uploading images
     List<Future> imageUploadFutures = _multipleImagePickBloc.paths.map((e) {
@@ -227,6 +254,8 @@ class ProductCrud extends StatelessWidget {
     List urls = await Future.wait(imageUploadFutures);
 
     productModel.images = urls.cast<String>();
+
+    print(productModel.toJson());
 
     await FirebaseStorageApi.addData(
       data: productModel.toJson(),
@@ -270,6 +299,17 @@ class ProductCrud extends StatelessWidget {
       showValidationMsg(message: 'Add product description');
       return 0;
     }
+
+    if (_priceController.value.text.length < 1) {
+      showValidationMsg(message: 'Add product price');
+      return 0;
+    }
+
+    if (double.tryParse(_priceController.value.text) == null) {
+      showValidationMsg(message: 'Invalid price');
+      return 0;
+    }
+
     return 1;
   }
 }
